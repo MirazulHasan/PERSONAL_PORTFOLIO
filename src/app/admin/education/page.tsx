@@ -32,7 +32,7 @@ const selectStyle: React.CSSProperties = {
     ...inputStyle, cursor: "pointer",
 };
 
-const GradeSection = ({ gt, prefix = "", editingItem = null }: { gt: string; prefix?: string; editingItem?: any }) => (
+const GradeSection = ({ gt, editingItem = null }: { gt: string; editingItem?: any }) => (
     <>
         {gt !== "None" && (
             <div style={{ display: "grid", gridTemplateColumns: gt === "Division" ? "1fr" : "1fr 1fr", gap: 20, alignItems: "center", marginTop: 24, padding: 20, background: "rgba(255,255,255,0.02)", borderRadius: 16, border: "1px dashed var(--border)" }}>
@@ -40,17 +40,17 @@ const GradeSection = ({ gt, prefix = "", editingItem = null }: { gt: string; pre
                     <label style={labelStyle}>{gt === "Division" ? "Division/Class Result" : "Grade / Score"}</label>
                     <input
                         type={gt === "Division" ? "text" : "number"}
-                        name={`${prefix}grade`}
+                        name="grade"
                         step={gt === "Division" ? undefined : "0.01"}
                         placeholder={gt === "Division" ? "e.g. First Class" : "e.g. 3.84"}
-                        defaultValue={prefix ? editingItem?.grade ?? "" : ""}
+                        defaultValue={editingItem?.grade ?? ""}
                         style={inputStyle}
                     />
                 </div>
                 {(gt === "CGPA" || gt === "GPA") && (
                     <div>
                         <label style={labelStyle}>Out Of (Scale)</label>
-                        <select name={`${prefix}gradeScale`} defaultValue={prefix ? editingItem?.gradeScale ?? "4.00" : "4.00"} style={selectStyle}>
+                        <select name="gradeScale" defaultValue={editingItem?.gradeScale ?? "4.00"} style={selectStyle}>
                             <option value="4.00" style={{ background: "var(--bg-card)", color: "var(--text-primary)" }}>4.00</option>
                             <option value="5.00" style={{ background: "var(--bg-card)", color: "var(--text-primary)" }}>5.00</option>
                         </select>
@@ -368,7 +368,7 @@ export default function EducationAdmin() {
                                 </div>
                             </div>
 
-                            <GradeSection gt={editGradeType} prefix="edit_" editingItem={editingItem} />
+                            <GradeSection gt={editGradeType} editingItem={editingItem} />
 
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 32 }}>
                                 <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700, color: "var(--accent)", cursor: "pointer" }}>
