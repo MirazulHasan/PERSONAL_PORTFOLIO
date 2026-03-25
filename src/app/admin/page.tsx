@@ -312,7 +312,28 @@ export default async function AdminDashboard() {
                                 </div>
                             </section>
                         )}
+                        {activities.length > 0 && (
+
+                            <section style={{ marginTop: 40 }}>
+                                <h3 className="cv-section-title"><Rocket size={16} /> Activities <span /></h3>
+                                <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+                                    {activities.map(act => (
+                                        <div key={act.id}>
+                                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 20, marginBottom: 8 }}>
+                                                <h4 style={{ fontWeight: 800, fontSize: 17, lineHeight: 1.3 }}>{act.title}</h4>
+                                                <span style={{ fontSize: 13, fontWeight: 700, color: "var(--accent)", whiteSpace: "nowrap", flexShrink: 0, marginTop: 3 }}>
+                                                    {act.startDate ? new Date(act.startDate).toLocaleDateString('en-GB') : "N/A"} — {act.current ? "Present" : act.endDate ? new Date(act.endDate).toLocaleDateString('en-GB') : "N/A"}
+                                                </span>
+                                            </div>
+                                            <p style={{ fontWeight: 700, color: "var(--text-muted)", marginBottom: 12, fontSize: 14 }}>{act.role}</p>
+                                            {act.description && <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.6 }}>{act.description}</p>}
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
                     </div>
+
 
                     {/* Sidebar Column */}
                     <div className="cv-sidebar" style={{ background: "rgba(255,255,255,0.02)", padding: 48 }}>
@@ -357,22 +378,6 @@ export default async function AdminDashboard() {
                             </div>
                         </section>
 
-                        {activities.length > 0 && (
-                            <section style={{ marginBottom: 48 }}>
-                                <h3 className="cv-section-title"><Rocket size={16} /> Activities <span /></h3>
-                                <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-                                    {activities.slice(0, 4).map(act => (
-                                        <div key={act.id}>
-                                            <h4 style={{ fontSize: 13, fontWeight: 800 }}>{act.title}</h4>
-                                            <p style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 4 }}>{act.current ? act.role : `Former ${act.role}`}</p>
-                                            <p style={{ fontSize: 11, color: "var(--accent)", fontWeight: 700 }}>
-                                                {act.startDate ? new Date(act.startDate).toLocaleDateString('en-GB') : "N/A"} — {act.current ? "Present" : act.endDate ? new Date(act.endDate).toLocaleDateString('en-GB') : "N/A"}
-                                            </p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </section>
-                        )}
 
 
 
