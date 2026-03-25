@@ -23,6 +23,7 @@ dev.db-journal
 
 # Prisma generated client
 prisma/generated/
+src/generated/
 
 # Debug & logs
 npm-debug.log*
