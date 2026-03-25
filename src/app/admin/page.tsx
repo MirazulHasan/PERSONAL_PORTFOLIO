@@ -103,21 +103,21 @@ export default async function AdminDashboard() {
     const profileData = await prisma.profile.findFirst({ include: { socialLinks: true } });
     const profile = profileData as unknown as Profile | null;
 
-    const education = await (prisma as any).education.findMany({ 
-        orderBy: [{ order: "asc" }, { current: "desc" }, { passingYear: "desc" }] 
+    const education = await (prisma as any).education.findMany({
+        orderBy: [{ order: "asc" }, { current: "desc" }, { passingYear: "desc" }]
     }) as unknown as Education[];
 
-    const experience = await (prisma as any).experience.findMany({ 
-        orderBy: [{ order: "asc" }, { startDate: "desc" }] 
+    const experience = await (prisma as any).experience.findMany({
+        orderBy: [{ order: "asc" }, { startDate: "desc" }]
     }) as unknown as Experience[];
 
-    const skills = await (prisma as any).skill.findMany({ 
-        orderBy: [{ order: "asc" }, { level: "desc" }] 
+    const skills = await (prisma as any).skill.findMany({
+        orderBy: [{ order: "asc" }, { level: "desc" }]
     }) as unknown as Skill[];
 
-    const certificates = await (prisma as any).certificate.findMany({ 
-        orderBy: [{ order: "asc" }, { issuedAt: "desc" }], 
-        take: 6 
+    const certificates = await (prisma as any).certificate.findMany({
+        orderBy: [{ order: "asc" }, { issuedAt: "desc" }],
+        take: 6
     }) as unknown as Certificate[];
 
     const activities = await (prisma as any).activity.findMany({
@@ -133,15 +133,15 @@ export default async function AdminDashboard() {
     }) as Reference[];
 
     const adminCards = [
-        { title: "About",        href: "/admin/profile",      icon: "👤" },
-        { title: "Education",    href: "/admin/education",    icon: "🎓" },
-        { title: "Experience",   href: "/admin/experience",   icon: "💼" },
-        { title: "Skills",       href: "/admin/skills",       icon: "🧠" },
-        { title: "Projects",     href: "/admin/projects",     icon: "🚀" },
+        { title: "About", href: "/admin/profile", icon: "👤" },
+        { title: "Education", href: "/admin/education", icon: "🎓" },
+        { title: "Experience", href: "/admin/experience", icon: "💼" },
+        { title: "Skills", href: "/admin/skills", icon: "🧠" },
+        { title: "Projects", href: "/admin/projects", icon: "🚀" },
         { title: "Certificates", href: "/admin/certificates", icon: "📜" },
-        { title: "Activities",   href: "/admin/activities",   icon: "🏅" },
+        { title: "Activities", href: "/admin/activities", icon: "🏅" },
         { title: "Publications", href: "/admin/publications", icon: "📚" },
-        { title: "References",   href: "/admin/references",   icon: "🤝" },
+        { title: "References", href: "/admin/references", icon: "🤝" },
     ];
 
     return (
@@ -195,7 +195,7 @@ export default async function AdminDashboard() {
 
 
             `}</style>
-            
+
             <div className="hide-on-print" style={{ marginBottom: 40, display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
                 <div>
                     <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>Live Portfolio Overview</p>
@@ -216,7 +216,7 @@ export default async function AdminDashboard() {
                 <div className="cv-card-header" style={{ padding: "60px 48px", background: "linear-gradient(to bottom, rgba(255,255,255,0.02), transparent)", borderBottom: "1px solid var(--border)", display: "flex", gap: 40, alignItems: "center" }}>
                     <div style={{
                         width: 140, height: 140, borderRadius: "50%",
-                        background: "linear-gradient(135deg, #6c63ff, #ff6584)", 
+                        background: "linear-gradient(135deg, #6c63ff, #ff6584)",
                         padding: 3, flexShrink: 0,
                         boxShadow: "0 0 50px rgba(108,99,255,0.3)",
                     }}>
@@ -254,7 +254,7 @@ export default async function AdminDashboard() {
                     {/* Main Column */}
                     <div className="cv-main-col" style={{ background: "rgba(255,255,255,0.01)", padding: 48, overflow: "hidden" }}>
 
-                        
+
                         <section style={{ marginBottom: 48 }}>
                             <h3 className="cv-section-title"><UserCheck size={16} /> Profile Summary <span /></h3>
                             <p style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: 16, color: "var(--text-primary)" }}>{profile?.aboutTitle ?? "Professional Summary"}</p>
@@ -317,7 +317,7 @@ export default async function AdminDashboard() {
                     {/* Sidebar Column */}
                     <div className="cv-sidebar" style={{ background: "rgba(255,255,255,0.02)", padding: 48 }}>
 
-                        
+
                         {/* Skills Grouped */}
                         <section style={{ marginBottom: 45 }}>
                             <h3 className="cv-section-title"><Code size={16} /> Skills & Tech <span /></h3>
