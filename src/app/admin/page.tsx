@@ -147,26 +147,27 @@ export default async function AdminDashboard() {
     return (
         <div style={{ maxWidth: 1100, margin: "0 auto", paddingBottom: 100 }}>
             <style>{`
-                .cv-card { background: rgba(255,255,255,0.01); backdrop-filter: blur(24px); border: 1px solid var(--border); border-radius: 32px; overflow: hidden; box-shadow: 0 40px 100px rgba(0,0,0,0.3); }
+                .cv-card { background: rgba(255,255,255,0.01); backdrop-filter: blur(24px); border: 1px solid var(--border); border-radius: 32px; box-shadow: 0 40px 100px rgba(0,0,0,0.3); }
                 .cv-section-title { font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
                 .cv-section-title span { height: 1px; flex: 1; background: linear-gradient(to right, var(--accent), transparent); opacity: 0.3; }
                 .quick-btn:hover { border-color: var(--accent) !important; background: rgba(108,99,255,0.08) !important; transform: translateY(-3px); }
-                .skill-chip { font-size: 11px; font-weight: 700; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: "6px 14px"; border-radius: 50px; color: var(--text-primary); }
+                .skill-chip { font-size: 11px; font-weight: 700; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 6px 14px; border-radius: 50px; color: var(--text-primary); }
 
                 @media print {
-                    @page { size: A4; margin: 0; }
+                    @page { size: auto; margin: 0; }
                     body { background: #0a0a0f !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
                     
                     /* Hide everything we don't need */
                     .hide-on-print, nav, footer, button, .ticker-container { display: none !important; }
                     
                     /* Reset container */
-                    main, html, body { margin: 0 !important; padding: 0 !important; height: 100% !important; overflow: hidden !important; }
+                    main, html, body { margin: 0 !important; padding: 0 !important; width: 100% !important; height: auto !important; overflow: visible !important; }
                     
-                    /* Force the CV card to take the exact A4 dimensions */
+                    /* Force the CV card to take the width but allow dynamic height */
                     #cv-card { 
                         width: 210mm !important;
-                        height: 297mm !important;
+                        height: auto !important;
+                        min-height: 297mm !important;
                         background: #0a0a0f !important; 
                         margin: 0 !important; 
                         border: none !important; 
@@ -175,8 +176,7 @@ export default async function AdminDashboard() {
                         display: flex !important;
                         flex-direction: column !important;
                         page-break-after: avoid !important;
-                        transform: scale(1);
-                        transform-origin: top left;
+                        overflow: visible !important;
                     }
                     
                     /* Ensure all text and icons keep their colors */
@@ -188,10 +188,11 @@ export default async function AdminDashboard() {
 
                     /* Adjust spacing for tight fit */
                     .cv-card-header { padding: 40px 48px !important; }
-                    .cv-main-col, .cv-sidebar { padding: 32px 40px !important; }
+                    .cv-main-col, .cv-sidebar { padding: 24px 40px !important; }
                     .cv-section-title { margin-bottom: 16px !important; }
-                    .cv-experience-item { margin-bottom: 24px !important; }
+                    .cv-experience-item { margin-bottom: 20px !important; }
                 }
+
 
             `}</style>
             
