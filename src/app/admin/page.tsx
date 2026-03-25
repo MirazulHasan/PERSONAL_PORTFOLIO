@@ -154,33 +154,45 @@ export default async function AdminDashboard() {
                 .skill-chip { font-size: 11px; font-weight: 700; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: "6px 14px"; border-radius: 50px; color: var(--text-primary); }
 
                 @media print {
-                    @page { size: A4 portrait; margin: 0; }
-                    body { background: #0a0a0f !important; }
+                    @page { size: A4; margin: 0; }
+                    body { background: #0a0a0f !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
                     
                     /* Hide everything we don't need */
-                    .hide-on-print { display: none !important; }
+                    .hide-on-print, nav, footer, button, .ticker-container { display: none !important; }
                     
-                    /* Reset all paddings and margins that offset the print */
-                    main { margin: 0 !important; padding: 0 !important; }
+                    /* Reset container */
+                    main, html, body { margin: 0 !important; padding: 0 !important; height: 100% !important; overflow: hidden !important; }
                     
                     /* Force the CV card to take the exact A4 dimensions */
                     #cv-card { 
                         width: 210mm !important;
-                        height: 297mm !important; /* Fixed A4 height to prevent overflow/blank pages */
-                        overflow: hidden !important; 
+                        height: 297mm !important;
                         background: #0a0a0f !important; 
                         margin: 0 !important; 
                         border: none !important; 
                         border-radius: 0 !important;
-                        -webkit-print-color-adjust: exact !important;
-                        print-color-adjust: exact !important;
                         box-shadow: none !important;
+                        display: flex !important;
+                        flex-direction: column !important;
+                        page-break-after: avoid !important;
+                        transform: scale(1);
+                        transform-origin: top left;
                     }
                     
-                    /* Enforce text colors for links and labels to stay visible in PDF */
-                    #cv-card * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
-                    .gradient-text { background: none !important; color: #fff !important; -webkit-text-fill-color: initial !important; }
+                    /* Ensure all text and icons keep their colors */
+                    #cv-card * {
+                        -webkit-print-color-adjust: exact !important; 
+                        print-color-adjust: exact !important; 
+                        color-adjust: exact !important;
+                    }
+
+                    /* Adjust spacing for tight fit */
+                    .cv-card-header { padding: 40px 48px !important; }
+                    .cv-main-col, .cv-sidebar { padding: 32px 40px !important; }
+                    .cv-section-title { margin-bottom: 16px !important; }
+                    .cv-experience-item { margin-bottom: 24px !important; }
                 }
+
             `}</style>
             
             <div className="hide-on-print" style={{ marginBottom: 40, display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
@@ -200,7 +212,7 @@ export default async function AdminDashboard() {
             <div id="cv-card" className="cv-card">
 
                 {/* Header */}
-                <div style={{ padding: "60px 48px", background: "linear-gradient(to bottom, rgba(255,255,255,0.02), transparent)", borderBottom: "1px solid var(--border)", display: "flex", gap: 40, alignItems: "center" }}>
+                <div className="cv-card-header" style={{ padding: "60px 48px", background: "linear-gradient(to bottom, rgba(255,255,255,0.02), transparent)", borderBottom: "1px solid var(--border)", display: "flex", gap: 40, alignItems: "center" }}>
                     <div style={{
                         width: 140, height: 140, borderRadius: "50%",
                         background: "linear-gradient(135deg, #6c63ff, #ff6584)", 
@@ -237,9 +249,10 @@ export default async function AdminDashboard() {
                     </div>
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 1, background: "var(--border)" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 1, background: "var(--border)", flex: 1, minHeight: 0 }}>
                     {/* Main Column */}
-                    <div style={{ background: "rgba(255,255,255,0.01)", padding: 48 }}>
+                    <div className="cv-main-col" style={{ background: "rgba(255,255,255,0.01)", padding: 48, overflow: "hidden" }}>
+
                         
                         <section style={{ marginBottom: 48 }}>
                             <h3 className="cv-section-title"><UserCheck size={16} /> Profile Summary <span /></h3>
@@ -251,7 +264,8 @@ export default async function AdminDashboard() {
                             <h3 className="cv-section-title"><Briefcase size={16} /> Professional Experience <span /></h3>
                             <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
                                 {experience.length > 0 ? experience.map(exp => (
-                                    <div key={exp.id}>
+                                    <div key={exp.id} className="cv-experience-item">
+
                                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 20, marginBottom: 8 }}>
                                             <h4 style={{ fontWeight: 800, fontSize: 17, lineHeight: 1.3 }}>{exp.position}</h4>
                                             <span style={{ fontSize: 13, fontWeight: 700, color: "var(--accent)", whiteSpace: "nowrap", flexShrink: 0, marginTop: 3 }}>
@@ -300,7 +314,8 @@ export default async function AdminDashboard() {
                     </div>
 
                     {/* Sidebar Column */}
-                    <div style={{ background: "rgba(255,255,255,0.02)", padding: 48 }}>
+                    <div className="cv-sidebar" style={{ background: "rgba(255,255,255,0.02)", padding: 48 }}>
+
                         
                         {/* Skills Grouped */}
                         <section style={{ marginBottom: 45 }}>
