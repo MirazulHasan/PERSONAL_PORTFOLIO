@@ -6,14 +6,11 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { GripVertical } from "lucide-react";
 
 // ── helpers ─────────────────────────────────────────────────────────────────
+// ── helpers ─────────────────────────────────────────────────────────────────
 function DroppableFix({ children, ...props }: any) {
     const [enabled, setEnabled] = useState(false);
     useEffect(() => {
-        const animation = requestAnimationFrame(() => setEnabled(true));
-        return () => {
-            cancelAnimationFrame(animation);
-            setEnabled(false);
-        };
+        setEnabled(true);
     }, []);
     if (!enabled) return null;
     return <Droppable {...props}>{children}</Droppable>;
@@ -25,7 +22,6 @@ async function getCroppedImg(imageSrc: string, croppedAreaPixels: any): Promise<
     await new Promise((resolve) => { image.onload = resolve; });
 
     const canvas = document.createElement("canvas");
-    // Always output 400×400 for a crisp circle avatar
     canvas.width = 400;
     canvas.height = 400;
     const ctx = canvas.getContext("2d");
@@ -40,7 +36,8 @@ async function getCroppedImg(imageSrc: string, croppedAreaPixels: any): Promise<
         0, 0,
         400, 400
     );
-    return canvas.toDataURL("image/png");
+    // Use lower quality to save space in base64 string
+    return canvas.toDataURL("image/jpeg", 0.85);
 }
 
 const inputStyle: React.CSSProperties = {
@@ -84,19 +81,19 @@ export default function ProfileAdmin() {
             .then((r) => r.json())
             .then((d) => {
                 setProfile(d);
-                // Ensure every link has an id for DND keys
                 const links = (d?.socialLinks || []).map((l: any, idx: number) => ({
                     ...l,
-                    id: l.id || `init-${idx}-${Date.now()}`
+                    id: String(l.id || `init-${idx}-${Date.now()}`)
                 }));
                 setSocialLinks(links);
                 setLoading(false);
-            });
+            })
+            .catch(() => setLoading(false));
     }, []);
 
     const showToast = (type: "success" | "error", msg: string) => {
         setToast({ type, msg });
-        setTimeout(() => setToast(null), 3500);
+        setTimeout(() => setToast(null), 3000);
     };
 
     const onCropComplete = useCallback((_: any, cap: any) => {
@@ -133,33 +130,34 @@ export default function ProfileAdmin() {
             const croppedImage = await getCroppedImg(imageSrc, croppedAreaPixels);
             if (!croppedImage) return;
 
-            const res = await fetch("/api/upload", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ image: croppedImage }),
-            });
-
-            if (res.ok) {
-                const { url } = await res.json();
-                setProfile((p: any) => ({ ...p, avatarUrl: url + "?t=" + Date.now() }));
-                setShowCropper(false);
-                showToast("success", "Profile photo updated!");
-            } else {
-                showToast("error", "Upload failed. Please try again.");
-            }
+            // Instead of API upload, we just set the profile state with base64
+            // This avoids file system issues on Vercel
+            setProfile((prev: any) => ({ ...prev, avatarUrl: croppedImage }));
+            setShowCropper(false);
+            showToast("success", "Photo applied! Click 'Save Profile' to permanently save.");
         } catch {
-            showToast("error", "Upload error. Please try again.");
+            showToast("error", "Error processing photo.");
         }
         setUploading(false);
     };
 
     const handleAddLink = () => {
-        if (socialLinks.length >= 10) { showToast("error", "Maximum 10 social links allowed."); return; }
-        setSocialLinks([...socialLinks, { id: `new-${Date.now()}`, platform: "GitHub", url: "" }]);
+        if (socialLinks.length >= 10) { 
+            showToast("error", "Maximum 10 social links allowed."); 
+            return; 
+        }
+        const newId = `new-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        setSocialLinks(prev => [...prev, { id: newId, platform: "GitHub", url: "" }]);
     };
-    const handleRemoveLink = (i: number) => setSocialLinks(socialLinks.filter((_, idx) => idx !== i));
+    const handleRemoveLink = (i: number) => {
+        setSocialLinks(prev => prev.filter((_, idx) => idx !== i));
+    };
     const handleLinkChange = (i: number, field: string, value: string) => {
-        const n = [...socialLinks]; n[i][field] = value; setSocialLinks(n);
+        setSocialLinks(prev => {
+            const newList = [...prev];
+            newList[i] = { ...newList[i], [field]: value };
+            return newList;
+        });
     };
 
     const onDragEnd = (result: any) => {
