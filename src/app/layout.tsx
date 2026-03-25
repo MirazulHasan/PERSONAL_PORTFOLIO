@@ -1,10 +1,21 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: "Md. Mirazul Hasan | Portfolio",
-  description: "Full Stack Developer — building clean, scalable web applications.",
-};
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Md. Mirazul Hasan | Portfolio",
+    description: "Full Stack Developer — building clean, scalable web applications.",
+    icons: {
+      icon: "/api/icon",
+      shortcut: "/api/icon",
+      apple: "/api/icon",
+    },
+  };
+}
+
+
+
 
 export default function RootLayout({
   children,
