@@ -128,9 +128,22 @@ export default async function HomePage() {
         background: "var(--bg-nav)",
         backdropFilter: "blur(12px)",
       }}>
-        <Link href="/" style={{ fontWeight: 700, fontSize: "1.1rem", textDecoration: "none", color: "inherit" }}>
-          {profile?.name ?? "Portfolio"}
+        <Link href="/" style={{ display: "flex", alignItems: "center", gap: 12, fontWeight: 800, fontSize: "1.1rem", textDecoration: "none", color: "inherit", letterSpacing: "-0.02em" }}>
+          {profile?.avatarUrl && (
+            <div style={{
+              width: 34, height: 34, borderRadius: "50%",
+              background: "linear-gradient(135deg, #6c63ff, #ff6584)",
+              padding: "1.5px", display: "flex", alignItems: "center", justifyContent: "center",
+              boxShadow: "0 0 15px rgba(108,99,255,0.25)",
+            }}>
+              <div style={{ width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden", background: "var(--avatar-bg)" }}>
+                <img src={profile.avatarUrl} alt="Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              </div>
+            </div>
+          )}
+          <span>{profile?.name ?? "Portfolio"}</span>
         </Link>
+
 
         <div style={{ display: "flex", gap: 28, alignItems: "center" }}>
           <Link href="#about" style={{ color: "var(--text-muted)", textDecoration: "none", fontSize: 14, fontWeight: 500 }}>About</Link>
