@@ -325,85 +325,78 @@ export default function ProfileAdmin() {
                             <span style={{ width: 3, height: 20, background: "var(--accent)", borderRadius: 4, display: "inline-block" }} />
                             Social Profiles
                         </h2>
-                        <button type="button" onClick={handleAddLink} style={{
-                            background: "rgba(108,99,255,0.12)", border: "1px solid rgba(108,99,255,0.4)",
-                            color: "var(--accent)", padding: "7px 16px", borderRadius: 8,
-                            fontSize: 12, fontWeight: 700, cursor: "pointer", letterSpacing: "0.04em",
-                        }}>+ ADD LINK</button>
-                    </div>
-                    <DragDropContext onDragEnd={onDragEnd}>
-                        <DroppableFix droppableId="social-links">
-                            {(provided: any) => (
-                                <div {...provided.droppableProps} ref={provided.innerRef} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                                    {socialLinks.map((link, i) => (
-                                        <Draggable key={link.id} draggableId={String(link.id)} index={i}>
-                                            {(provided: any, snapshot: any) => (
-                                                <div
-                                                    ref={provided.innerRef}
-                                                    {...provided.draggableProps}
-                                                    className="social-row"
-                                                    style={{
-                                                        ...provided.draggableProps.style,
-                                                        display: "flex",
-                                                        gap: 16,
-                                                        alignItems: "flex-end",
-                                                        background: snapshot.isDragging ? "rgba(108,99,255,0.06)" : "rgba(108,99,255,0.02)",
-                                                        padding: "16px",
-                                                        borderRadius: "16px",
-                                                        border: "1px solid var(--border)",
-                                                        borderColor: snapshot.isDragging ? "var(--accent)" : "var(--border)",
-                                                        boxShadow: snapshot.isDragging ? "0 10px 40px rgba(108,99,255,0.15)" : "none",
-                                                        transition: "all 0.2s ease",
-                                                        zIndex: snapshot.isDragging ? 100 : 1
-                                                    }}
-                                                >
-                                                    <div {...provided.dragHandleProps} className="drag-handle"
-                                                        style={{ color: "var(--text-muted)", cursor: "grab", opacity: 0.3, transition: "all 0.2s", marginBottom: 12 }}>
-                                                        <GripVertical size={20} />
-                                                    </div>
-                                                    <div style={{ width: 160, flexShrink: 0 }}>
-                                                        <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "var(--text-muted)", marginBottom: 8, textTransform: "uppercase" }}>Platform</label>
-                                                        <select value={link.platform} onChange={(e) => handleLinkChange(i, "platform", e.target.value)}
-                                                            style={{ 
-                                                                ...inputStyle, 
-                                                                padding: "11px 16px",
-                                                                appearance: "none",
-                                                                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236c63ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`,
-                                                                backgroundRepeat: "no-repeat",
-                                                                backgroundPosition: "right 12px center",
-                                                                backgroundSize: "16px",
-                                                                cursor: "pointer"
-                                                            }}>
-                                                            {["GitHub", "LinkedIn", "Twitter", "Instagram", "Facebook", "Portfolio", "YouTube", "Other"].map(p => (
-                                                                <option key={p} value={p} style={{ background: "var(--bg-card)", color: "var(--text-primary)" }}>{p}</option>
-                                                            ))}
-                                                        </select>
-                                                    </div>
-                                                    <div style={{ flex: 1 }}>
-                                                        <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "var(--text-muted)", marginBottom: 8, textTransform: "uppercase" }}>URL</label>
-                                                        <input type="url" value={link.url} onChange={(e) => handleLinkChange(i, "url", e.target.value)}
-                                                            placeholder="https://..." style={{ ...inputStyle, padding: "11px 16px" }}
-                                                            onFocus={(e) => e.target.style.borderColor = "var(--accent)"}
-                                                            onBlur={(e) => e.target.style.borderColor = "var(--border)"} />
-                                                    </div>
-                                                    <button type="button" className="remove-link-btn" onClick={() => handleRemoveLink(i)} style={{
-                                                        background: "rgba(255,77,77,0.08)", border: "1px solid rgba(255,77,77,0.3)",
-                                                        color: "#ff4d4d", padding: "11px 14px", borderRadius: 12, cursor: "pointer",
-                                                        fontSize: 16, lineHeight: 1, transition: "background 0.2s", flexShrink: 0,
-                                                    }}>✕</button>
-                                                </div>
-                                            )}
-                                        </Draggable>
-                                    ))}
-                                    {provided.placeholder}
-                                </div>
+                        <div style={{ display: "flex", gap: 12 }}>
+                            {socialLinks.length > 0 && (
+                                <button type="button" onClick={() => { if(confirm("Clear all links?")) setSocialLinks([]); }} style={{
+                                    background: "rgba(255,77,77,0.1)", border: "1px solid rgba(255,77,77,0.3)",
+                                    color: "#ff4d4d", padding: "7px 16px", borderRadius: 8,
+                                    fontSize: 12, fontWeight: 700, cursor: "pointer",
+                                }}>CLEAR ALL</button>
                             )}
-                        </DroppableFix>
-                    </DragDropContext>
+                            <button type="button" onClick={handleAddLink} style={{
+                                background: "rgba(108,99,255,0.12)", border: "1px solid rgba(108,99,255,0.4)",
+                                color: "var(--accent)", padding: "7px 16px", borderRadius: 8,
+                                fontSize: 12, fontWeight: 700, cursor: "pointer", letterSpacing: "0.04em",
+                            }}>+ ADD LINK</button>
+                        </div>
+                    </div>
+                    
+                    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                        {socialLinks.map((link, i) => (
+                            <div
+                                key={link.id || i}
+                                className="social-row"
+                                style={{
+                                    display: "flex",
+                                    gap: 16,
+                                    alignItems: "flex-end",
+                                    background: "rgba(108,99,255,0.02)",
+                                    padding: "16px",
+                                    borderRadius: "16px",
+                                    border: "1px solid var(--border)",
+                                    transition: "all 0.2s ease",
+                                }}
+                            >
+                                <div style={{ width: 160, flexShrink: 0 }}>
+                                    <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "var(--text-muted)", marginBottom: 8, textTransform: "uppercase" }}>Platform</label>
+                                    <select value={link.platform} onChange={(e) => handleLinkChange(i, "platform", e.target.value)}
+                                        style={{ 
+                                            ...inputStyle, 
+                                            padding: "11px 16px",
+                                            appearance: "none",
+                                            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236c63ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`,
+                                            backgroundRepeat: "no-repeat",
+                                            backgroundPosition: "right 12px center",
+                                            backgroundSize: "16px",
+                                            cursor: "pointer"
+                                        }}>
+                                        {["GitHub", "LinkedIn", "Twitter", "Instagram", "Facebook", "Portfolio", "YouTube", "Other"].map(p => (
+                                            <option key={p} value={p} style={{ background: "var(--bg-card)", color: "var(--text-primary)" }}>{p}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div style={{ flex: 1 }}>
+                                    <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "var(--text-muted)", marginBottom: 8, textTransform: "uppercase" }}>URL</label>
+                                    <input type="url" value={link.url} onChange={(e) => handleLinkChange(i, "url", e.target.value)}
+                                        placeholder="https://..." style={{ ...inputStyle, padding: "11px 16px" }}
+                                        onFocus={(e) => e.target.style.borderColor = "var(--accent)"}
+                                        onBlur={(e) => e.target.style.borderColor = "var(--border)"} />
+                                </div>
+                                <button type="button" className="remove-link-btn" onClick={() => handleRemoveLink(i)} style={{
+                                    background: "rgba(255,77,77,0.08)", border: "1px solid rgba(255,77,77,0.3)",
+                                    color: "#ff4d4d", padding: "11px 14px", borderRadius: 12, cursor: "pointer",
+                                    fontSize: 16, lineHeight: 1, transition: "background 0.2s", flexShrink: 0,
+                                }}>✕</button>
+                            </div>
+                        ))}
+                    </div>
+
                     {socialLinks.length === 0 && (
-                        <p style={{ fontSize: 13, color: "var(--text-muted)", textAlign: "center", padding: "28px 20px", border: "1px dashed var(--border)", borderRadius: 12 }}>
-                            No social links yet — click <strong>+ ADD LINK</strong> to get started.
-                        </p>
+                        <div style={{ fontSize: 13, color: "var(--text-muted)", textAlign: "center", padding: "40px 20px", border: "1px dashed var(--border)", borderRadius: 16, background: "rgba(255,255,255,0.01)" }}>
+                            <div style={{ fontSize: 24, marginBottom: 12 }}>🔗</div>
+                            <p>No social links yet.</p>
+                            <p style={{ fontSize: 11, marginTop: 4 }}>Click <strong>+ ADD LINK</strong> to showcase your profiles.</p>
+                        </div>
                     )}
                 </div>
 
