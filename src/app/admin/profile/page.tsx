@@ -342,6 +342,7 @@ export default function ProfileAdmin() {
                     </div>
                     
                     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                        <pre style={{ fontSize: 10, color: "var(--accent)" }}>DEBUG: {JSON.stringify(socialLinks)}</pre>
                         {socialLinks.map((link, i) => (
                             <div
                                 key={link.id || i}
