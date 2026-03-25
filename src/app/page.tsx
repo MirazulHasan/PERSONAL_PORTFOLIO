@@ -147,14 +147,15 @@ export default async function HomePage() {
 
 
         <div style={{ display: "flex", gap: 28, alignItems: "center" }}>
-          <Link href="#about" style={{ color: "var(--text-muted)", textDecoration: "none", fontSize: 14, fontWeight: 500 }}>About</Link>
-          <Link href="#education" style={{ color: "var(--text-muted)", textDecoration: "none", fontSize: 14, fontWeight: 500 }}>Education</Link>
-          <Link href="#experience" style={{ color: "var(--text-muted)", textDecoration: "none", fontSize: 14, fontWeight: 500 }}>Experience</Link>
-          <Link href="#skills" style={{ color: "var(--text-muted)", textDecoration: "none", fontSize: 14, fontWeight: 500 }}>Skills</Link>
-          <Link href="#projects" style={{ color: "var(--text-muted)", textDecoration: "none", fontSize: 14, fontWeight: 500 }}>Projects</Link>
-          <Link href="#blog" style={{ color: "var(--text-muted)", textDecoration: "none", fontSize: 14, fontWeight: 500 }}>Blog</Link>
-          <Link href="#contact" style={{ color: "var(--text-muted)", textDecoration: "none", fontSize: 14, fontWeight: 500 }}>Contact</Link>
+          <Link href="#about" className="nav-link-glow" style={{ color: "var(--text-muted)", textDecoration: "none", fontSize: 14, fontWeight: 500 }}>About</Link>
+          <Link href="#education" className="nav-link-glow" style={{ color: "var(--text-muted)", textDecoration: "none", fontSize: 14, fontWeight: 500 }}>Education</Link>
+          <Link href="#experience" className="nav-link-glow" style={{ color: "var(--text-muted)", textDecoration: "none", fontSize: 14, fontWeight: 500 }}>Experience</Link>
+          <Link href="#skills" className="nav-link-glow" style={{ color: "var(--text-muted)", textDecoration: "none", fontSize: 14, fontWeight: 500 }}>Skills</Link>
+          <Link href="#projects" className="nav-link-glow" style={{ color: "var(--text-muted)", textDecoration: "none", fontSize: 14, fontWeight: 500 }}>Projects</Link>
+          <Link href="#blog" className="nav-link-glow" style={{ color: "var(--text-muted)", textDecoration: "none", fontSize: 14, fontWeight: 500 }}>Blog</Link>
+          <Link href="#contact" className="nav-link-glow" style={{ color: "var(--text-muted)", textDecoration: "none", fontSize: 14, fontWeight: 500 }}>Contact</Link>
           <ThemeToggle />
+
           <Link href="/login" className="admin-nav-link" style={{
             fontSize: 12, fontWeight: 700, color: "var(--text-muted)",
             textDecoration: "none", letterSpacing: "0.06em",
