@@ -346,7 +346,7 @@ export default function ProfileAdmin() {
                         {socialLinks.map((link, i) => (
                             <div
                                 key={link.id || i}
-                                className="social-row"
+                                className="link-item-row"
                                 style={{
                                     display: "flex",
                                     gap: 16,
