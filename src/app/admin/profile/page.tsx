@@ -60,21 +60,21 @@ const Field = ({ label, name, type = "text", defaultValue }: any) => (
 
 // ── component ────────────────────────────────────────────────────────────────
 export default function ProfileAdmin() {
-    const [profile, setProfile]       = useState<any>(null);
-    const [loading, setLoading]       = useState(true);
-    const [saving, setSaving]         = useState(false);
-    const [toast, setToast]           = useState<{ type: "success" | "error"; msg: string } | null>(null);
+    const [profile, setProfile] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [toast, setToast] = useState<{ type: "success" | "error"; msg: string } | null>(null);
     const [socialLinks, setSocialLinks] = useState<any[]>([]);
 
     // Crop state
-    const [imageSrc, setImageSrc]               = useState<string | null>(null);
-    const [crop, setCrop]                        = useState({ x: 0, y: 0 });
-    const [zoom, setZoom]                        = useState(1);
-    const [rotation, setRotation]                = useState(0);
+    const [imageSrc, setImageSrc] = useState<string | null>(null);
+    const [crop, setCrop] = useState({ x: 0, y: 0 });
+    const [zoom, setZoom] = useState(1);
+    const [rotation, setRotation] = useState(0);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
-    const [showCropper, setShowCropper]          = useState(false);
-    const [uploading, setUploading]              = useState(false);
-    const [dragOver, setDragOver]                = useState(false);
+    const [showCropper, setShowCropper] = useState(false);
+    const [uploading, setUploading] = useState(false);
+    const [dragOver, setDragOver] = useState(false);
 
     useEffect(() => {
         fetch("/api/profile?t=" + Date.now())
@@ -142,9 +142,9 @@ export default function ProfileAdmin() {
     };
 
     const handleAddLink = () => {
-        if (socialLinks.length >= 10) { 
-            showToast("error", "Maximum 10 social links allowed."); 
-            return; 
+        if (socialLinks.length >= 10) {
+            showToast("error", "Maximum 10 social links allowed.");
+            return;
         }
         const newId = `new-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
         setSocialLinks(prev => [...prev, { id: newId, platform: "GitHub", url: "" }]);
@@ -327,7 +327,7 @@ export default function ProfileAdmin() {
                         </h2>
                         <div style={{ display: "flex", gap: 12 }}>
                             {socialLinks.length > 0 && (
-                                <button type="button" onClick={() => { if(confirm("Clear all links?")) setSocialLinks([]); }} style={{
+                                <button type="button" onClick={() => { if (confirm("Clear all links?")) setSocialLinks([]); }} style={{
                                     background: "rgba(255,77,77,0.1)", border: "1px solid rgba(255,77,77,0.3)",
                                     color: "#ff4d4d", padding: "7px 16px", borderRadius: 8,
                                     fontSize: 12, fontWeight: 700, cursor: "pointer",
@@ -340,9 +340,8 @@ export default function ProfileAdmin() {
                             }}>+ ADD LINK</button>
                         </div>
                     </div>
-                    
+
                     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                        <pre style={{ fontSize: 10, color: "var(--accent)" }}>DEBUG: {JSON.stringify(socialLinks)}</pre>
                         {socialLinks.map((link, i) => (
                             <div
                                 key={link.id || i}
@@ -361,8 +360,8 @@ export default function ProfileAdmin() {
                                 <div style={{ width: 160, flexShrink: 0 }}>
                                     <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "var(--text-muted)", marginBottom: 8, textTransform: "uppercase" }}>Platform</label>
                                     <select value={link.platform} onChange={(e) => handleLinkChange(i, "platform", e.target.value)}
-                                        style={{ 
-                                            ...inputStyle, 
+                                        style={{
+                                            ...inputStyle,
                                             padding: "11px 16px",
                                             cursor: "pointer"
                                         }}>
@@ -402,7 +401,7 @@ export default function ProfileAdmin() {
                         <span style={{ width: 3, height: 20, background: "var(--accent)", borderRadius: 4, display: "inline-block" }} />
                         Page Section Customization
                     </h2>
-                    
+
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "40px 24px" }}>
                         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                             <p style={{ fontSize: 13, fontWeight: 700, color: "var(--accent)", borderBottom: "1px solid var(--border)", paddingBottom: 8 }}>🎓 Education</p>
