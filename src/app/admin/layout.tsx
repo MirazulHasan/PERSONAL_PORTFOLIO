@@ -9,8 +9,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             backgroundColor: "var(--bg-primary)",
             color: "var(--text-primary)",
             position: "relative",
-            overflow: "hidden"
+            overflow: "auto"
         }}>
+
             {/* ── Background Layer ── */}
             <div className="dot-pattern" style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none" }} />
 
