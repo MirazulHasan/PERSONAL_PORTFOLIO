@@ -3,7 +3,7 @@ import ClientInteractivity from "@/components/ClientInteractivity";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     return (
-        <div style={{
+        <div className="admin-layout-wrapper" style={{
             display: "flex",
             minHeight: "100vh",
             backgroundColor: "var(--bg-primary)",

@@ -7,14 +7,22 @@ export default function DownloadPDFButton({ name }: { name?: string | null }) {
 
     const handleDownload = () => {
         setLoading(true);
-        // We use the browser's native print engine to ensure 
-        // that all hyperlinks and selectable text are preserved perfectly.
-        // The layout is controlled via @media print CSS in admin/page.tsx.
-        window.print();
         
-        // Brief timeout to reset loading state after the print dialog opens
-        setTimeout(() => setLoading(false), 500);
+        // Temporarily change document title for a cleaner PDF filename
+        const originalTitle = document.title;
+        const fileName = name ? `${name.replace(/\s+/g, "_")}_Resume` : "Resume";
+        document.title = fileName;
+
+        setTimeout(() => {
+            window.print();
+            setLoading(false);
+            // Restore original title
+            setTimeout(() => {
+                document.title = originalTitle;
+            }, 1000);
+        }, 100);
     };
+
 
 
     return (
@@ -22,7 +30,7 @@ export default function DownloadPDFButton({ name }: { name?: string | null }) {
             id="download-pdf-btn"
             onClick={handleDownload}
             disabled={loading}
-            title="Download resume as PDF (1 page, same as CV preview)"
+            title="Download ATS-Friendly PDF Resume"
             style={{
                 display: "flex",
                 alignItems: "center",

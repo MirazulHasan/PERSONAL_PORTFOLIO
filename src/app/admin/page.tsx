@@ -2,6 +2,9 @@ import { Github, Linkedin, Mail, ExternalLink, Globe, MapPin, Award, BookOpen, U
 import Link from "next/link";
 import prisma from "@/lib/db";
 import DownloadPDFButton from "@/components/admin/DownloadPDFButton";
+import DownloadImageButton from "@/components/admin/DownloadImageButton";
+import AtsResume from "@/components/admin/AtsResume";
+
 
 export const dynamic = 'force-dynamic';
 
@@ -150,48 +153,22 @@ export default async function AdminDashboard() {
                 .cv-card { background: rgba(255,255,255,0.01); backdrop-filter: blur(24px); border: 1px solid var(--border); border-radius: 32px; box-shadow: 0 40px 100px rgba(0,0,0,0.3); overflow: hidden; }
                 .cv-section-title { font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
                 .cv-section-title span { height: 1px; flex: 1; background: linear-gradient(to right, var(--accent), transparent); opacity: 0.3; }
+                .skill-chip { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 50px; font-size: 11.5px; font-weight: 800; color: var(--text-primary); display: inline-flex; align-items: center; justify-content: center; line-height: 1; min-height: 34px; padding: 0 16px; white-space: normal; text-align: center; }
                 .quick-btn:hover { border-color: var(--accent) !important; background: rgba(108,99,255,0.08) !important; transform: translateY(-3px); }
-                .skill-chip { font-size: 11px; font-weight: 700; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 6px 14px; border-radius: 50px; color: var(--text-primary); }
 
                 @media print {
                     @page { size: auto; margin: 0; }
-                    body { background: #0a0a0f !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+                    body { background: #fff !important; color: #000 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
                     
+                    .admin-layout-wrapper { background: transparent !important; }
+
                     /* Hide everything we don't need */
-                    .hide-on-print, nav, footer, button, .ticker-container { display: none !important; }
+                    .hide-on-print, nav, footer, button, .ticker-container, #cv-card, .dot-pattern, .glow-circle { display: none !important; }
                     
                     /* Reset container */
                     main, html, body { margin: 0 !important; padding: 0 !important; width: 100% !important; height: auto !important; overflow: visible !important; }
-                    
-                    /* Force the CV card to take the width but allow dynamic height */
-                    #cv-card { 
-                        width: 210mm !important;
-                        height: auto !important;
-                        min-height: 297mm !important;
-                        background: #0a0a0f !important; 
-                        margin: 0 !important; 
-                        border: none !important; 
-                        border-radius: 0 !important;
-                        box-shadow: none !important;
-                        display: flex !important;
-                        flex-direction: column !important;
-                        page-break-after: avoid !important;
-                        overflow: visible !important;
-                    }
-                    
-                    /* Ensure all text and icons keep their colors */
-                    #cv-card * {
-                        -webkit-print-color-adjust: exact !important; 
-                        print-color-adjust: exact !important; 
-                        color-adjust: exact !important;
-                    }
-
-                    /* Adjust spacing for tight fit */
-                    .cv-card-header { padding: 40px 48px !important; }
-                    .cv-main-col, .cv-sidebar { padding: 24px 40px !important; }
-                    .cv-section-title { margin-bottom: 16px !important; }
-                    .cv-experience-item { margin-bottom: 20px !important; }
                 }
+
 
 
             `}</style>
@@ -202,7 +179,9 @@ export default async function AdminDashboard() {
                     <h1 className="gradient-text" style={{ fontSize: "2.8rem", fontWeight: 900, letterSpacing: "-0.04em" }}>CV Preview</h1>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <DownloadImageButton name={profile?.name} />
                     <DownloadPDFButton name={profile?.name} />
+
                     <div style={{ padding: "8px 16px", background: "rgba(108,99,255,0.1)", border: "1px solid rgba(108,99,255,0.3)", borderRadius: 50, color: "var(--accent)", fontSize: 11, fontWeight: 800 }}>
                         PORTFOLIO STATUS: ONLINE
                     </div>
@@ -233,17 +212,36 @@ export default async function AdminDashboard() {
                         <p style={{ fontSize: "1.4rem", color: "var(--accent)", fontWeight: 700, marginBottom: 20 }}>{profile?.title || "Professional Title"}</p>
                         <div style={{ display: "flex", flexDirection: "column", gap: 14, color: "var(--text-muted)", fontSize: 13 }}>
                             {/* All social links in one row */}
-                            <div style={{ display: "flex", flexWrap: "wrap", gap: 24, marginBottom: 4 }}>
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: "20px 32px", marginBottom: 4 }}>
                                 {profile?.socialLinks?.map((link, i) => (
-                                    <a key={i} href={link.url} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", color: "var(--text-primary)", fontWeight: 700 }}>
-                                        <SocialIcon platform={link.platform} /> {link.platform}
+                                    <a key={i} href={link.url} target="_blank" rel="noreferrer" style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 10,
+                                        textDecoration: "none",
+                                        color: "var(--text-primary)",
+                                        fontWeight: 700,
+                                        fontSize: 13,
+                                        transition: "opacity 0.2s"
+                                    }}>
+                                        <span style={{
+                                            display: "inline-flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            transform: "translateY(2.5px)", // Improved vertical correction for this specific font
+                                            opacity: 0.9,
+                                            flexShrink: 0
+                                        }}>
+                                            <SocialIcon platform={link.platform} />
+                                        </span>
+                                        <span style={{ lineHeight: 1 }}>{link.platform}</span>
                                     </a>
                                 ))}
                             </div>
 
                             {/* Main Contact (Email & Address) */}
                             <div style={{ display: "flex", flexWrap: "wrap", gap: 32, borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: 14 }}>
-                                {profile?.email && <span style={{ display: "flex", alignItems: "center", gap: 8 }}><Mail size={16} color="var(--accent)" /> {profile.email}</span>}
+                                {profile?.email && <span style={{ display: "flex", alignItems: "center", gap: 8 }}><Mail size={16} color="var(--accent)" /> <a href={`mailto:${profile.email}`} className="transition-colors hover:text-[#6c63ff]" style={{ color: "inherit", textDecoration: "none" }}>{profile.email}</a></span>}
                                 {profile?.address && <span style={{ display: "flex", alignItems: "center", gap: 8 }}><MapPin size={16} color="var(--accent)" /> {profile.address}</span>}
                             </div>
                         </div>
@@ -268,7 +266,7 @@ export default async function AdminDashboard() {
                                     <div key={exp.id} className="cv-experience-item">
 
                                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 20, marginBottom: 8 }}>
-                                            <h4 style={{ fontWeight: 800, fontSize: 17, lineHeight: 1.3 }}>{exp.position}</h4>
+                                            <h4 style={{ fontWeight: 800, fontSize: 17, lineHeight: 1.3 }}>{!exp.current ? `Former ${exp.position}` : exp.position}</h4>
                                             <span style={{ fontSize: 13, fontWeight: 700, color: "var(--accent)", whiteSpace: "nowrap", flexShrink: 0, marginTop: 3 }}>
                                                 {new Date(exp.startDate).toLocaleDateString('en-GB')} — {exp.current ? "Present" : exp.endDate ? new Date(exp.endDate).toLocaleDateString('en-GB') : ""}
                                             </span>
@@ -304,7 +302,19 @@ export default async function AdminDashboard() {
                                         <div key={pub.id}>
                                             <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
                                                 <h4 style={{ fontSize: 15, fontWeight: 800 }}>{pub.title}</h4>
-                                                {pub.submitted && <span style={{ fontSize: 10, background: "rgba(255,100,0,0.1)", color: "#ff8c00", padding: "2px 8px", borderRadius: 4, border: "1px solid rgba(255,100,0,0.2)", fontWeight: 800 }}>SUBMITTED</span>}
+                                                {pub.submitted && <span style={{
+                                                    fontSize: 10,
+                                                    background: "rgba(255,100,0,0.1)",
+                                                    color: "#ff8c00",
+                                                    padding: "4px 10px",
+                                                    borderRadius: 6,
+                                                    border: "1px solid rgba(255,100,0,0.2)",
+                                                    fontWeight: 900,
+                                                    display: "inline-flex",
+                                                    alignItems: "center",
+                                                    justifyContent: "center",
+                                                    lineHeight: 1
+                                                }}>SUBMITTED</span>}
                                             </div>
                                             <p style={{ fontSize: 13, color: "var(--text-muted)" }}>{pub.publisher} {pub.date && new Date(pub.date).getUTCFullYear() !== 1970 ? `• ${new Date(pub.date).toLocaleDateString('en-GB')}` : ""}</p>
                                         </div>
@@ -320,12 +330,12 @@ export default async function AdminDashboard() {
                                     {activities.map(act => (
                                         <div key={act.id}>
                                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 20, marginBottom: 8 }}>
-                                                <h4 style={{ fontWeight: 800, fontSize: 17, lineHeight: 1.3 }}>{act.title}</h4>
-                                                <span style={{ fontSize: 13, fontWeight: 700, color: "var(--accent)", whiteSpace: "nowrap", flexShrink: 0, marginTop: 3 }}>
+                                                <h4 style={{ fontWeight: 800, fontSize: 17, lineHeight: 1.3 }}>{!act.current ? `Former ` : ""}{act.role || act.title}</h4>
+                                                <span style={{ fontSize: 13, fontWeight: 700, color: "var(--accent)", whiteSpace: "nowrap", flexShrink: 0, marginTop: 4 }}>
                                                     {act.startDate ? new Date(act.startDate).toLocaleDateString('en-GB') : "N/A"} — {act.current ? "Present" : act.endDate ? new Date(act.endDate).toLocaleDateString('en-GB') : "N/A"}
                                                 </span>
                                             </div>
-                                            <p style={{ fontWeight: 700, color: "var(--text-muted)", marginBottom: 12, fontSize: 14 }}>{act.role}</p>
+                                            <p style={{ fontWeight: 700, color: "var(--text-muted)", marginBottom: 12, fontSize: 14 }}>{act.role ? act.title : ""}</p>
                                             {act.description && <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.6 }}>{act.description}</p>}
                                         </div>
                                     ))}
@@ -351,11 +361,11 @@ export default async function AdminDashboard() {
                                         return acc;
                                     }, {})
                                 ).map(([category, items]: [string, any]) => (
-                                    <div key={category}>
-                                        <h4 style={{ fontSize: 11, fontWeight: 900, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>{category}</h4>
-                                        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                                    <div key={category} style={{ marginBottom: 8 }}>
+                                        <h4 style={{ fontSize: 10, fontWeight: 900, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 14 }}>{category}</h4>
+                                        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px 12px" }}>
                                             {items.map((skill: any) => (
-                                                <span key={skill.id} className="skill-chip" style={{ padding: "6px 12px" }}>
+                                                <span key={skill.id} className="skill-chip">
                                                     {skill.name}
                                                 </span>
                                             ))}
@@ -397,6 +407,17 @@ export default async function AdminDashboard() {
                     </div>
                 </div>
             </div>
+
+            <AtsResume 
+                profile={profile} 
+                education={education}
+                experience={experience}
+                skills={skills}
+                certificates={certificates}
+                activities={activities}
+                publications={publications}
+                references={references}
+            />
 
             {/* ── MANAGE CV DATA ── */}
             <div className="hide-on-print" style={{ marginTop: 64 }}>
