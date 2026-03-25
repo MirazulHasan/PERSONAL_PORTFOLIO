@@ -262,3 +262,30 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   flex-shrink: 0;
   width: 320px;
 }
+
+/* logo and name link hover effect */
+.nav-logo-link {
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.nav-logo-link:hover {
+  transform: scale(1.02) translateX(4px);
+}
+
+.nav-logo-link .logo-container {
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.nav-logo-link:hover .logo-container {
+  box-shadow: 0 0 25px rgba(108, 99, 255, 0.6) !important;
+  transform: scale(1.1) rotate(5deg);
+}
+
+.nav-logo-link span {
+  transition: all 0.3s ease;
+}
+
+.nav-logo-link:hover span {
+  color: #fff !important;
+  text-shadow: 0 0 15px rgba(108, 99, 255, 0.4);
+}

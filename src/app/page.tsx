@@ -128,9 +128,9 @@ export default async function HomePage() {
         background: "var(--bg-nav)",
         backdropFilter: "blur(12px)",
       }}>
-        <Link href="/" style={{ display: "flex", alignItems: "center", gap: 12, fontWeight: 800, fontSize: "1.1rem", textDecoration: "none", color: "inherit", letterSpacing: "-0.02em" }}>
+        <Link href="/" className="nav-logo-link" style={{ display: "flex", alignItems: "center", gap: 12, fontWeight: 800, fontSize: "1.1rem", textDecoration: "none", color: "inherit", letterSpacing: "-0.02em" }}>
           {profile?.avatarUrl && (
-            <div style={{
+            <div className="logo-container" style={{
               width: 34, height: 34, borderRadius: "50%",
               background: "linear-gradient(135deg, #6c63ff, #ff6584)",
               padding: "1.5px", display: "flex", alignItems: "center", justifyContent: "center",
@@ -143,6 +143,7 @@ export default async function HomePage() {
           )}
           <span>{profile?.name ?? "Portfolio"}</span>
         </Link>
+
 
 
         <div style={{ display: "flex", gap: 28, alignItems: "center" }}>
