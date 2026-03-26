@@ -26,7 +26,15 @@ export default function AtsResume({ profile, education, experience, skills, cert
                     display: none;
                 }
                 @media print {
-                    html, body, .ats-resume {
+                    html, body {
+                        background: #fff !important;
+                        background-color: #fff !important;
+                        color: #000 !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        height: auto !important;
+                    }
+                    .ats-resume {
                         display: block !important;
                         background: #fff !important;
                         color: #000 !important;
@@ -35,6 +43,8 @@ export default function AtsResume({ profile, education, experience, skills, cert
                         padding: 0;
                         margin: 0;
                         width: 100%;
+                        position: static !important;
+                        overflow: visible !important;
                     }
                     
                     /* Page Settings */

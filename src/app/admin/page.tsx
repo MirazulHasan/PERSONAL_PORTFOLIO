@@ -163,10 +163,17 @@ export default async function AdminDashboard() {
                     .admin-layout-wrapper { background: transparent !important; }
 
                     /* Hide everything we don't need */
-                    .hide-on-print, nav, footer, button, .ticker-container, #cv-card, .dot-pattern, .glow-circle { display: none !important; }
+                    .hide-on-print, nav, footer, button, .ticker-container, #cv-card, .dot-pattern, .glow-circle, #background-effects { display: none !important; }
                     
                     /* Reset container */
-                    main, html, body { margin: 0 !important; padding: 0 !important; width: 100% !important; height: auto !important; overflow: visible !important; }
+                    main, html, body { 
+                        margin: 0 !important; 
+                        padding: 0 !important; 
+                        width: 100% !important; 
+                        height: auto !important; 
+                        overflow: visible !important; 
+                        background: #fff !important;
+                    }
                 }
 
 

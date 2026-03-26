@@ -4,6 +4,7 @@ import ClientInteractivity from "@/components/ClientInteractivity";
 import ThemeToggle from "@/components/ThemeToggle";
 import ProjectCarousel from "@/components/ProjectCarousel";
 import SkillsTicker from "@/components/SkillsTicker";
+import Navbar from "@/components/Navbar";
 
 export const dynamic = 'force-dynamic';
 
@@ -116,55 +117,7 @@ export default async function HomePage() {
 
   return (
     <main>
-      {/* ── NAV ── */}
-      <nav style={{
-        position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
-        padding: "0 5%",
-        height: 64,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        borderBottom: "1px solid var(--border)",
-        background: "var(--bg-nav)",
-        backdropFilter: "blur(12px)",
-      }}>
-        <Link href="/" className="nav-logo-link" style={{ display: "flex", alignItems: "center", gap: 12, fontWeight: 800, fontSize: "1.1rem", textDecoration: "none", color: "inherit", letterSpacing: "-0.02em" }}>
-          {profile?.avatarUrl && (
-            <div className="logo-container" style={{
-              width: 34, height: 34, borderRadius: "50%",
-              background: "linear-gradient(135deg, #6c63ff, #ff6584)",
-              padding: "1.5px", display: "flex", alignItems: "center", justifyContent: "center",
-              boxShadow: "0 0 15px rgba(108,99,255,0.25)",
-            }}>
-              <div style={{ width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden", background: "var(--avatar-bg)" }}>
-                <img src={profile.avatarUrl} alt="Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-              </div>
-            </div>
-          )}
-          <span>{profile?.name ?? "Portfolio"}</span>
-        </Link>
-
-
-
-        <div style={{ display: "flex", gap: 28, alignItems: "center" }}>
-          <Link href="#about" className="nav-link-glow" style={{ color: "var(--text-muted)", textDecoration: "none", fontSize: 14, fontWeight: 500 }}>About</Link>
-          <Link href="#education" className="nav-link-glow" style={{ color: "var(--text-muted)", textDecoration: "none", fontSize: 14, fontWeight: 500 }}>Education</Link>
-          <Link href="#experience" className="nav-link-glow" style={{ color: "var(--text-muted)", textDecoration: "none", fontSize: 14, fontWeight: 500 }}>Experience</Link>
-          <Link href="#skills" className="nav-link-glow" style={{ color: "var(--text-muted)", textDecoration: "none", fontSize: 14, fontWeight: 500 }}>Skills</Link>
-          <Link href="#projects" className="nav-link-glow" style={{ color: "var(--text-muted)", textDecoration: "none", fontSize: 14, fontWeight: 500 }}>Projects</Link>
-          <Link href="#blog" className="nav-link-glow" style={{ color: "var(--text-muted)", textDecoration: "none", fontSize: 14, fontWeight: 500 }}>Blog</Link>
-          <Link href="#contact" className="nav-link-glow" style={{ color: "var(--text-muted)", textDecoration: "none", fontSize: 14, fontWeight: 500 }}>Contact</Link>
-          <ThemeToggle />
-
-          <Link href="/login" className="admin-nav-link" style={{
-            fontSize: 12, fontWeight: 700, color: "var(--text-muted)",
-            textDecoration: "none", letterSpacing: "0.06em",
-            padding: "6px 14px", border: "1px solid var(--border)",
-            borderRadius: 8, transition: "all 0.2s",
-          }}>⚙ Admin</Link>
-        </div>
-
-      </nav>
+      <Navbar profile={profile} />
 
       {/* ── HERO ── */}
       <section style={{
@@ -275,7 +228,7 @@ export default async function HomePage() {
 
       {/* ── EDUCATION ── */}
       {education.length > 0 && (
-        <section id="education" className="reveal" style={{ padding: "100px 5%", background: "linear-gradient(to bottom, transparent, var(--bg-section), transparent)" }}>
+        <section id="education" className="reveal" style={{ padding: "100px 5%" }}>
           <div style={{ maxWidth: 1100, margin: "0 auto" }}>
             <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>{(profile as any)?.educationSubtitle ?? "Education"}</p>
             <h2 className="section-title" style={{ marginBottom: 60 }}>{(profile as any)?.educationTitle ?? "Academic Background"}</h2>
@@ -382,7 +335,7 @@ export default async function HomePage() {
 
       {/* ── SKILLS (Core Expertise) ── */}
       {skills.length > 0 && (
-        <section id="skills" className="reveal" style={{ padding: "100px 5%", background: "linear-gradient(to bottom, transparent, var(--bg-section), transparent)" }}>
+        <section id="skills" className="reveal" style={{ padding: "100px 5%" }}>
           <div style={{ maxWidth: 1100, margin: "0 auto" }}>
             <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>{(profile as any)?.skillsSubtitle ?? "Technical Stack"}</p>
             <h2 className="section-title" style={{ marginBottom: 60 }}>{(profile as any)?.skillsTitle ?? "Core Expertise"}</h2>
@@ -392,7 +345,7 @@ export default async function HomePage() {
       )}
 
       {/* ── PROJECTS ── */}
-      <section id="projects" className="reveal" style={{ padding: "100px 5%", background: "linear-gradient(to bottom, transparent, var(--bg-section), transparent)" }}>
+      <section id="projects" className="reveal" style={{ padding: "100px 5%" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>{(profile as any)?.projectsSubtitle ?? "Portfolio"}</p>
           <h2 className="section-title" style={{ marginBottom: 60 }}>{(profile as any)?.projectsTitle ?? "Featured Projects"}</h2>
@@ -428,7 +381,7 @@ export default async function HomePage() {
 
       {/* ── PUBLICATIONS ── */}
       {publications.length > 0 && (
-        <section className="reveal" style={{ padding: "100px 5%", background: "linear-gradient(to bottom, transparent, var(--bg-section), transparent)" }}>
+        <section className="reveal" style={{ padding: "100px 5%" }}>
           <div style={{ maxWidth: 1100, margin: "0 auto" }}>
             <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>{(profile as any)?.publicationsSubtitle ?? "Academic Work"}</p>
             <h2 className="section-title" style={{ marginBottom: 60 }}>{(profile as any)?.publicationsTitle ?? "Research & Publications"}</h2>
@@ -500,7 +453,7 @@ export default async function HomePage() {
 
       {/* ── REFERENCES ── */}
       {references.length > 0 && (
-        <section className="reveal" style={{ padding: "100px 5%", background: "linear-gradient(to bottom, transparent, var(--bg-section), transparent)" }}>
+        <section className="reveal" style={{ padding: "100px 5%" }}>
           <div style={{ maxWidth: 1100, margin: "0 auto" }}>
             <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>{(profile as any)?.referencesSubtitle ?? "Endorsements"}</p>
             <h2 className="section-title" style={{ marginBottom: 60 }}>{(profile as any)?.referencesTitle ?? "References"}</h2>
