@@ -15,11 +15,15 @@ export default function DownloadImageButton({ name }: { name?: string | null }) 
             // Give the browser 500ms to ensure all fonts and SVG icons are fully settled
             await new Promise(resolve => setTimeout(resolve, 500));
 
+            // Detect theme from document.documentElement
+            const currentTheme = document.documentElement.getAttribute("data-theme") || "dark";
+            const bgColor = currentTheme === "light" ? "#ffffff" : "#0a0a0f";
+
             // html-to-image guarantees 1-to-1 visual correspondence and correctly parses layout
             // We use a high scale (3x) for razor-sharp result.
             const dataUrl = await htmlToImage.toPng(card, {
                 pixelRatio: 3, 
-                backgroundColor: "#0a0a0f",
+                backgroundColor: bgColor,
                 style: {
                     borderRadius: "0px",
                     boxShadow: "none",

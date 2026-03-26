@@ -39,10 +39,10 @@ export default function Navbar({ profile }: NavbarProps) {
     };
   }, []);
 
-  const navBg = theme === "light" 
+  const navBg = theme === "light"
     ? (scrolled ? "rgba(248, 250, 252, 0.55)" : "transparent")
     : (scrolled ? "rgba(2, 6, 23, 0.45)" : "transparent");
-    
+
   const navBorder = theme === "light"
     ? (scrolled ? "1px solid rgba(15, 23, 42, 0.08)" : "1px solid transparent")
     : (scrolled ? "1px solid rgba(255, 255, 255, 0.05)" : "1px solid transparent");
@@ -116,7 +116,7 @@ export default function Navbar({ profile }: NavbarProps) {
             </div>
           </div>
         )}
-        <span style={{ 
+        <span style={{
           opacity: scrolled ? 1 : 0.9,
           transition: "opacity 0.5s ease"
         }}>
