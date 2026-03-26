@@ -167,7 +167,7 @@ export default async function HomePage() {
       </nav>
 
       {/* ── HERO ── */}
-      <section className="dot-pattern" style={{
+      <section style={{
         position: "relative",
         minHeight: "100vh",
         display: "flex",
@@ -178,12 +178,6 @@ export default async function HomePage() {
         padding: "0 5%",
         overflow: "hidden",
       }}>
-        {/* Glow blobs - massive, dense bouncing screensaver puddles */}
-        <div className="glow-circle" style={{ width: 800, height: 800, background: "rgba(239, 68, 68, 0.2)", filter: "blur(100px)", top: 0, left: 0 }} />
-        <div className="glow-circle" style={{ width: 600, height: 600, background: "rgba(34, 197, 94, 0.25)", filter: "blur(90px)", top: 0, left: 0 }} />
-        <div className="glow-circle" style={{ width: 700, height: 700, background: "rgba(59, 130, 246, 0.2)", filter: "blur(110px)", top: 0, left: 0 }} />
-        <div className="glow-circle" style={{ width: 900, height: 900, background: "rgba(234, 179, 8, 0.2)", filter: "blur(120px)", top: 0, left: 0 }} />
-        <div className="glow-circle" style={{ width: 1000, height: 1000, background: "rgba(168, 85, 247, 0.15)", filter: "blur(140px)", top: 0, left: 0 }} />
 
         <div className="animate-in" style={{ maxWidth: 760, position: "relative" }}>
           {/* Avatar */}

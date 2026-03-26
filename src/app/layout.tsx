@@ -23,6 +23,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 
 
+import BackgroundEffects from "@/components/BackgroundEffects";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -43,7 +45,10 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <BackgroundEffects />
+        {children}
+      </body>
     </html>
   );
 }
