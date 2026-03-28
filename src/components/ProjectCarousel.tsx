@@ -165,8 +165,8 @@ export default function ProjectCarousel({ projects }: ProjectCarouselProps) {
             >
               {/* Main Card Shell */}
               <div style={{
-                background: "var(--bg-card)", 
-                border: "2px solid var(--accent)", 
+                background: "var(--bg-card)",
+                border: "2px solid var(--accent)",
                 borderRadius: 24,
                 padding: "44px 48px",
                 boxShadow: "0 0 0 1px rgba(108, 99, 255, 0.15), 0 24px 60px rgba(0,0,0,0.2), 0 0 40px rgba(108, 99, 255, 0.15)",

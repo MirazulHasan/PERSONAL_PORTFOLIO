@@ -71,11 +71,11 @@ export default function SkillsTicker({ skillsByCategory }: SkillsTickerProps) {
   const handleDragEnd = () => {
     setIsDragging(false);
     const currentX = x.get();
-    
+
     // Normalize x position to stay within the infinite loop range [-singleSetWidth, 0]
     let normalizedX = currentX % singleSetWidth;
     if (normalizedX > 0) normalizedX -= singleSetWidth;
-    
+
     x.set(normalizedX);
     if (!isHovered) {
       startAnimation(singleSetWidth, normalizedX);
@@ -83,7 +83,7 @@ export default function SkillsTicker({ skillsByCategory }: SkillsTickerProps) {
   };
 
   return (
-    <div 
+    <div
       className="ticker-container"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}

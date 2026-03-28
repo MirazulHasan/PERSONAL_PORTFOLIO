@@ -7,17 +7,17 @@ import { useEffect, useState } from "react";
 import ThemeToggle from "@/components/ThemeToggle";
 
 const navigation = [
-    { name: "Dashboard",       href: "/admin",              icon: "⚡" },
-    { name: "About",           href: "/admin/profile",      icon: "👤" },
-    { name: "Education",       href: "/admin/education",    icon: "🎓" },
-    { name: "Experience",      href: "/admin/experience",   icon: "💼" },
-    { name: "Projects",        href: "/admin/projects",     icon: "🚀" },
-    { name: "Skills",          href: "/admin/skills",       icon: "🧠" },
-    { name: "Certificates",    href: "/admin/certificates", icon: "📜" },
-    { name: "Activities",      href: "/admin/activities",   icon: "🏅" },
-    { name: "Publications",    href: "/admin/publications", icon: "📚" },
-    { name: "References",      href: "/admin/references",   icon: "🤝" },
-    { name: "Blog Posts",      href: "/admin/posts",        icon: "✍️" },
+    { name: "Dashboard", href: "/admin", icon: "⚡" },
+    { name: "About", href: "/admin/profile", icon: "👤" },
+    { name: "Education", href: "/admin/education", icon: "🎓" },
+    { name: "Experience", href: "/admin/experience", icon: "💼" },
+    { name: "Projects", href: "/admin/projects", icon: "🚀" },
+    { name: "Skills", href: "/admin/skills", icon: "🧠" },
+    { name: "Certificates", href: "/admin/certificates", icon: "📜" },
+    { name: "Activities", href: "/admin/activities", icon: "🏅" },
+    { name: "Publications", href: "/admin/publications", icon: "📚" },
+    { name: "References", href: "/admin/references", icon: "🤝" },
+    { name: "Blog Posts", href: "/admin/posts", icon: "✍️" },
 ];
 
 export function Sidebar() {
@@ -28,7 +28,7 @@ export function Sidebar() {
         fetch("/api/profile")
             .then((r) => r.json())
             .then(setProfile)
-            .catch(() => {});
+            .catch(() => { });
     }, []);
 
     // Re-fetch whenever we navigate to pick up a fresh avatar
@@ -36,7 +36,7 @@ export function Sidebar() {
         fetch("/api/profile")
             .then((r) => r.json())
             .then(setProfile)
-            .catch(() => {});
+            .catch(() => { });
     }, [pathname]);
 
     const initials = (profile?.name ?? "M").charAt(0).toUpperCase();

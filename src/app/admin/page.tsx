@@ -415,8 +415,8 @@ export default async function AdminDashboard() {
                 </div>
             </div>
 
-            <AtsResume 
-                profile={profile} 
+            <AtsResume
+                profile={profile}
                 education={education}
                 experience={experience}
                 skills={skills}
