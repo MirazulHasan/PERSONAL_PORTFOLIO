@@ -1,10 +1,11 @@
 import Link from "next/link";
 import prisma from "@/lib/db";
 import ClientInteractivity from "@/components/ClientInteractivity";
-import ThemeToggle from "@/components/ThemeToggle";
 import ProjectCarousel from "@/components/ProjectCarousel";
 import SkillsTicker from "@/components/SkillsTicker";
 import Navbar from "@/components/Navbar";
+import CodingPanel from "@/components/CodingPanel";
+import EducationSection from "@/components/EducationSection";
 
 export const dynamic = 'force-dynamic';
 
@@ -128,7 +129,7 @@ export default async function HomePage() {
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        padding: "0 5%",
+        padding: "120px 5% 60px", // Increased top padding to ensure zero overlap
         overflow: "hidden",
       }}>
 
@@ -167,10 +168,11 @@ export default async function HomePage() {
           <p style={{ fontSize: "clamp(1.1rem, 2.5vw, 1.4rem)", color: "var(--text-muted)", lineHeight: 1.7, marginBottom: 40, maxWidth: 640, margin: "0 auto 40px" }}>
             {profile?.bio ?? "Full Stack Developer crafting clean, scalable, and beautiful web applications with a passion for great user experience."}
           </p>
-          <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", marginBottom: 32 }}>
             <Link href="#projects" className="btn-glow">View My Work</Link>
             <Link href="#contact" className="btn-outline">Get in Touch</Link>
           </div>
+          <CodingPanel />
         </div>
       </section>
 
@@ -240,68 +242,7 @@ export default async function HomePage() {
                 opacity: 0.2, borderRadius: 2
               }} />
 
-              {(() => {
-                const getOrdinal = (n: number) => {
-                  const s = ["th", "st", "nd", "rd"];
-                  const v = n % 100;
-                  return n + (s[(v - 20) % 10] || s[v] || s[0]);
-                };
-                return education.map((edu: any, idx: number) => (
-                  <div key={edu.id} className="glass hover-card" style={{
-                    padding: 32,
-                    width: "min(650px, 100%)",
-                    marginLeft: `clamp(0px, ${idx * 8}%, 300px)`, // Dynamic staggered index
-                    position: "relative",
-                    transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)"
-                  }}>
-                    {/* Big Ordinal Number on the Right */}
-                    <div style={{
-                      position: "absolute", right: -130, top: "50%",
-                      transform: "translateY(-50%)",
-                      fontSize: "3.2rem", fontWeight: 900,
-                      color: "var(--accent)", opacity: 0.3,
-                      fontFamily: "var(--font-heading)",
-                      userSelect: "none", pointerEvents: "none",
-                      whiteSpace: "nowrap",
-                      textShadow: "0 0 10px rgba(108,99,255,0.2)"
-                    }}>
-                      {getOrdinal(idx + 1)}
-                    </div>
-
-
-
-
-                    {/* Staircase Step Indicator */}
-                    <div style={{
-                      position: "absolute", left: -10, top: 40, width: 20, height: 2,
-                      background: "var(--accent)", opacity: 0.5
-                    }} />
-
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16, alignItems: "flex-start" }}>
-                      <div>
-                        <h3 style={{ fontSize: "1.3rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: 4 }}>{edu.degree}</h3>
-                        <p style={{ color: "var(--accent)", fontSize: 15, fontWeight: 700 }}>{edu.school}</p>
-                      </div>
-                      <span style={{
-                        fontSize: 12, fontWeight: 800, color: "var(--accent)",
-                        padding: "4px 12px", background: "rgba(108,99,255,0.1)",
-                        borderRadius: 50, border: "1px solid rgba(108,99,255,0.2)"
-                      }}>
-                        {edu.current ? (edu.passingYear && edu.passingYear > 0 ? `Ongoing (${edu.passingYear})` : "Present") : (edu.passingYear || "")}
-                      </span>
-                    </div>
-
-                    {edu.field && <p style={{ fontSize: 14, color: "var(--text-muted)", marginBottom: 20, fontWeight: 500 }}>{edu.field}</p>}
-
-                    {edu.grade && (
-                      <div style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-                        <span style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--text-muted)", fontWeight: 700 }}>{edu.gradeType}</span>
-                        <span style={{ padding: "4px 12px", background: "rgba(255,101,132,0.1)", border: "1px solid rgba(255,101,132,0.2)", borderRadius: 8, fontSize: 13, fontWeight: 800, color: "var(--accent-2)" }}>{edu.grade}</span>
-                      </div>
-                    )}
-                  </div>
-                ));
-              })()}
+              <EducationSection education={education} />
 
             </div>
 

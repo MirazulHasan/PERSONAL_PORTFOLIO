@@ -49,10 +49,10 @@ export async function POST(req: Request) {
         }
 
         const body = await req.json();
-        const { name, category, level, icon } = body;
+        const { name, category, level } = body;
 
         const skill = await prisma.skill.create({
-            data: { name, category, level: parseInt(level) || 0, icon }
+            data: { name, category, level: parseInt(level) || 0 }
         });
         return NextResponse.json(skill);
     } catch (error) {
@@ -72,11 +72,11 @@ export async function PUT(req: Request) {
         if (!id) return NextResponse.json({ error: "ID is required" }, { status: 400 });
 
         const body = await req.json();
-        const { name, category, level, icon } = body;
+        const { name, category, level } = body;
 
         const skill = await prisma.skill.update({
             where: { id },
-            data: { name, category, level: parseInt(level) || 0, icon: icon || null }
+            data: { name, category, level: parseInt(level) || 0 }
         });
         return NextResponse.json(skill);
     } catch (error) {

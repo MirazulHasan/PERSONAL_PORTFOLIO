@@ -11,6 +11,7 @@ export default function ThemeToggle() {
     setMounted(true);
     const saved = localStorage.getItem("theme") || "dark";
     setTheme(saved);
+    document.documentElement.setAttribute("data-theme", saved);
   }, []);
 
   const toggle = () => {
@@ -21,23 +22,32 @@ export default function ThemeToggle() {
   };
 
   if (!mounted) {
-    // Return a fixed size placeholder on server/first-render to prevent hydration jump
-    return <div style={{ width: 36, height: 36 }} />;
+    return <div style={{ width: 48, height: 24 }} />;
   }
 
   return (
-    <button 
-      onClick={toggle}
-      style={{
-        display: "flex", alignItems: "center", justifyContent: "center",
-        width: 36, height: 36, borderRadius: "50%",
-        background: "var(--bg-card)", border: "1px solid var(--border)",
-        color: "var(--text-primary)", cursor: "pointer", transition: "all 0.2s"
-      }}
-      aria-label="Toggle Theme"
-      className="theme-toggle"
-    >
-      {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
-    </button>
+    <label className="switch">
+      <input 
+        className="switch__input" 
+        type="checkbox" 
+        role="switch" 
+        checked={theme === "light"} 
+        onChange={toggle} 
+      />
+      <span className="switch__icon">
+        <span className="switch__icon-part switch__icon-part--1"></span>
+        <span className="switch__icon-part switch__icon-part--2"></span>
+        <span className="switch__icon-part switch__icon-part--3"></span>
+        <span className="switch__icon-part switch__icon-part--4"></span>
+        <span className="switch__icon-part switch__icon-part--5"></span>
+        <span className="switch__icon-part switch__icon-part--6"></span>
+        <span className="switch__icon-part switch__icon-part--7"></span>
+        <span className="switch__icon-part switch__icon-part--8"></span>
+        <span className="switch__icon-part switch__icon-part--9"></span>
+        <span className="switch__icon-part switch__icon-part--10"></span>
+        <span className="switch__icon-part switch__icon-part--11"></span>
+      </span>
+      <span className="switch__sr">Toggle Theme</span>
+    </label>
   );
 }

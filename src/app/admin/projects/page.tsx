@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { GripVertical } from "lucide-react";
+import { GripVertical, Image as ImageIcon, X } from "lucide-react";
 
 function DroppableFix({ children, ...props }: any) {
     const [enabled, setEnabled] = useState(false);
@@ -42,17 +42,22 @@ const labelStyle: React.CSSProperties = {
     textTransform: "uppercase", letterSpacing: "0.05em",
 };
 
-const Field = ({ label, name, type = "text", placeholder = "", defaultValue = "" }: any) => (
+const Field = ({ label, name, type = "text", placeholder = "", defaultValue = "", onValueChange }: any) => (
     <div style={{ width: "100%" }}>
         <label style={labelStyle}>{label}</label>
         <input
-            type={type} name={name} placeholder={placeholder} defaultValue={defaultValue}
+            type={type} name={name} placeholder={placeholder} 
+            defaultValue={defaultValue}
+            onChange={(e) => onValueChange?.(e.target.value)}
             required={type !== "url"} style={inputStyle}
+            id={`field-${name}`}
             onFocus={(e) => e.target.style.borderColor = "var(--accent)"}
             onBlur={(e) => e.target.style.borderColor = "var(--border)"}
         />
     </div>
 );
+
+
 
 export default function ProjectsAdmin() {
     const [projects, setProjects] = useState<Project[]>([]);
@@ -185,9 +190,9 @@ export default function ProjectsAdmin() {
                         onBlur={(e) => e.target.style.borderColor = "var(--border)"} />
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 24 }}>
-                    <Field label="Image URL" name="imageUrl" type="url" placeholder="https://..." />
-                    <Field label="GitHub" name="githubUrl" type="url" placeholder="repo link..." />
-                    <Field label="Live Demo" name="liveUrl" type="url" placeholder="site link..." />
+                    <Field label="Project Thumbnail" name="imageUrl" type="url" placeholder="https://..." />
+                    <Field label="GitHub Repo" name="githubUrl" type="url" placeholder="https://github.com/..." />
+                    <Field label="Live Demo" name="liveUrl" type="url" placeholder="https://..." />
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(255,255,255,0.02)", padding: 20, borderRadius: 16, border: "1px solid var(--border)" }}>
                     <label style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13, fontWeight: 700, color: "var(--text-primary)", cursor: "pointer" }}>
@@ -305,7 +310,7 @@ export default function ProjectsAdmin() {
                                     style={{ ...inputStyle, lineHeight: 1.6, resize: "vertical" }} />
                             </div>
                             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 32 }}>
-                                <Field label="Image" name="imageUrl" type="url" defaultValue={editingProject.imageUrl ?? ""} />
+                                <Field label="Image URL" name="imageUrl" type="url" defaultValue={editingProject.imageUrl ?? ""} />
                                 <Field label="GitHub" name="githubUrl" type="url" defaultValue={editingProject.githubUrl ?? ""} />
                                 <Field label="Live" name="liveUrl" type="url" defaultValue={editingProject.liveUrl ?? ""} />
                             </div>

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { Image as ImageIcon } from "lucide-react";
 const inputStyle: React.CSSProperties = {
     width: "100%", padding: "12px 16px",
     background: "rgba(255,255,255,0.03)", border: "1px solid var(--border)",
@@ -34,6 +35,8 @@ const Field = ({ label, name, type = "text", placeholder = "", value, onChange, 
         )}
     </div>
 );
+
+
 
 export default function PostsAdmin() {
     const [posts, setPosts] = useState<any[]>([]);
@@ -132,6 +135,8 @@ export default function PostsAdmin() {
                     <Field label="Domain Link (Slug)" name="slug" value={formData.slug} onChange={(e: any) => setFormData({...formData, slug: e.target.value})} placeholder="url-friendly-slug" />
                 </div>
 
+
+
                 <div style={{ marginBottom: 24 }}>
                     <Field label="Content (Markdown)" name="content" textarea value={formData.content} onChange={(e: any) => setFormData({...formData, content: e.target.value})} placeholder="Markdown supported..." />
                 </div>
@@ -193,6 +198,7 @@ export default function PostsAdmin() {
                                     <input name="slug" defaultValue={editingPost.slug} required style={inputStyle} />
                                 </div>
                             </div>
+
                             <div style={{ marginBottom: 24 }}>
                                 <label style={labelStyle}>Content (Markdown)</label>
                                 <textarea name="content" defaultValue={editingPost.content} required rows={12} style={{ ...inputStyle, lineHeight: 1.6, resize: "vertical", fontFamily: "monospace" }} />

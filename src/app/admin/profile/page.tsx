@@ -128,15 +128,18 @@ export default function ProfileAdmin() {
         setUploading(true);
         try {
             const croppedImage = await getCroppedImg(imageSrc, croppedAreaPixels);
-            if (!croppedImage) return;
+            if (!croppedImage) {
+                setUploading(false);
+                return;
+            }
 
-            // Instead of API upload, we just set the profile state with base64
-            // This avoids file system issues on Vercel
+            // Set the profile state with the new base64 image URL
             setProfile((prev: any) => ({ ...prev, avatarUrl: croppedImage }));
             setShowCropper(false);
-            showToast("success", "Photo applied! Click 'Save Profile' to permanently save.");
-        } catch {
-            showToast("error", "Error processing photo.");
+            showToast("success", "Photo updated locally! Click 'Save Profile' to permanently save.");
+        } catch (error) {
+            console.error("Update Error:", error);
+            showToast("error", "Error updating photo.");
         }
         setUploading(false);
     };

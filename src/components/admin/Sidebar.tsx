@@ -58,7 +58,7 @@ export function Sidebar() {
         }}>
             {/* ── Brand header ── */}
             <div style={{ padding: "28px 24px 20px", borderBottom: "1px solid var(--border)" }}>
-                <Link href="/" style={{ textDecoration: "none" }}>
+                <Link href="/admin" style={{ textDecoration: "none" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
                         <div style={{ color: "var(--text-primary)", width: 30, height: 30, borderRadius: 8, background: "linear-gradient(135deg, #6c63ff, #ff6584)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 16 }}>{initials}</div>
                         <span className="gradient-text" style={{ fontWeight: 800, fontSize: "1rem" }}>Admin Portal</span>

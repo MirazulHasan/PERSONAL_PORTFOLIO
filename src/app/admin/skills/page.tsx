@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { GripVertical, Cpu, Edit3, Trash2, Plus, Zap, X } from "lucide-react";
+import { GripVertical, Cpu, Edit3, Trash2, Plus, Zap, X, Image as ImageIcon } from "lucide-react";
 
 const inputStyle: React.CSSProperties = {
     width: "100%", padding: "12px 16px",
@@ -24,7 +24,7 @@ const Field = ({ label, name, type = "text", placeholder = "", defaultValue = ""
             name={name}
             placeholder={placeholder}
             defaultValue={defaultValue}
-            required
+            required={name !== "icon"}
             min={type === "number" ? 0 : undefined}
             max={type === "number" ? 100 : undefined}
             style={inputStyle}
@@ -33,6 +33,8 @@ const Field = ({ label, name, type = "text", placeholder = "", defaultValue = ""
         />
     </div>
 );
+
+
 
 export default function SkillsAdmin() {
     const [skills, setSkills] = useState<any[]>([]);
@@ -158,6 +160,7 @@ export default function SkillsAdmin() {
                     <Field label="Skill Name" name="name" placeholder="e.g. TypeScript" />
                     <Field label="Category" name="category" placeholder="e.g. Frontend" />
                 </div>
+
                 <div style={{ display: "flex", justifyContent: "flex-end", background: "rgba(255,255,255,0.02)", padding: 20, borderRadius: 16, border: "1px solid var(--border)", marginTop: 8 }}>
                     <button type="submit" className="btn-glow" style={{ height: 46, display: "flex", alignItems: "center", gap: 8 }} disabled={saving}>
                         <Plus size={18} />
@@ -244,6 +247,7 @@ export default function SkillsAdmin() {
                             <div style={{ display: "flex", flexDirection: "column", gap: 24, marginBottom: 32 }}>
                                 <Field label="Skill Name" name="name" defaultValue={editingItem.name} />
                                 <Field label="Category" name="category" defaultValue={editingItem.category} />
+
                             </div>
                             <div style={{ display: "flex", gap: 12, justifyContent: "flex-end" }}>
                                 <button type="button" onClick={() => setEditingItem(null)} style={{ background: "transparent", border: "1px solid var(--border)", color: "var(--text-muted)", padding: "10px 20px", borderRadius: 10, fontWeight: 700, cursor: "pointer" }}>Discard</button>

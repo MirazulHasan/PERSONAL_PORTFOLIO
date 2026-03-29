@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { GripVertical, Award, Calendar, ExternalLink } from "lucide-react";
+import { GripVertical, Award, Calendar, ExternalLink, Image as ImageIcon, X } from "lucide-react";
 
 function DroppableFix({ children, ...props }: any) {
     const [enabled, setEnabled] = useState(false);
@@ -49,6 +49,8 @@ const Field = ({ label, name, type = "text", placeholder = "", defaultValue = ""
         />
     </div>
 );
+
+
 
 export default function CertificatesAdmin() {
     const [certs, setCerts] = useState<any[]>([]);
@@ -177,11 +179,12 @@ export default function CertificatesAdmin() {
                     <Field label="Certificate Title" name="title" placeholder="e.g. AWS Solutions Architect" />
                     <Field label="Issuing Organization" name="issuer" placeholder="e.g. Amazon Web Services" />
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 32 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 24 }}>
                     <Field label="Date Issued" name="issueDate" type="date" />
                     <Field label="Credential ID" name="credentialId" placeholder="Optional" />
                     <Field label="Verify URL" name="credentialUrl" type="url" placeholder="https://..." />
                 </div>
+
                 <div style={{ display: "flex", justifyContent: "flex-end", background: "rgba(255,255,255,0.02)", padding: 20, borderRadius: 16, border: "1px solid var(--border)", marginTop: 8 }}>
                     <button type="submit" className="btn-glow" disabled={saving}>
                         {saving ? "Processing..." : "Add Certificate"}
@@ -287,7 +290,7 @@ export default function CertificatesAdmin() {
                                 <Field label="Title" name="title" defaultValue={editingItem.title} />
                                 <Field label="Issuer" name="issuer" defaultValue={editingItem.issuer} />
                             </div>
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 32 }}>
+                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 24 }}>
                                 <Field label="Date" name="issueDate" type="date" defaultValue={toDateInput(editingItem.issuedAt)} />
                                 <Field label="ID" name="credentialId" defaultValue={editingItem.credentialId ?? ""} />
                                 <Field label="Verify URL" name="credentialUrl" type="url" defaultValue={editingItem.credentialUrl ?? ""} />

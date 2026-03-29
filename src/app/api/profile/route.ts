@@ -28,7 +28,6 @@ export async function PUT(req: Request) {
         }
 
         const body = await req.json();
-        console.log("Profile Update Request Body:", JSON.stringify(body, null, 2));
 
         const {
             name, title, bio = "", aboutTitle, address, avatarUrl, resumeUrl, email,
@@ -73,7 +72,6 @@ export async function PUT(req: Request) {
         };
 
         if (profile) {
-            console.log("Updating existing profile:", profile.id);
             updated = (prisma.profile as any).update({
                 where: { id: profile.id },
                 data: {
@@ -90,7 +88,6 @@ export async function PUT(req: Request) {
                 include: { socialLinks: true }
             });
         } else {
-            console.log("Creating new profile");
             updated = (prisma.profile as any).create({
                 data: {
                     ...data,
@@ -107,7 +104,6 @@ export async function PUT(req: Request) {
 
         // Finalize the update/create
         updated = await updated;
-        console.log("Profile updated successfully");
         return NextResponse.json(updated);
 
 

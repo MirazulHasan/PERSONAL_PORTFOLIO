@@ -45,7 +45,7 @@ export async function PATCH(req: Request) {
         }
 
         const body = await req.json();
-        const { id, title, content, slug, published } = body;
+        const { id, title, content, slug, published, coverImg } = body;
 
         if (!id) return NextResponse.json({ error: "ID is required" }, { status: 400 });
 
@@ -55,6 +55,7 @@ export async function PATCH(req: Request) {
                 title,
                 content,
                 slug: slug || title.toLowerCase().replace(/ /g, "-"),
+                coverImg,
                 published: !!published,
             }
         });
