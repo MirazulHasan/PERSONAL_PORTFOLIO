@@ -30,6 +30,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 
 import BackgroundEffects from "@/components/BackgroundEffects";
+import BackToTop from "@/components/BackToTop";
 
 export default function RootLayout({
   children,
@@ -53,6 +54,7 @@ export default function RootLayout({
       </head>
       <body>
         <BackgroundEffects />
+        <BackToTop />
         {children}
       </body>
     </html>

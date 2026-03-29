@@ -1,8 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Sun, Moon } from "lucide-react";
 
+/**
+ * High-Fidelity Celestial Toggle.
+ * Derived from the premium day/night transition design provided.
+ * Features: Moving clouds, cratered moon, and appearing stars.
+ */
 export default function ThemeToggle() {
   const [theme, setTheme] = useState("dark");
   const [mounted, setMounted] = useState(false);
@@ -22,32 +26,28 @@ export default function ThemeToggle() {
   };
 
   if (!mounted) {
-    return <div style={{ width: 48, height: 24 }} />;
+    return <div style={{ width: 80, height: 34, transform: 'scale(1)' }} />;
   }
 
+  // According to the provided CSS:
+  // Default = Day (Light)
+  // Checked = Night (Dark)
+  const isDark = theme === "dark";
+
   return (
-    <label className="switch">
-      <input 
-        className="switch__input" 
-        type="checkbox" 
-        role="switch" 
-        checked={theme === "light"} 
-        onChange={toggle} 
-      />
-      <span className="switch__icon">
-        <span className="switch__icon-part switch__icon-part--1"></span>
-        <span className="switch__icon-part switch__icon-part--2"></span>
-        <span className="switch__icon-part switch__icon-part--3"></span>
-        <span className="switch__icon-part switch__icon-part--4"></span>
-        <span className="switch__icon-part switch__icon-part--5"></span>
-        <span className="switch__icon-part switch__icon-part--6"></span>
-        <span className="switch__icon-part switch__icon-part--7"></span>
-        <span className="switch__icon-part switch__icon-part--8"></span>
-        <span className="switch__icon-part switch__icon-part--9"></span>
-        <span className="switch__icon-part switch__icon-part--10"></span>
-        <span className="switch__icon-part switch__icon-part--11"></span>
-      </span>
-      <span className="switch__sr">Toggle Theme</span>
-    </label>
+    <div className="theme-toggle-wrapper">
+      <label className="theme-container">
+        <input 
+          type="checkbox" 
+          checked={isDark} 
+          onChange={toggle} 
+        />
+        <div className="theme-slider round">
+          <div className="theme-background"></div>
+          <div className="theme-star"></div>
+          <div className="theme-star"></div>
+        </div>
+      </label>
+    </div>
   );
 }

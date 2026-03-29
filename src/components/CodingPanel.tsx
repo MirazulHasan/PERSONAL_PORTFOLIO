@@ -8,6 +8,10 @@ const SECTIONS = [
   "Experience",
   "Skills",
   "Projects",
+  "Certificates",
+  "Publications",
+  "Activities",
+  "References",
   "Blog",
   "Contact",
 ];
@@ -51,18 +55,20 @@ export default function CodingPanel() {
       zIndex: 10,
     }}>
       {/* Mac Terminal Window */}
-      <div className="glass" style={{
+      <div style={{
         overflow: "hidden",
-        background: "rgba(2, 6, 23, 0.75)", // Darker, more terminal-like
+        background: "var(--bg-card)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
         border: "1px solid var(--glass-border)",
-        boxShadow: status === "error" ? "0 0 40px rgba(239, 68, 68, 0.2)" : (status === "success" ? "0 0 40px rgba(74, 222, 128, 0.2)" : "0 20px 50px rgba(0, 0, 0, 0.4)"),
+        boxShadow: status === "error" ? "0 0 40px rgba(239, 68, 68, 0.2)" : (status === "success" ? "0 0 40px rgba(74, 222, 128, 0.2)" : "0 20px 50px rgba(0, 0, 0, 0.15)"),
         borderRadius: "12px",
         transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
       }}>
         {/* Terminal Header (Title Bar) */}
         <div style={{
           height: "36px",
-          background: "rgba(255, 255, 255, 0.05)",
+          background: "rgba(128, 128, 128, 0.08)",
           display: "flex",
           alignItems: "center",
           padding: "0 16px",
@@ -82,8 +88,8 @@ export default function CodingPanel() {
             left: "50%",
             transform: "translateX(-50%)",
             fontSize: "12px",
-            color: "var(--text-muted)",
-            opacity: 0.6,
+            color: "var(--text-primary)",
+            opacity: 0.4,
             letterSpacing: "0.02em",
             fontWeight: 500,
             whiteSpace: "nowrap",
@@ -140,8 +146,8 @@ export default function CodingPanel() {
 
           <div style={{
             fontSize: "11px",
-            color: "var(--text-muted)",
-            opacity: 0.4,
+            color: "var(--text-primary)",
+            opacity: 0.5,
             whiteSpace: "nowrap",
             textTransform: "uppercase",
             letterSpacing: "0.1em",
@@ -176,9 +182,10 @@ export default function CodingPanel() {
               borderRadius: "50px",
               cursor: "pointer",
               transition: "all 0.3s",
-              border: "1px solid rgba(255,255,255,0.05)",
-              color: "var(--text-muted)",
-              fontWeight: 500,
+              border: "1px solid var(--border)",
+              color: "var(--text-primary)",
+              opacity: 0.8,
+              fontWeight: 600,
             }}
           >
             {s}
