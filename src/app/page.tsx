@@ -129,7 +129,7 @@ export default async function HomePage() {
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        padding: "120px 5% 60px", // Increased top padding to ensure zero overlap
+        padding: "100px 5% 60px", // Increased top padding to ensure zero overlap
         overflow: "hidden",
       }}>
 
@@ -157,6 +157,7 @@ export default async function HomePage() {
             fontSize: 13,
             fontWeight: 500,
             color: "var(--accent)",
+            marginTop: 20,
             marginBottom: 28,
             letterSpacing: "0.02em",
           }}>

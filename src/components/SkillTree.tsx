@@ -40,17 +40,17 @@ export default function SkillTree({ skillsByCategory }: SkillTreeProps) {
   );
 
   return (
-    <div className="skill-tree-dynamic" style={{ 
-      position: "relative", 
-      padding: "40px 0", 
-      display: "flex", 
-      flexDirection: "column", 
+    <div className="skill-tree-dynamic" style={{
+      position: "relative",
+      padding: "40px 0",
+      display: "flex",
+      flexDirection: "column",
       alignItems: "center",
-      minHeight: totalCategories * 140 + 200 
+      minHeight: totalCategories * 140 + 200
     }}>
-      
+
       {/* ── ROOT NODE ── */}
-      <motion.div 
+      <motion.div
         initial={{ y: -20, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}
         style={{
@@ -64,22 +64,22 @@ export default function SkillTree({ skillsByCategory }: SkillTreeProps) {
           marginBottom: 0
         }}
       >
-        <span style={{ 
-          color: "var(--text-primary)", 
-          fontSize: "16px", 
-          fontWeight: 900, 
-          textTransform: "uppercase", 
-          letterSpacing: "2.5px" 
+        <span style={{
+          color: "var(--text-primary)",
+          fontSize: "16px",
+          fontWeight: 900,
+          textTransform: "uppercase",
+          letterSpacing: "2.5px"
         }}>Skills</span>
         <div style={{ position: "absolute", bottom: 0, left: 10, right: 10, height: 2, background: "var(--accent)", opacity: 0.5 }} />
       </motion.div>
 
       {/* ── CENTRAL TRUNK ── */}
-      <div style={{ 
-        position: "absolute", 
-        top: 100, 
-        width: 2, 
-        height: totalCategories * 120, 
+      <div style={{
+        position: "absolute",
+        top: 100,
+        width: 2,
+        height: totalCategories * 120,
         background: "var(--border)",
         left: "50%",
         transform: "translateX(-50%)",
@@ -88,32 +88,32 @@ export default function SkillTree({ skillsByCategory }: SkillTreeProps) {
       }} />
 
       {/* ── DYNAMIC BRANCHES ── */}
-      <div style={{ 
-        width: "100%", 
-        maxWidth: 1000, 
-        marginTop: 60,
+      <div style={{
+        width: "100%",
+        maxWidth: 1000,
+        marginTop: 30,
         display: "flex",
         flexDirection: "column",
-        gap: 60, 
+        gap: 30,
         zIndex: 5
       }}>
         {categories.map((cat, idx) => {
           const isEven = idx % 2 === 0;
           return (
-            <div key={cat} style={{ 
+            <div key={cat} style={{
               position: "relative",
               width: "100%",
               display: "flex",
               justifyContent: isEven ? "flex-start" : "flex-end",
               alignItems: "center"
             }}>
-              
+
               {/* Branch Connector */}
-              <div style={{ 
-                position: "absolute", 
-                left: isEven ? "45%" : "50%", 
-                right: isEven ? "50%" : "45%", 
-                height: 2, 
+              <div style={{
+                position: "absolute",
+                left: isEven ? "45%" : "50%",
+                right: isEven ? "50%" : "45%",
+                height: 2,
                 background: "var(--border)",
                 top: "50%",
                 transform: "translateY(-50%)",
@@ -132,12 +132,12 @@ export default function SkillTree({ skillsByCategory }: SkillTreeProps) {
                 }}
               >
                 <div style={{ marginBottom: 12 }}>
-                  <h3 style={{ 
-                    fontSize: "1rem", 
-                    fontWeight: 800, 
-                    color: "var(--accent)", 
-                    textTransform: "uppercase", 
-                    letterSpacing: "0.12em" 
+                  <h3 style={{
+                    fontSize: "1rem",
+                    fontWeight: 800,
+                    color: "var(--accent)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.12em"
                   }}>{cat}</h3>
                   <div style={{ height: 1, width: 30, background: "var(--accent)", marginLeft: isEven ? "auto" : 0, marginRight: isEven ? 0 : "auto", marginTop: 4, opacity: 0.6 }} />
                 </div>
@@ -150,14 +150,14 @@ export default function SkillTree({ skillsByCategory }: SkillTreeProps) {
               </motion.div>
 
               {/* Node on trunk */}
-              <div style={{ 
-                position: "absolute", 
-                left: "50%", 
-                top: "50%", 
+              <div style={{
+                position: "absolute",
+                left: "50%",
+                top: "50%",
                 transform: "translate(-50%, -50%)",
-                width: 8, 
-                height: 8, 
-                borderRadius: "50%", 
+                width: 8,
+                height: 8,
+                borderRadius: "50%",
                 background: "var(--accent)",
                 border: "2px solid var(--bg-primary)",
                 boxShadow: "0 0 10px var(--accent)",
