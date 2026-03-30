@@ -25,6 +25,10 @@ export default function BackToTop() {
       top: 0,
       behavior: "smooth",
     });
+    // Clear the URL hash if it exists
+    if (window.location.hash) {
+      window.history.replaceState(null, "", window.location.pathname);
+    }
   };
 
   return (
