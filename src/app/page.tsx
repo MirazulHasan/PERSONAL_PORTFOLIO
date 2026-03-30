@@ -2,7 +2,7 @@ import Link from "next/link";
 import prisma from "@/lib/db";
 import ClientInteractivity from "@/components/ClientInteractivity";
 import ProjectCarousel from "@/components/ProjectCarousel";
-import SkillsTicker from "@/components/SkillsTicker";
+import SkillTree from "@/components/SkillTree";
 import Navbar from "@/components/Navbar";
 import CodingPanel from "@/components/CodingPanel";
 import EducationSection from "@/components/EducationSection";
@@ -136,7 +136,7 @@ export default async function HomePage() {
         <div className="animate-in" style={{ maxWidth: 760, position: "relative" }}>
           {/* Avatar */}
           {profile?.avatarUrl && (
-            <div style={{ display: "flex", justifyContent: "center", marginBottom: 32 }}>
+            <div style={{ display: "flex", justifyContent: "center", position: "relative", zIndex: 10 }}>
               <div style={{
                 width: 120, height: 120, borderRadius: "50%",
                 background: "linear-gradient(135deg, #6c63ff, #ff6584)",
@@ -280,7 +280,7 @@ export default async function HomePage() {
           <div style={{ maxWidth: 1100, margin: "0 auto" }}>
             <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>{(profile as any)?.skillsSubtitle ?? "Technical Stack"}</p>
             <h2 className="section-title" style={{ marginBottom: 60 }}>{(profile as any)?.skillsTitle ?? "Core Expertise"}</h2>
-            <SkillsTicker skillsByCategory={skillsByCategory} />
+            <SkillTree skillsByCategory={skillsByCategory} />
           </div>
         </section>
       )}
