@@ -45,7 +45,7 @@ export default function CodingPanel() {
   };
 
   return (
-    <div className={`coding-panel-container ${status}`} style={{
+    <div className={`coding-panel-container coding-panel-responsive ${status}`} style={{
       marginTop: "48px",
       width: "100%",
       maxWidth: "650px", // Increased from 500px
@@ -99,7 +99,7 @@ export default function CodingPanel() {
         </div>
 
         {/* Terminal Body */}
-        <form onSubmit={handleCommand} style={{
+        <form className="terminal-form-inner" onSubmit={handleCommand} style={{
           display: "flex",
           alignItems: "center",
           padding: "24px", // Increased padding
@@ -107,7 +107,8 @@ export default function CodingPanel() {
           transition: "all 0.3s ease",
           transform: status === "error" ? "translateX(5px)" : "none",
         }}>
-          <div style={{
+          {/* Desktop Full Prompt */}
+          <div className="terminal-prompt terminal-prompt-full" style={{
             display: "flex",
             gap: "8px",
             color: "var(--accent)",
@@ -120,6 +121,20 @@ export default function CodingPanel() {
             <span style={{ color: "var(--text-muted)" }}>@</span>
             <span style={{ color: "var(--accent)" }}>macbook</span>
             <span style={{ color: "var(--text-muted)" }}>:</span>
+            <span style={{ color: "#f472b6" }}>~</span>
+            <span style={{ color: "var(--text-muted)" }}>$</span>
+          </div>
+
+          {/* Mobile Short Prompt */}
+          <div className="terminal-prompt terminal-prompt-short" style={{
+            display: "none", // Hidden by default, shown via media query
+            gap: "4px",
+            color: "var(--accent)",
+            fontWeight: "bold",
+            fontSize: "13px",
+            whiteSpace: "nowrap",
+            userSelect: "none"
+          }}>
             <span style={{ color: "#f472b6" }}>~</span>
             <span style={{ color: "var(--text-muted)" }}>$</span>
           </div>

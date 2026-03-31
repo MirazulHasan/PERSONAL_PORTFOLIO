@@ -77,6 +77,7 @@ export default function ProjectCarousel({ projects }: ProjectCarouselProps) {
 
   return (
     <div
+      className="project-carousel-outer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onMouseDown={handleMouseDown}
@@ -115,7 +116,7 @@ export default function ProjectCarousel({ projects }: ProjectCarouselProps) {
       </div>
 
       {/* ── Card Stack ── */}
-      <div style={{
+      <div className="project-card-stack" style={{
         position: "relative",
         width: "100%",
         minHeight: 500,

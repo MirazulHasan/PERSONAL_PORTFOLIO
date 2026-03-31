@@ -15,7 +15,7 @@ export default function EducationCard({ edu, idx, ordinal, isExpanded, onHover }
   return (
     <div 
       onMouseEnter={onHover}
-      className="glass hover-card" 
+      className="glass hover-card edu-staircase-offset" 
       style={{
         padding: 32,
         width: "min(650px, 100%)",
@@ -27,7 +27,7 @@ export default function EducationCard({ edu, idx, ordinal, isExpanded, onHover }
       }}
     >
       {/* Big Ordinal Number on the Right - ALWAYS VISIBLE */}
-      <div style={{
+      <div className="edu-ordinal-float" style={{
         position: "absolute", right: -130, top: "50%",
         transform: "translateY(-50%)",
         fontSize: "3.2rem", fontWeight: 900,

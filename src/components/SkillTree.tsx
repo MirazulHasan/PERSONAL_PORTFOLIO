@@ -30,7 +30,9 @@ export default function SkillTree({ skillsByCategory }: SkillTreeProps) {
         color: "var(--text-primary)",
         textTransform: "uppercase",
         letterSpacing: "0.05em",
-        whiteSpace: "nowrap",
+        whiteSpace: "normal",
+        wordBreak: "break-word",
+        lineHeight: "1.4",
         transition: "all 0.3s ease",
         cursor: "default"
       }}
@@ -75,7 +77,7 @@ export default function SkillTree({ skillsByCategory }: SkillTreeProps) {
       </motion.div>
 
       {/* ── CENTRAL TRUNK ── */}
-      <div style={{
+      <div className="skill-tree-desktop-view" style={{
         position: "absolute",
         top: 100,
         width: 2,
@@ -88,7 +90,7 @@ export default function SkillTree({ skillsByCategory }: SkillTreeProps) {
       }} />
 
       {/* ── DYNAMIC BRANCHES ── */}
-      <div style={{
+      <div className="skill-tree-desktop-view" style={{
         width: "100%",
         maxWidth: 1000,
         marginTop: 30,
@@ -167,6 +169,26 @@ export default function SkillTree({ skillsByCategory }: SkillTreeProps) {
             </div>
           );
         })}
+      </div>
+
+      {/* ── MOBILE FALLBACK ── */}
+      <div className="skill-tree-mobile-view" style={{ display: "none", width: "100%", marginTop: 40, position: "relative", zIndex: 10 }}>
+        {categories.map((cat) => (
+          <motion.div
+            key={`mobile-${cat}`}
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true, margin: "-50px" }}
+            className="skill-mobile-category"
+          >
+            <h3 className="skill-mobile-category-title">{cat}</h3>
+            <div className="skill-mobile-tags">
+              {skillsByCategory[cat].map((s: any) => (
+                <Tag key={`mobile-tag-${s.id}`} name={s.name} />
+              ))}
+            </div>
+          </motion.div>
+        ))}
       </div>
 
     </div>

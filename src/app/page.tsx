@@ -169,7 +169,7 @@ export default async function HomePage() {
           <p style={{ fontSize: "clamp(1.1rem, 2.5vw, 1.4rem)", color: "var(--text-muted)", lineHeight: 1.7, marginBottom: 40, maxWidth: 640, margin: "0 auto 40px" }}>
             {profile?.bio ?? "Full Stack Developer crafting clean, scalable, and beautiful web applications with a passion for great user experience."}
           </p>
-          <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", marginBottom: 32 }}>
+          <div className="hero-cta-row" style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", marginBottom: 32 }}>
             <Link href="#projects" className="btn-glow">View My Work</Link>
             <Link href="#contact" className="btn-outline">Get in Touch</Link>
           </div>
@@ -179,7 +179,7 @@ export default async function HomePage() {
 
       {/* ── ABOUT ── */}
       <section id="about" style={{ padding: "100px 5%" }}>
-        <div className="reveal" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center", maxWidth: 1100, margin: "0 auto" }}>
+        <div className="reveal about-responsive-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center", maxWidth: 1100, margin: "0 auto" }}>
           <div>
             <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>About Me</p>
             <h2 className="section-title" style={{ marginBottom: 24 }}>{(profile as any)?.aboutTitle ?? "Passionate about building things that matter"}</h2>
@@ -192,7 +192,7 @@ export default async function HomePage() {
               ))}
             </div>
           </div>
-          <div className="glass hover-card" style={{ padding: 40 }}>
+          <div className="glass hover-card about-info-card" style={{ padding: 40 }}>
             {/* Avatar in about card */}
             {profile?.avatarUrl && (
               <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 32, paddingBottom: 28, borderBottom: "1px solid var(--border)" }}>
@@ -258,8 +258,8 @@ export default async function HomePage() {
           <h2 className="section-title" style={{ marginBottom: 60 }}>{(profile as any)?.experienceTitle ?? "Professional Experience"}</h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
             {experience.map((exp: any) => (
-              <div key={exp.id} className="glass hover-card" style={{ padding: 40 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 16, marginBottom: 16 }}>
+              <div key={exp.id} className="glass hover-card experience-card-inner" style={{ padding: 40 }}>
+                <div className="experience-card-header" style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 16, marginBottom: 16 }}>
                   <div>
                     <h3 style={{ fontSize: "1.3rem", fontWeight: 800, marginBottom: 4 }}>{exp.position}</h3>
                     <p style={{ fontSize: "1.1rem", color: "var(--accent)", fontWeight: 700 }}>{exp.company}</p>
@@ -355,7 +355,7 @@ export default async function HomePage() {
         <section id="activities" className="reveal" style={{ padding: "100px 5%", maxWidth: 1100, margin: "0 auto" }}>
           <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>{(profile as any)?.activitiesSubtitle ?? "Involvement"}</p>
           <h2 className="section-title" style={{ marginBottom: 60 }}>{(profile as any)?.activitiesTitle ?? "Extra-Curricular Activities"}</h2>
-          <div style={{ position: "relative", borderLeft: "2px solid var(--border)", paddingLeft: 32, display: "flex", flexDirection: "column", gap: 48 }}>
+          <div className="activities-timeline-section" style={{ position: "relative", borderLeft: "2px solid var(--border)", paddingLeft: 32, display: "flex", flexDirection: "column", gap: 48 }}>
             {(() => {
               const grouped: any[] = [];
               activities.forEach((act: any) => {
@@ -366,13 +366,13 @@ export default async function HomePage() {
               return grouped.map((group) => (
                 <div key={group.id} style={{ position: "relative" }}>
                   {/* Main Timeline dot */}
-                  <span style={{ position: "absolute", left: -41, top: 4, width: 16, height: 16, borderRadius: "50%", background: "var(--bg-primary)", border: "4px solid var(--accent)", boxShadow: "0 0 12px rgba(108,99,255,0.6)" }} />
+                  <span className="activities-dot-main" style={{ position: "absolute", left: -41, top: 4, width: 16, height: 16, borderRadius: "50%", background: "var(--bg-primary)", border: "4px solid var(--accent)", boxShadow: "0 0 12px rgba(108,99,255,0.6)" }} />
                   <h3 style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: group.roles.length > 1 ? 24 : 4 }}>{group.title}</h3>
                   <div style={{ display: "flex", flexDirection: "column", gap: group.roles.length > 1 ? 32 : 12 }}>
                     {group.roles.map((act: any, idx: number) => (
                       <div key={act.id} style={{ position: "relative" }}>
                         {group.roles.length > 1 && (
-                          <span style={{ position: "absolute", left: -37, top: 6, width: 8, height: 8, borderRadius: "50%", background: "var(--accent)", boxShadow: "0 0 8px rgba(108,99,255,0.4)" }} />
+                          <span className="activities-dot-sub" style={{ position: "absolute", left: -37, top: 6, width: 8, height: 8, borderRadius: "50%", background: "var(--accent)", boxShadow: "0 0 8px rgba(108,99,255,0.4)" }} />
                         )}
                         <p style={{ fontSize: 14, color: "var(--accent)", fontWeight: 600, marginBottom: 8 }}>{act.endDate && !act.current ? `Former ${act.role}` : act.role}</p>
                         {(act.startDate || act.endDate || act.current) && (
