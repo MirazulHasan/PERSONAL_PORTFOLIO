@@ -1,5 +1,5 @@
 "use client";
-import { motion, AnimatePresence } from "framer-motion";
+
 import { Mail, MapPin, Calendar, CheckCircle, Link as LinkIcon, Edit2, Star, Trophy, Zap, Lightbulb, Github, Linkedin, Facebook, Instagram, Youtube, Twitter } from "lucide-react";
 
 export default function AtsResume({ profile, education, experience, skills, certificates, activities, publications, references }: any) {
@@ -194,7 +194,10 @@ export default function AtsResume({ profile, education, experience, skills, cert
 
                 <div className="ats-avatar-circle">
                     {profile?.avatarUrl ? (
-                        <img src={profile.avatarUrl} alt="Profile" />
+                        <>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={profile.avatarUrl} alt="Profile" />
+                        </>
                     ) : (
                         getInitials(profile?.name)
                     )}

@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { GripVertical, Image as ImageIcon, X } from "lucide-react";
+import { GripVertical } from "lucide-react";
 
 function DroppableFix({ children, ...props }: any) {
     const [enabled, setEnabled] = useState(false);

@@ -10,7 +10,7 @@ export async function GET() {
             orderBy: [{ order: "asc" }, { level: "desc" }]
         });
         return NextResponse.json(skills);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to fetch skills" }, { status: 500 });
     }
 }
@@ -36,7 +36,7 @@ export async function PATCH(req: Request) {
         );
 
         return NextResponse.json({ success: true });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to reorder skills" }, { status: 500 });
     }
 }
@@ -55,7 +55,7 @@ export async function POST(req: Request) {
             data: { name, category, level: parseInt(level) || 0 }
         });
         return NextResponse.json(skill);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to create skill" }, { status: 500 });
     }
 }
@@ -79,7 +79,7 @@ export async function PUT(req: Request) {
             data: { name, category, level: parseInt(level) || 0 }
         });
         return NextResponse.json(skill);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to update skill" }, { status: 500 });
     }
 }
@@ -98,7 +98,7 @@ export async function DELETE(req: Request) {
 
         await prisma.skill.delete({ where: { id } });
         return NextResponse.json({ success: true });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to delete skill" }, { status: 500 });
     }
 }

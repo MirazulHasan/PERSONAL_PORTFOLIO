@@ -12,8 +12,6 @@ export async function GET() {
     console.error("Favicon API error:", error);
   }
 
-  const fallbackColor = "linear-gradient(135deg, #6c63ff, #ff6584)";
-
   // If no avatar, return a simple round SVG with 'M' (using basic font)
   if (!avatarUrl) {
     const fallbackSvg = `

@@ -2,19 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Cropper from "react-easy-crop";
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { GripVertical } from "lucide-react";
-
 // ── helpers ─────────────────────────────────────────────────────────────────
-// ── helpers ─────────────────────────────────────────────────────────────────
-function DroppableFix({ children, ...props }: any) {
-    const [enabled, setEnabled] = useState(false);
-    useEffect(() => {
-        setEnabled(true);
-    }, []);
-    if (!enabled) return null;
-    return <Droppable {...props}>{children}</Droppable>;
-}
 
 async function getCroppedImg(imageSrc: string, croppedAreaPixels: any): Promise<string | null> {
     const image = new Image();
@@ -163,13 +151,7 @@ export default function ProfileAdmin() {
         });
     };
 
-    const onDragEnd = (result: any) => {
-        if (!result.destination) return;
-        const items = Array.from(socialLinks);
-        const [reorderedItem] = items.splice(result.source.index, 1);
-        items.splice(result.destination.index, 0, reorderedItem);
-        setSocialLinks(items);
-    };
+
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -244,6 +226,7 @@ export default function ProfileAdmin() {
                             }}>
                                 <div style={{ width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden", background: "#0a0a0f" }}>
                                     {profile?.avatarUrl ? (
+                                        /* eslint-disable-next-line @next/next/no-img-element */
                                         <img src={profile.avatarUrl} alt="Avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                                     ) : (
                                         <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 48, fontWeight: 900, color: "var(--text-primary)" }}>
@@ -286,7 +269,7 @@ export default function ProfileAdmin() {
                             </p>
                             <p style={{ fontSize: 12, color: "var(--text-muted)" }}>PNG, JPG, WEBP — max 10 MB</p>
                             <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 8 }}>
-                                You'll get a crop &amp; resize editor before saving
+                                You&apos;ll get a crop &amp; resize editor before saving
                             </p>
                         </div>
 
@@ -514,6 +497,7 @@ export default function ProfileAdmin() {
                         {/* Preview circle */}
                         <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 24, padding: "16px 20px", background: "rgba(255,255,255,0.03)", borderRadius: 12, border: "1px solid var(--border)" }}>
                             <div style={{ width: 48, height: 48, borderRadius: "50%", overflow: "hidden", border: "2px solid var(--accent)", flexShrink: 0 }}>
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
                                 {profile?.avatarUrl ? <img src={profile.avatarUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <div style={{ width: "100%", height: "100%", background: "linear-gradient(135deg,#6c63ff,#ff6584)" }} />}
                             </div>
                             <div>

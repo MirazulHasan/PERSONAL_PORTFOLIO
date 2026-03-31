@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { Image as ImageIcon } from "lucide-react";
+import { useState, useEffect } from "react";
 const inputStyle: React.CSSProperties = {
     width: "100%", padding: "12px 16px",
     background: "rgba(255,255,255,0.03)", border: "1px solid var(--border)",

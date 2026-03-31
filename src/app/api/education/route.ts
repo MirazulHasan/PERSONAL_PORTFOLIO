@@ -10,7 +10,7 @@ export async function GET() {
             orderBy: [{ order: "asc" }, { current: "desc" }, { passingYear: "desc" }]
         });
         return NextResponse.json(education);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to fetch education" }, { status: 500 });
     }
 }
@@ -36,7 +36,7 @@ export async function PATCH(req: Request) {
         );
 
         return NextResponse.json({ success: true });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to reorder education" }, { status: 500 });
     }
 }
@@ -70,7 +70,7 @@ export async function POST(req: Request) {
             }
         });
         return NextResponse.json(record);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to create education record" }, { status: 500 });
     }
 }
@@ -104,7 +104,7 @@ export async function PUT(req: Request) {
             }
         });
         return NextResponse.json(record);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to update education record" }, { status: 500 });
     }
 }
@@ -123,7 +123,7 @@ export async function DELETE(req: Request) {
 
         await prisma.education.delete({ where: { id } });
         return NextResponse.json({ success: true });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to delete education record" }, { status: 500 });
     }
 }

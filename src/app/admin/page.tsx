@@ -208,6 +208,7 @@ export default async function AdminDashboard() {
                     }}>
                         <div style={{ width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden", background: "var(--bg-primary)" }}>
                             {profile?.avatarUrl ? (
+                                /* eslint-disable-next-line @next/next/no-img-element */
                                 <img src={profile.avatarUrl} alt="Avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                             ) : (
                                 <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 48, fontWeight: 900, color: "var(--text-primary)" }}>MH</div>

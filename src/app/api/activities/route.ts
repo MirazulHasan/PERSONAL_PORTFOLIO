@@ -10,7 +10,7 @@ export async function GET() {
             orderBy: [{ order: "asc" }, { startDate: "desc" }]
         });
         return NextResponse.json(activities);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to fetch activities" }, { status: 500 });
     }
 }
@@ -36,7 +36,7 @@ export async function PATCH(req: Request) {
         );
 
         return NextResponse.json({ success: true });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to reorder activities" }, { status: 500 });
     }
 }
@@ -62,7 +62,7 @@ export async function POST(req: Request) {
             }
         });
         return NextResponse.json(activity);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to create activity" }, { status: 500 });
     }
 }
@@ -93,7 +93,7 @@ export async function PUT(req: Request) {
             }
         });
         return NextResponse.json(activity);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to update activity" }, { status: 500 });
     }
 }
@@ -112,7 +112,7 @@ export async function DELETE(req: Request) {
 
         await prisma.activity.delete({ where: { id } });
         return NextResponse.json({ success: true });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to delete activity" }, { status: 500 });
     }
 }

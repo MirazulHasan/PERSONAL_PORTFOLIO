@@ -10,7 +10,7 @@ export async function GET() {
             orderBy: [{ order: "asc" }, { createdAt: "asc" }]
         });
         return NextResponse.json(references);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to fetch references" }, { status: 500 });
     }
 }
@@ -36,7 +36,7 @@ export async function PATCH(req: Request) {
         );
 
         return NextResponse.json({ success: true });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to reorder references" }, { status: 500 });
     }
 }
@@ -61,7 +61,7 @@ export async function POST(req: Request) {
             }
         });
         return NextResponse.json(reference);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to create reference" }, { status: 500 });
     }
 }
@@ -91,7 +91,7 @@ export async function PUT(req: Request) {
             }
         });
         return NextResponse.json(reference);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to update reference" }, { status: 500 });
     }
 }
@@ -110,7 +110,7 @@ export async function DELETE(req: Request) {
 
         await prisma.reference.delete({ where: { id } });
         return NextResponse.json({ success: true });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to delete reference" }, { status: 500 });
     }
 }

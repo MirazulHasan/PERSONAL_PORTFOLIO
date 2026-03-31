@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { GripVertical, Cpu, Edit3, Trash2, Plus, Zap, X, Image as ImageIcon } from "lucide-react";
+import { GripVertical, Cpu, Edit3, Trash2, Plus, Zap, X } from "lucide-react";
 
 const inputStyle: React.CSSProperties = {
     width: "100%", padding: "12px 16px",

@@ -7,7 +7,7 @@ export async function GET() {
     try {
         const posts = await prisma.post.findMany({ orderBy: { createdAt: "desc" } });
         return NextResponse.json(posts);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to fetch posts" }, { status: 500 });
     }
 }
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
             }
         });
         return NextResponse.json(post);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to create post" }, { status: 500 });
     }
 }
@@ -60,7 +60,7 @@ export async function PATCH(req: Request) {
             }
         });
         return NextResponse.json(updatedPost);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to update post" }, { status: 500 });
     }
 }
@@ -79,7 +79,7 @@ export async function DELETE(req: Request) {
 
         await prisma.post.delete({ where: { id } });
         return NextResponse.json({ success: true });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to delete post" }, { status: 500 });
     }
 }

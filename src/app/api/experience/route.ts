@@ -10,7 +10,7 @@ export async function GET() {
             orderBy: [{ order: "asc" }, { startDate: "desc" }]
         });
         return NextResponse.json(experience);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to fetch experience" }, { status: 500 });
     }
 }
@@ -36,7 +36,7 @@ export async function PATCH(req: Request) {
         );
 
         return NextResponse.json({ success: true });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to reorder experience" }, { status: 500 });
     }
 }
@@ -62,7 +62,7 @@ export async function POST(req: Request) {
             }
         });
         return NextResponse.json(record);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to create experience record" }, { status: 500 });
     }
 }
@@ -93,7 +93,7 @@ export async function PUT(req: Request) {
             }
         });
         return NextResponse.json(record);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to update experience record" }, { status: 500 });
     }
 }
@@ -112,7 +112,7 @@ export async function DELETE(req: Request) {
 
         await prisma.experience.delete({ where: { id } });
         return NextResponse.json({ success: true });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to delete experience record" }, { status: 500 });
     }
 }

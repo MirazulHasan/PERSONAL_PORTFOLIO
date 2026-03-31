@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
-  ChevronDown, Menu, X, Home, User, Briefcase, Code, GraduationCap,
+  ChevronDown, Menu, X, User, Briefcase, Code, GraduationCap,
   LayoutPanelLeft, FileText, Mail, Settings, Award, BookOpen, Star, Sparkles
 } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
@@ -33,21 +33,17 @@ const SECONDARY_LINKS = [
 export default function Navbar({ profile }: NavbarProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      window.removeEventListener("scroll", handleScroll);
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
@@ -71,6 +67,7 @@ export default function Navbar({ profile }: NavbarProps) {
               padding: "1.5px"
             }}>
               <div style={{ width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden", background: "var(--avatar-bg)" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={profile?.avatarUrl || "/logo.png"} alt="Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               </div>
             </div>
@@ -156,6 +153,7 @@ export default function Navbar({ profile }: NavbarProps) {
               padding: "4px"
             }}>
               <div style={{ width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden", background: "var(--avatar-bg)" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={profile?.avatarUrl || "/logo.png"} alt="Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               </div>
             </div>

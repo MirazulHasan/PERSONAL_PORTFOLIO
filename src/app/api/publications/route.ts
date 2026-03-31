@@ -9,7 +9,7 @@ export async function GET() {
             orderBy: [{ order: "asc" }, { createdAt: "desc" }]
         });
         return NextResponse.json(publications);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to fetch publications" }, { status: 500 });
     }
 }
@@ -34,7 +34,7 @@ export async function PATCH(req: Request) {
         );
 
         return NextResponse.json({ success: true });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to reorder publications" }, { status: 500 });
     }
 }
@@ -95,7 +95,7 @@ export async function PUT(req: Request) {
             }
         });
         return NextResponse.json(publication);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to update publication" }, { status: 500 });
     }
 }
@@ -114,7 +114,7 @@ export async function DELETE(req: Request) {
 
         await (prisma as any).publication.delete({ where: { id } });
         return NextResponse.json({ success: true });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to delete publication" }, { status: 500 });
     }
 }

@@ -8,7 +8,7 @@ export async function GET() {
         // @ts-ignore
         const certificates = await prisma.certificate.findMany({ orderBy: [{ order: "asc" }, { issuedAt: "desc" }] });
         return NextResponse.json(certificates);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to fetch certificates" }, { status: 500 });
     }
 }
@@ -34,7 +34,7 @@ export async function PATCH(req: Request) {
         );
 
         return NextResponse.json({ success: true });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to reorder certificates" }, { status: 500 });
     }
 }
@@ -60,7 +60,7 @@ export async function POST(req: Request) {
             }
         });
         return NextResponse.json(certificate);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to create certificate" }, { status: 500 });
     }
 }
@@ -91,7 +91,7 @@ export async function PUT(req: Request) {
             }
         });
         return NextResponse.json(certificate);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to update certificate" }, { status: 500 });
     }
 }
@@ -110,7 +110,7 @@ export async function DELETE(req: Request) {
 
         await prisma.certificate.delete({ where: { id } });
         return NextResponse.json({ success: true });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to delete certificate" }, { status: 500 });
     }
 }

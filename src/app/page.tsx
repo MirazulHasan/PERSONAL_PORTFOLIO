@@ -143,6 +143,7 @@ export default async function HomePage() {
                 padding: 3, boxShadow: "0 0 60px rgba(108,99,255,0.5)",
               }}>
                 <div style={{ width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden", background: "var(--avatar-bg)" }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={profile.avatarUrl} alt={profile.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </div>
               </div>
@@ -164,7 +165,7 @@ export default async function HomePage() {
             Available for new opportunities
           </div>
           <h1 style={{ fontSize: "clamp(3rem, 8vw, 6rem)", fontWeight: 900, lineHeight: 1.05, letterSpacing: "-0.04em", marginBottom: 24 }}>
-            Hi, I'm <span className="gradient-text">{profile?.name ?? "Md. Mirazul Hasan"}</span>
+            Hi, I&apos;m <span className="gradient-text">{profile?.name ?? "Md. Mirazul Hasan"}</span>
           </h1>
           <p style={{ fontSize: "clamp(1.1rem, 2.5vw, 1.4rem)", color: "var(--text-muted)", lineHeight: 1.7, marginBottom: 40, maxWidth: 640, margin: "0 auto 40px" }}>
             {profile?.bio ?? "Full Stack Developer crafting clean, scalable, and beautiful web applications with a passion for great user experience."}
@@ -202,6 +203,7 @@ export default async function HomePage() {
                   boxShadow: "0 0 24px rgba(108,99,255,0.4)",
                 }}>
                   <div style={{ width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden", background: "var(--avatar-bg)" }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={profile.avatarUrl} alt={profile.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   </div>
                 </div>
@@ -369,7 +371,7 @@ export default async function HomePage() {
                   <span className="activities-dot-main" style={{ position: "absolute", left: -41, top: 4, width: 16, height: 16, borderRadius: "50%", background: "var(--bg-primary)", border: "4px solid var(--accent)", boxShadow: "0 0 12px rgba(108,99,255,0.6)" }} />
                   <h3 style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: group.roles.length > 1 ? 24 : 4 }}>{group.title}</h3>
                   <div style={{ display: "flex", flexDirection: "column", gap: group.roles.length > 1 ? 32 : 12 }}>
-                    {group.roles.map((act: any, idx: number) => (
+                    {group.roles.map((act: any) => (
                       <div key={act.id} style={{ position: "relative" }}>
                         {group.roles.length > 1 && (
                           <span className="activities-dot-sub" style={{ position: "absolute", left: -37, top: 6, width: 8, height: 8, borderRadius: "50%", background: "var(--accent)", boxShadow: "0 0 8px rgba(108,99,255,0.4)" }} />
@@ -443,7 +445,7 @@ export default async function HomePage() {
       <section id="contact" className="reveal" style={{ padding: "100px 5%", textAlign: "center" }}>
         <div style={{ maxWidth: 680, margin: "0 auto" }}>
           <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>Contact</p>
-          <h2 className="section-title" style={{ marginBottom: 20 }}>Let's work together</h2>
+          <h2 className="section-title" style={{ marginBottom: 20 }}>Let&apos;s work together</h2>
           <p style={{ color: "var(--text-muted)", lineHeight: 1.8, marginBottom: 40 }}>
             Whether you have a project in mind, a question, or just want to say hi — my inbox is always open.
           </p>
