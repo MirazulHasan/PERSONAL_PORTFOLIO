@@ -129,7 +129,7 @@ export default function PostsAdmin() {
                     Write New Article
                 </h2>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+                <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
                     <Field label="Post Title" name="title" value={formData.title} onChange={handleTitleChange} placeholder="A catchy title..." />
                     <Field label="Domain Link (Slug)" name="slug" value={formData.slug} onChange={(e: any) => setFormData({...formData, slug: e.target.value})} placeholder="url-friendly-slug" />
                 </div>
@@ -187,7 +187,7 @@ export default function PostsAdmin() {
                     <div className="glass" style={{ width: "100%", maxWidth: 800, padding: 48, borderRadius: 24, border: "1px solid var(--border)", maxHeight: "90vh", overflowY: "auto" }} onClick={(e) => e.stopPropagation()}>
                         <h2 style={{ fontWeight: 800, fontSize: "1.3rem", marginBottom: 32 }}>Edit Journal Entry</h2>
                         <form onSubmit={handleEditSave}>
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+                            <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
                                 <div style={{ width: "100%" }}>
                                     <label style={labelStyle}>Title</label>
                                     <input name="title" defaultValue={editingPost.title} required style={inputStyle} />

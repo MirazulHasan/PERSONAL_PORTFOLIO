@@ -156,7 +156,7 @@ export default function SkillsAdmin() {
                     <Cpu size={20} color="var(--accent)" />
                     Register New Competency
                 </h2>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+                <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
                     <Field label="Skill Name" name="name" placeholder="e.g. TypeScript" />
                     <Field label="Category" name="category" placeholder="e.g. Frontend" />
                 </div>

@@ -175,11 +175,11 @@ export default function CertificatesAdmin() {
                     <Award size={20} color="var(--accent)" />
                     Add New Credential
                 </h2>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+                <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
                     <Field label="Certificate Title" name="title" placeholder="e.g. AWS Solutions Architect" />
                     <Field label="Issuing Organization" name="issuer" placeholder="e.g. Amazon Web Services" />
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 24 }}>
+                <div className="admin-grid-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 24 }}>
                     <Field label="Date Issued" name="issueDate" type="date" />
                     <Field label="Credential ID" name="credentialId" placeholder="Optional" />
                     <Field label="Verify URL" name="credentialUrl" type="url" placeholder="https://..." />
@@ -286,11 +286,11 @@ export default function CertificatesAdmin() {
                         onClick={(e) => e.stopPropagation()}>
                         <h2 style={{ fontWeight: 800, fontSize: "1.3rem", marginBottom: 32 }}>Edit Certificate</h2>
                         <form onSubmit={handleEditSave}>
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+                            <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
                                 <Field label="Title" name="title" defaultValue={editingItem.title} />
                                 <Field label="Issuer" name="issuer" defaultValue={editingItem.issuer} />
                             </div>
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 24 }}>
+                            <div className="admin-grid-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 24 }}>
                                 <Field label="Date" name="issueDate" type="date" defaultValue={toDateInput(editingItem.issuedAt)} />
                                 <Field label="ID" name="credentialId" defaultValue={editingItem.credentialId ?? ""} />
                                 <Field label="Verify URL" name="credentialUrl" type="url" defaultValue={editingItem.credentialUrl ?? ""} />

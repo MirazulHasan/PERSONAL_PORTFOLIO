@@ -179,7 +179,7 @@ export default function ProjectsAdmin() {
                     <span style={{ width: 3, height: 20, background: "var(--accent)", borderRadius: 4 }} />
                     Register New Project
                 </h2>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+                <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
                     <Field label="Project Title" name="title" placeholder="e.g. AI Content Generator" />
                     <Field label="Tech Stack" name="tags" placeholder="Next.js, Tailwind, Prisma" />
                 </div>
@@ -189,7 +189,7 @@ export default function ProjectsAdmin() {
                         onFocus={(e) => e.target.style.borderColor = "var(--accent)"}
                         onBlur={(e) => e.target.style.borderColor = "var(--border)"} />
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 24 }}>
+                <div className="admin-grid-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 24 }}>
                     <Field label="Project Thumbnail" name="imageUrl" type="url" placeholder="https://..." />
                     <Field label="GitHub Repo" name="githubUrl" type="url" placeholder="https://github.com/..." />
                     <Field label="Live Demo" name="liveUrl" type="url" placeholder="https://..." />
@@ -300,7 +300,7 @@ export default function ProjectsAdmin() {
                         onClick={(e) => e.stopPropagation()}>
                         <h2 style={{ fontWeight: 800, fontSize: "1.3rem", marginBottom: 32 }}>Update Project Detail</h2>
                         <form onSubmit={handleEditSave}>
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+                            <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
                                 <Field label="Title" name="title" defaultValue={editingProject.title} />
                                 <Field label="Stack" name="tags" defaultValue={editingProject.tags} />
                             </div>
@@ -309,7 +309,7 @@ export default function ProjectsAdmin() {
                                 <textarea name="description" rows={4} required defaultValue={editingProject.description}
                                     style={{ ...inputStyle, lineHeight: 1.6, resize: "vertical" }} />
                             </div>
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 32 }}>
+                            <div className="admin-grid-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 32 }}>
                                 <Field label="Image URL" name="imageUrl" type="url" defaultValue={editingProject.imageUrl ?? ""} />
                                 <Field label="GitHub" name="githubUrl" type="url" defaultValue={editingProject.githubUrl ?? ""} />
                                 <Field label="Live" name="liveUrl" type="url" defaultValue={editingProject.liveUrl ?? ""} />

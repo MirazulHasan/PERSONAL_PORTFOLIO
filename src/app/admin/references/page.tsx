@@ -153,12 +153,12 @@ export default function ReferencesAdmin() {
                     Add Reference
                 </h2>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+                <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
                     <Field label="Full Name" name="name" required placeholder="e.g. Dr. Sarah Jenkins" />
                     <Field label="Designation" name="designation" required placeholder="e.g. Research Director" />
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 20, marginBottom: 32 }}>
+                <div className="admin-grid-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 20, marginBottom: 32 }}>
                     <Field label="Company / University" name="company" placeholder="e.g. MIT Lab" />
                     <Field label="Email" name="email" type="email" placeholder="sarah@mit.edu" />
                     <Field label="Phone Number" name="phone" type="tel" placeholder="+1..." />
@@ -246,11 +246,11 @@ export default function ReferencesAdmin() {
                         onClick={(e) => e.stopPropagation()}>
                         <h3 style={{ fontWeight: 800, fontSize: "1.4rem", marginBottom: 32 }}>Update Reference Profile</h3>
                         <form onSubmit={handleEditSave}>
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+                            <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
                                 <Field label="Full Name" name="name" required defaultValue={editingItem.name} />
                                 <Field label="Designation" name="designation" required defaultValue={editingItem.designation} />
                             </div>
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 20, marginBottom: 32 }}>
+                            <div className="admin-grid-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 20, marginBottom: 32 }}>
                                 <Field label="Company" name="company" defaultValue={editingItem.company} />
                                 <Field label="Email" name="email" type="email" defaultValue={editingItem.email} />
                                 <Field label="Phone Number" name="phone" type="tel" defaultValue={editingItem.phone} />

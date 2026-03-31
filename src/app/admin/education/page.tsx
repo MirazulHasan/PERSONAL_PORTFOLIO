@@ -202,7 +202,7 @@ export default function EducationAdmin() {
                     <GraduationCap size={20} color="var(--accent)" />
                     Add Qualification
                 </h2>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24, alignItems: "flex-end" }}>
+                <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24, alignItems: "flex-end" }}>
                     <div>
                         <label style={labelStyle}>School / University</label>
                         <input name="school" placeholder="e.g. Harvard University" required style={inputStyle} />
@@ -217,7 +217,7 @@ export default function EducationAdmin() {
                     <input name="field" placeholder="e.g. Computer Science" style={inputStyle} />
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, alignItems: "flex-end", marginBottom: 8 }}>
+                <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, alignItems: "flex-end", marginBottom: 8 }}>
                     <div style={{ width: "100%" }}>
                         <label style={labelStyle}>Passing Year</label>
                         <input
@@ -331,7 +331,7 @@ export default function EducationAdmin() {
                         onClick={(e) => e.stopPropagation()}>
                         <h2 style={{ fontWeight: 800, fontSize: "1.3rem", marginBottom: 32 }}>Edit Education</h2>
                         <form onSubmit={handleEditSave}>
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24, alignItems: "flex-end" }}>
+                            <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24, alignItems: "flex-end" }}>
                                 <div>
                                     <label style={labelStyle}>School / University</label>
                                     <input name="school" defaultValue={editingItem.school} required style={inputStyle} />
@@ -346,7 +346,7 @@ export default function EducationAdmin() {
                                 <input name="field" defaultValue={editingItem.field ?? ""} style={inputStyle} />
                             </div>
 
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, alignItems: "flex-end", marginBottom: 8 }}>
+                            <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, alignItems: "flex-end", marginBottom: 8 }}>
                                 <div style={{ width: "100%" }}>
                                     <label style={labelStyle}>Passing Year</label>
                                     <input

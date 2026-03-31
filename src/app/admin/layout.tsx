@@ -16,7 +16,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
             {/* ── Content Layer ── */}
             <Sidebar />
-            <main style={{
+            <main className="admin-main-content" style={{
                 marginLeft: 260,
                 flex: 1,
                 padding: "40px 5% 60px",

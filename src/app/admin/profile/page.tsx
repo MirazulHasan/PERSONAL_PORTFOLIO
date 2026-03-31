@@ -283,7 +283,7 @@ export default function ProfileAdmin() {
                         <span style={{ width: 3, height: 20, background: "var(--accent)", borderRadius: 4, display: "inline-block" }} />
                         Basic Information
                     </h2>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+                    <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
                         <Field label="Full Name" name="name" defaultValue={profile?.name ?? ""} />
                         <Field label="Professional Title" name="title" defaultValue={profile?.title ?? ""} />
                     </div>
@@ -388,7 +388,7 @@ export default function ProfileAdmin() {
                         Page Section Customization
                     </h2>
 
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "40px 24px" }}>
+                    <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "40px 24px" }}>
                         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                             <p style={{ fontSize: 13, fontWeight: 700, color: "var(--accent)", borderBottom: "1px solid var(--border)", paddingBottom: 8 }}>🎓 Education</p>
                             <Field label="Title" name="educationTitle" defaultValue={profile?.educationTitle} />
@@ -473,7 +473,7 @@ export default function ProfileAdmin() {
                         </div>
 
                         {/* Controls */}
-                        <div style={{ marginTop: 24, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+                        <div className="admin-grid-2" style={{ marginTop: 24, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
                             <div>
                                 <label style={{ display: "flex", justifyContent: "space-between", fontSize: 12, fontWeight: 700, color: "var(--text-muted)", marginBottom: 10, textTransform: "uppercase" }}>
                                     <span>Zoom</span>

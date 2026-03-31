@@ -186,7 +186,7 @@ export default function ExperienceAdmin() {
                     Add Work Experience
                 </h2>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+                <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
                     <div>
                         <label style={labelStyle}>Company Name</label>
                         <input name="company" placeholder="e.g. Google" required style={inputStyle} />
@@ -203,7 +203,7 @@ export default function ExperienceAdmin() {
                         style={{ ...inputStyle, lineHeight: 1.6, resize: "vertical" } as any} />
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 8, alignItems: "flex-end" }}>
+                <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 8, alignItems: "flex-end" }}>
                     <div>
                         <label style={labelStyle}>Start Date</label>
                         <input type="date" name="startDate" required style={inputStyle} />
@@ -300,7 +300,7 @@ export default function ExperienceAdmin() {
                         onClick={(e) => e.stopPropagation()}>
                         <h2 style={{ fontWeight: 800, fontSize: "1.3rem", marginBottom: 32 }}>Edit Experience</h2>
                         <form onSubmit={handleEditSave}>
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+                            <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
                                 <div>
                                     <label style={labelStyle}>Company Name</label>
                                     <input name="company" defaultValue={editingItem.company} required style={inputStyle} />
@@ -315,7 +315,7 @@ export default function ExperienceAdmin() {
                                 <textarea name="description" rows={4} defaultValue={editingItem.description ?? ""}
                                     style={{ ...inputStyle, lineHeight: 1.6, resize: "vertical" } as any} />
                             </div>
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 8, alignItems: "flex-end" }}>
+                            <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 8, alignItems: "flex-end" }}>
                                 <div>
                                     <label style={labelStyle}>Start Date</label>
                                     <input type="date" name="startDate" defaultValue={toDateInput(editingItem.startDate)} required style={inputStyle} />

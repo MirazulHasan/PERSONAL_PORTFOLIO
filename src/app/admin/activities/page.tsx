@@ -173,7 +173,7 @@ export default function ActivitiesAdmin() {
                     Add Activity
                 </h2>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+                <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
                     <div>
                         <label style={labelStyle}>Title / Organization</label>
                         <input name="title" placeholder="e.g. Computer Science Club" required style={inputStyle} />
@@ -190,7 +190,7 @@ export default function ActivitiesAdmin() {
                         style={{ ...inputStyle, lineHeight: 1.6, resize: "vertical" } as any} />
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 8, alignItems: "flex-end" }}>
+                <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 8, alignItems: "flex-end" }}>
                     <div>
                         <label style={labelStyle}>Start Date</label>
                         <input type="date" name="startDate" style={inputStyle} />
@@ -285,7 +285,7 @@ export default function ActivitiesAdmin() {
                         onClick={(e) => e.stopPropagation()}>
                         <h2 style={{ fontWeight: 800, fontSize: "1.3rem", marginBottom: 32 }}>Edit Activity</h2>
                         <form onSubmit={handleEditSave}>
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+                            <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
                                 <div>
                                     <label style={labelStyle}>Title / Organization</label>
                                     <input name="title" defaultValue={editingItem.title} required style={inputStyle} />
@@ -300,7 +300,7 @@ export default function ActivitiesAdmin() {
                                 <textarea name="description" rows={4} defaultValue={editingItem.description ?? ""}
                                     style={{ ...inputStyle, lineHeight: 1.6, resize: "vertical" } as any} />
                             </div>
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 8 }}>
+                            <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 8 }}>
                                 <div>
                                     <label style={labelStyle}>Start Date</label>
                                     <input type="date" name="startDate" defaultValue={toDateInput(editingItem.startDate)} style={inputStyle} />

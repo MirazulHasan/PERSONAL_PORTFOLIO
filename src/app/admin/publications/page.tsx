@@ -196,12 +196,12 @@ export default function PublicationsAdmin() {
                     Add New Reference
                 </h2>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+                <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
                     <Field label="Paper / Article Title" name="title" required placeholder="Full title of your work" />
                     <Field label="Publisher / Journal" name="publisher" placeholder="e.g. Nature, IEEE, etc." disabled={submitted} />
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+                <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
                     <Field label="Date Published" name="date" type="date" required disabled={submitted} />
                     <Field label="Source URL" name="url" type="url" placeholder="https://doi.org/..." disabled={submitted} />
                 </div>
@@ -316,11 +316,11 @@ export default function PublicationsAdmin() {
                         onClick={(e) => e.stopPropagation()}>
                         <h2 style={{ fontWeight: 800, fontSize: "1.4rem", marginBottom: 32 }}>Update Research Entry</h2>
                         <form onSubmit={handleEditSave}>
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+                            <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
                                 <Field label="Paper Title" name="title" required defaultValue={editingItem.title} />
                                 <Field label="Publisher" name="publisher" defaultValue={editingItem.publisher} disabled={editSubmitted} />
                             </div>
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+                            <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
                                 <Field label="Publication Date" name="date" type="date" required defaultValue={toDateInput(editingItem.date)} disabled={editSubmitted} />
                                 <Field label="URL" name="url" type="url" defaultValue={editingItem.url} disabled={editSubmitted} />
                             </div>
