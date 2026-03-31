@@ -199,7 +199,7 @@ export default async function AdminDashboard() {
             <div id="cv-card" className="cv-card">
 
                 {/* Header */}
-                <div className="cv-card-header admin-cv-header-mobile" style={{ padding: "60px 48px", background: "linear-gradient(to bottom, rgba(255,255,255,0.02), transparent)", borderBottom: "1px solid var(--border)", display: "flex", gap: 40, alignItems: "center" }}>
+                <div className="cv-card-header" style={{ padding: "60px 48px", background: "linear-gradient(to bottom, rgba(255,255,255,0.02), transparent)", borderBottom: "1px solid var(--border)", display: "flex", gap: 40, alignItems: "center" }}>
                     <div style={{
                         width: 140, height: 140, borderRadius: "50%",
                         background: "linear-gradient(135deg, #6c63ff, #ff6584)",
@@ -256,7 +256,7 @@ export default async function AdminDashboard() {
                     </div>
                 </div>
 
-                <div className="admin-cv-main-mobile" style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 1, background: "var(--border)", flex: 1, minHeight: 0 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 1, background: "var(--border)", flex: 1, minHeight: 0 }}>
                     {/* Main Column */}
                     <div className="cv-main-col" style={{ background: "rgba(255,255,255,0.01)", padding: 48, overflow: "hidden" }}>
 

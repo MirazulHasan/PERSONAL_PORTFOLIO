@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import ThemeToggle from "@/components/ThemeToggle";
-import { Menu, X } from "lucide-react";
 
 const navigation = [
     { name: "Dashboard", href: "/admin", icon: "⚡" },
@@ -41,27 +40,9 @@ export function Sidebar() {
     }, [pathname]);
 
     const initials = (profile?.name ?? "M").charAt(0).toUpperCase();
-    const [isMobileOpen, setIsMobileOpen] = useState(false);
 
     return (
-        <>
-        {/* Mobile Header */}
-        <div className="admin-mobile-header hide-on-print">
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <div style={{ color: "var(--text-primary)", width: 32, height: 32, borderRadius: 8, background: "linear-gradient(135deg, #6c63ff, #ff6584)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 16 }}>
-                    {initials}
-                </div>
-                <span className="gradient-text" style={{ fontWeight: 800, fontSize: "1.1rem" }}>Admin Portal</span>
-            </div>
-            <button onClick={() => setIsMobileOpen(!isMobileOpen)} style={{ background: "transparent", border: "none", color: "var(--text-primary)", cursor: "pointer", display: "flex", alignItems: "center" }}>
-                {isMobileOpen ? <X size={28} /> : <Menu size={28} />}
-            </button>
-        </div>
-
-        {/* Overlay for mobile */}
-        <div className={`admin-overlay hide-on-print ${isMobileOpen ? "open" : ""}`} onClick={() => setIsMobileOpen(false)} />
-
-        <div className={`hide-on-print admin-sidebar ${isMobileOpen ? "open" : ""}`} style={{
+        <div className="hide-on-print" style={{
             width: 260,
             minHeight: "100vh",
             background: "var(--bg-nav)",
@@ -134,7 +115,7 @@ export function Sidebar() {
                             display: "flex",
                             alignItems: "center",
                             gap: 10,
-                        }} onClick={() => setIsMobileOpen(false)}>
+                        }}>
                             <span style={{ fontSize: 15, width: 20, textAlign: "center" }}>{item.icon}</span>
                             {item.name}
                         </Link>
@@ -174,6 +155,5 @@ export function Sidebar() {
                 </div>
             </div>
         </div>
-        </>
     );
 }
