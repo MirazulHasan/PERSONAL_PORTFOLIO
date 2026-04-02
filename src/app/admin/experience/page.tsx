@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { GripVertical, Plus, Calendar, Edit3, Trash2, Briefcase } from "lucide-react";
+import { GripVertical, Calendar, Edit3, Trash2, Briefcase } from "lucide-react";
 
 function DroppableFix({ children, ...props }: any) {
     const [enabled, setEnabled] = useState(false);

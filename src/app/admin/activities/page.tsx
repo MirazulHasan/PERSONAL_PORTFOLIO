@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { GripVertical, Plus, Calendar, Edit3, Trash2, Activity } from "lucide-react";
+import { GripVertical, Calendar, Edit3, Trash2, Activity } from "lucide-react";
 
 const inputStyle: React.CSSProperties = {
     width: "100%", padding: "12px 16px",

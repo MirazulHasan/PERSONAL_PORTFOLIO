@@ -155,61 +155,20 @@ const CategoryCombobox = ({ value, onChange, placeholder, categories }: any) => 
                     style={{ ...inputStyle, paddingRight: 40 }}
                 />
                 <div
-                    onMouseDown={(e) => { e.preventDefault(); isOpen ? setIsOpen(false) : openDropdown(); }}
+                    onMouseDown={(e) => {
+                        e.preventDefault();
+                        if (isOpen) setIsOpen(false);
+                        else openDropdown();
+                    }}
                     style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", cursor: "pointer", color: "var(--text-muted)" }}
                 >
                     <ChevronDown size={18} style={{ transform: isOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
                 </div>
             </div>
-            {isOpen && (
-                createPortal(
-                    <div
-                        id="category-dropdown-portal"
-                        style={{
-                            position: "fixed",
-                            top: dropdownPos.top,
-                            left: dropdownPos.left,
-                            width: dropdownPos.width,
-                            zIndex: 99999,
-                            maxHeight: 220,
-                            overflowY: "auto",
-                            background: "var(--bg-card, #0f0f1a)",
-                            border: "1px solid var(--border)",
-                            borderRadius: 12,
-                            boxShadow: "0 16px 48px rgba(0,0,0,0.6)",
-                            backdropFilter: "blur(20px)",
-                        }}
-                    >
-                        {categories.map((cat: string) => (
-                            <div
-                                key={cat}
-                                onMouseDown={(e) => {
-                                    e.preventDefault();
-                                    setInputValue(cat);
-                                    onChange(cat);
-                                    setIsOpen(false);
-                                }}
-                                style={{
-                                    padding: "10px 16px",
-                                    cursor: "pointer",
-                                    fontSize: 14,
-                                    color: "var(--text-primary)",
-                                    borderBottom: "1px solid var(--border)",
-                                    transition: "background 0.15s",
-                                }}
-                                onMouseEnter={(e) => e.currentTarget.style.background = "rgba(108,99,255,0.15)"}
-                                onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
-                            >
-                                {cat}
-                            </div>
-                        ))}
-                    </div>,
-                    document.body
-                )
-            )}
+            {dropdown}
         </div>
     );
-};
+}
 
 // Prevents SSR mismatch with react-beautiful-dnd / hello-pangea
 function DroppableFix({ children, ...props }: any) {
