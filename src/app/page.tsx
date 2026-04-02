@@ -6,6 +6,8 @@ import SkillTree from "@/components/SkillTree";
 import Navbar from "@/components/Navbar";
 import CodingPanel from "@/components/CodingPanel";
 import EducationSection from "@/components/EducationSection";
+import ExperienceSection from "@/components/ExperienceSection";
+import PublicationSection from "@/components/PublicationSection";
 
 export const dynamic = 'force-dynamic';
 
@@ -259,20 +261,7 @@ export default async function HomePage() {
           <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>{(profile as any)?.experienceSubtitle ?? "Career Path"}</p>
           <h2 className="section-title" style={{ marginBottom: 60 }}>{(profile as any)?.experienceTitle ?? "Professional Experience"}</h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
-            {experience.map((exp: any) => (
-              <div key={exp.id} className="glass hover-card experience-card-inner" style={{ padding: 40 }}>
-                <div className="experience-card-header" style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 16, marginBottom: 16 }}>
-                  <div>
-                    <h3 style={{ fontSize: "1.3rem", fontWeight: 800, marginBottom: 4 }}>{exp.position}</h3>
-                    <p style={{ fontSize: "1.1rem", color: "var(--accent)", fontWeight: 700 }}>{exp.company}</p>
-                  </div>
-                  <div style={{ color: "var(--text-muted)", fontWeight: 700, fontSize: 14 }}>
-                    {new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric' }).format(new Date(exp.startDate))} — {exp.current ? "Present" : exp.endDate ? new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric' }).format(new Date(exp.endDate)) : ""}
-                  </div>
-                </div>
-                <p style={{ color: "var(--text-muted)", lineHeight: 1.8, fontSize: 15 }}>{exp.description}</p>
-              </div>
-            ))}
+            <ExperienceSection experience={experience} />
           </div>
         </section>
       )}
@@ -330,23 +319,7 @@ export default async function HomePage() {
             <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>{(profile as any)?.publicationsSubtitle ?? "Academic Work"}</p>
             <h2 className="section-title" style={{ marginBottom: 60 }}>{(profile as any)?.publicationsTitle ?? "Research & Publications"}</h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-              {publications.map((pub: any) => (
-                <div key={pub.id} className="glass hover-card" style={{ padding: 32 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
-                    <h3 style={{ fontSize: "1.2rem", fontWeight: 700 }}>{pub.title}</h3>
-                    {pub.submitted && <span style={{ background: "rgba(255,179,71,0.15)", color: "#ffb347", fontSize: 12, fontWeight: 800, padding: "2px 10px", borderRadius: 50, border: "1px solid rgba(255,179,71,0.3)" }}>Submitted</span>}
-                  </div>
-                  {!pub.submitted && (
-                    <p style={{ color: "var(--accent)", fontSize: 14, fontWeight: 600, marginBottom: 16 }}>
-                      {pub.publisher} • {pub.date ? new Date(pub.date).getFullYear() : ""}
-                    </p>
-                  )}
-                  {pub.submitted && <p style={{ color: "var(--text-muted)", fontSize: 14, fontWeight: 600, marginBottom: 16, fontStyle: "italic" }}>Currently under review</p>}
-
-                  {pub.description && <p style={{ color: "var(--text-muted)", fontSize: 14, lineHeight: 1.7, marginBottom: 20 }}>{pub.description}</p>}
-                  {!pub.submitted && pub.url && <a href={pub.url} target="_blank" rel="noreferrer" className="btn-outline" style={{ padding: "8px 20px", fontSize: 13 }}>Read Publication ↗</a>}
-                </div>
-              ))}
+              <PublicationSection publications={publications} />
             </div>
           </div>
         </section>

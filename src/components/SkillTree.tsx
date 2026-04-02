@@ -27,14 +27,13 @@ export default function SkillTree({ skillsByCategory }: SkillTreeProps) {
         borderRadius: "6px",
         fontSize: "12px",
         fontWeight: 700,
-        color: "var(--text-primary)",
         textTransform: "uppercase",
         letterSpacing: "0.05em",
-        whiteSpace: "normal",
-        wordBreak: "break-word",
+        whiteSpace: "nowrap",
         lineHeight: "1.4",
         transition: "all 0.3s ease",
-        cursor: "default"
+        cursor: "default",
+        alignSelf: "flex-start"
       }}
     >
       {name}
@@ -128,7 +127,7 @@ export default function SkillTree({ skillsByCategory }: SkillTreeProps) {
                 initial={{ x: isEven ? -20 : 20, opacity: 0 }}
                 whileInView={{ x: 0, opacity: 1 }}
                 style={{
-                  width: "42%",
+                  maxWidth: "42%",
                   textAlign: isEven ? "right" : "left",
                   padding: "0 20px"
                 }}
@@ -144,7 +143,12 @@ export default function SkillTree({ skillsByCategory }: SkillTreeProps) {
                   <div style={{ height: 1, width: 30, background: "var(--accent)", marginLeft: isEven ? "auto" : 0, marginRight: isEven ? 0 : "auto", marginTop: 4, opacity: 0.6 }} />
                 </div>
 
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: isEven ? "flex-end" : "flex-start" }}>
+                <div style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 8,
+                  justifyContent: isEven ? "flex-end" : "flex-start"
+                }}>
                   {skillsByCategory[cat].map((s: any) => (
                     <Tag key={s.id} name={s.name} />
                   ))}
