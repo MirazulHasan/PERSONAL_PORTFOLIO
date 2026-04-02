@@ -32,6 +32,17 @@ const Field = ({ label, name, type = "text", placeholder = "", defaultValue = ""
     </div>
 );
 
+// Prevents SSR mismatch with react-beautiful-dnd / hello-pangea
+function DroppableFix({ children, ...props }: any) {
+    const [enabled, setEnabled] = useState(false);
+    useEffect(() => {
+        const frame = requestAnimationFrame(() => setEnabled(true));
+        return () => { cancelAnimationFrame(frame); setEnabled(false); };
+    }, []);
+    if (!enabled) return null;
+    return <Droppable {...props}>{children}</Droppable>;
+}
+
 export default function ReferencesAdmin() {
     const [items, setItems] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -48,6 +59,11 @@ export default function ReferencesAdmin() {
                 setLoading(false);
             });
     }, []);
+
+    const onDragStart = () => {
+        if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+        window.getSelection()?.removeAllRanges();
+    };
 
     const onDragEnd = async (result: any) => {
         if (!result.destination) return;
@@ -131,7 +147,10 @@ export default function ReferencesAdmin() {
 
     return (
         <div style={{ maxWidth: 1000, paddingBottom: 100 }}>
-            <style>{`.ref-row:hover .drag-handle { opacity: 1 !important; transform: translateX(0) !important; }`}</style>
+            <style>{`
+                .ref-row { transition: background 0.2s, box-shadow 0.2s; }
+                .ref-row:hover .drag-handle { opacity: 1 !important; transform: translateX(0) !important; }
+            `}</style>
             
             <div style={{ marginBottom: 40, display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
                 <div>
@@ -173,70 +192,83 @@ export default function ReferencesAdmin() {
             </form>
 
             {/* ── DRAGGABLE RECORDS LIST ── */}
-            <div className="glass" style={{ border: "1px solid var(--border)", overflow: "hidden" }}>
-                <div style={{ padding: "24px 32px", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-                    <h3 style={{ fontWeight: 800, fontSize: "1.1rem" }}>Recorded References</h3>
-                    <p style={{ fontSize: 11, color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase" }}>Drag to reorder priority list</p>
+            <div className="glass" style={{ padding: "18px 32px", border: "1px solid var(--border)", borderRadius: 16, display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(255,255,255,0.02)", marginBottom: 24 }}>
+                <h2 style={{ fontSize: "1.05rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.02em" }}>Priority Sequence</h2>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <span style={{ fontSize: 9, fontWeight: 800, color: "var(--text-muted)", letterSpacing: "0.12em", textTransform: "uppercase" }}>
+                        Drag to reorder
+                    </span>
+                    <span style={{ color: "var(--border)", opacity: 0.5 }}>•</span>
+                    <span style={{ fontSize: 9, fontWeight: 800, color: "var(--text-muted)", letterSpacing: "0.12em", textTransform: "uppercase" }}>
+                        Click to edit
+                    </span>
                 </div>
+            </div>
 
-                <DragDropContext onDragEnd={onDragEnd}>
-                    <Droppable droppableId="ref-list">
-                        {(provided) => (
-                            <div {...provided.droppableProps} ref={provided.innerRef}>
-                                {items.length === 0 ? (
-                                    <p style={{ padding: 60, textAlign: "center", color: "var(--text-muted)", fontSize: 14 }}>No references documented.</p>
-                                ) : items.map((item, index) => (
-                                    <Draggable key={item.id} draggableId={item.id} index={index}>
-                                        {(provided, snapshot) => (
-                                            <div ref={provided.innerRef} {...provided.draggableProps} className="ref-row"
-                                                style={{
-                                                    ...provided.draggableProps.style,
-                                                    padding: "24px 32px",
-                                                    borderBottom: "1px solid var(--border)",
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    background: snapshot.isDragging ? "rgba(108,99,255,0.08)" : "transparent",
-                                                    backdropFilter: snapshot.isDragging ? "blur(20px)" : "none",
-                                                    transition: "background 0.2s"
-                                                }}>
-                                                
-                                                <div {...provided.dragHandleProps} className="drag-handle"
-                                                    style={{ marginRight: 24, color: "var(--text-muted)", cursor: "grab", opacity: 0.3, transition: "all 0.2s" }}>
-                                                    <GripVertical size={20} />
+            <DragDropContext onDragStart={onDragStart} onDragEnd={(res) => { onDragEnd(res); window.getSelection()?.removeAllRanges(); }}>
+                <DroppableFix droppableId="ref-list">
+                    {(provided: any) => (
+                        <div {...provided.droppableProps} ref={provided.innerRef} style={{ display: "flex", flexDirection: "column" }}>
+                            {items.length === 0 ? (
+                                <p style={{ padding: 60, textAlign: "center", color: "var(--text-muted)", fontSize: 14 }}>No references documented.</p>
+                            ) : items.map((item, index) => (
+                                <Draggable key={item.id} draggableId={item.id} index={index}>
+                                    {(provided: any, snapshot: any) => (
+                                        <div
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            className="glass ref-row"
+                                            style={{
+                                                ...provided.draggableProps.style,
+                                                padding: "24px 32px",
+                                                border: "1px solid var(--border)",
+                                                borderRadius: 20,
+                                                marginBottom: 16,
+                                                display: "flex",
+                                                alignItems: "center",
+                                                background: snapshot.isDragging ? "rgba(108,99,255,0.12)" : "var(--bg-card)",
+                                                backdropFilter: snapshot.isDragging ? "blur(30px)" : "blur(10px)",
+                                                boxShadow: snapshot.isDragging ? "0 20px 50px rgba(0,0,0,0.4)" : "none",
+                                                zIndex: snapshot.isDragging ? 1000 : 1,
+                                                ...(snapshot.isDropAnimating ? { transitionDuration: "0.001s" } : {}),
+                                            }}
+                                        >
+                                            <div {...provided.dragHandleProps} className="drag-handle"
+                                                style={{ marginRight: 24, color: "var(--text-muted)", cursor: "grab", opacity: 0.4, transition: "all 0.2s" }}>
+                                                <GripVertical size={20} />
+                                            </div>
+
+                                            <div style={{ flex: 1, minWidth: 0 }}>
+                                                <h3 style={{ fontWeight: 800, fontSize: "1.1rem", color: "var(--text-primary)", marginBottom: 8, letterSpacing: "-0.01em" }}>{item.name}</h3>
+                                                <div style={{ display: "flex", alignItems: "center", gap: 10, color: "var(--accent)", fontSize: 13, fontWeight: 800, marginBottom: 12 }}>
+                                                    <Building2 size={15} />
+                                                    {item.designation} {item.company ? `· ${item.company}` : ""}
                                                 </div>
-
-                                                <div style={{ flex: 1, minWidth: 0 }}>
-                                                    <h3 style={{ fontWeight: 700, fontSize: "1.1rem", color: "var(--text-primary)", marginBottom: 4 }}>{item.name}</h3>
-                                                    <div style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--accent)", fontSize: 13, fontWeight: 700, marginBottom: 8 }}>
-                                                        <Building2 size={14} />
-                                                        {item.designation} {item.company ? `at ${item.company}` : ""}
-                                                    </div>
-                                                    <div style={{ display: "flex", flexWrap: "wrap", gap: 20, color: "var(--text-muted)", fontSize: 12, fontWeight: 700 }}>
-                                                        {item.email && <div style={{ display: "flex", alignItems: "center", gap: 6 }}><Mail size={13} /> {item.email}</div>}
-                                                        {item.phone && <div style={{ display: "flex", alignItems: "center", gap: 6 }}><Phone size={13} /> {item.phone}</div>}
-                                                    </div>
-                                                </div>
-
-                                                <div style={{ display: "flex", gap: 8, marginLeft: 24 }}>
-                                                    <button onClick={() => openEdit(item)}
-                                                        style={{ background: "rgba(255,255,255,0.05)", border: "1px solid var(--border)", color: "var(--text-primary)", cursor: "pointer", fontSize: 12, padding: "8px 16px", borderRadius: 10, fontWeight: 700, display: "flex", alignItems: "center", gap: 6 }}>
-                                                        <Edit3 size={14} /> Edit
-                                                    </button>
-                                                    <button onClick={() => handleDelete(item.id)}
-                                                        style={{ background: "rgba(255,59,59,0.08)", border: "1px solid rgba(255,59,59,0.2)", color: "#ff6b6b", cursor: "pointer", fontSize: 12, padding: "8px 16px", borderRadius: 10, fontWeight: 700 }}>
-                                                        <Trash2 size={14} />
-                                                    </button>
+                                                <div style={{ display: "flex", flexWrap: "wrap", gap: 24, color: "var(--text-muted)", fontSize: 12, fontWeight: 700 }}>
+                                                    {item.email && <div style={{ display: "flex", alignItems: "center", gap: 8 }}><Mail size={14} /> {item.email}</div>}
+                                                    {item.phone && <div style={{ display: "flex", alignItems: "center", gap: 8 }}><Phone size={14} /> {item.phone}</div>}
                                                 </div>
                                             </div>
-                                        )}
-                                    </Draggable>
-                                ))}
-                                {provided.placeholder}
-                            </div>
-                        )}
-                    </Droppable>
-                </DragDropContext>
-            </div>
+
+                                            <div style={{ display: "flex", gap: 10, marginLeft: 24 }}>
+                                                <button onClick={() => openEdit(item)}
+                                                    style={{ background: "rgba(255,255,255,0.03)", border: "1px solid var(--border)", color: "var(--text-primary)", cursor: "pointer", fontSize: 11, padding: "10px 18px", borderRadius: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 8 }}>
+                                                    <Edit3 size={14} /> EDIT
+                                                </button>
+                                                <button onClick={() => handleDelete(item.id)}
+                                                    style={{ background: "rgba(255,59,59,0.06)", border: "1px solid rgba(255,59,59,0.2)", color: "#ff6b6b", cursor: "pointer", fontSize: 11, padding: "10px 18px", borderRadius: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 8 }}>
+                                                    <Trash2 size={14} /> DELETE
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </Draggable>
+                            ))}
+                            {provided.placeholder}
+                        </div>
+                    )}
+                </DroppableFix>
+            </DragDropContext>
 
             {/* ── EDIT MODAL ── */}
             {editingItem && (

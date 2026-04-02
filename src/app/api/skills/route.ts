@@ -23,21 +23,33 @@ export async function PATCH(req: Request) {
         }
 
         const body = await req.json();
-        const { orders } = body;
+        const { orders, renameCategory } = body;
 
-        await Promise.all(
-            orders.map((item: any) =>
-                prisma.skill.update({
-                    where: { id: item.id },
-                    // @ts-ignore
-                    data: { order: item.order }
-                })
-            )
-        );
+        if (renameCategory) {
+            const { oldName, newName } = renameCategory;
+            await prisma.skill.updateMany({
+                where: { category: oldName },
+                data: { category: newName }
+            });
+            return NextResponse.json({ success: true });
+        }
 
-        return NextResponse.json({ success: true });
+        if (orders) {
+            await Promise.all(
+                orders.map((item: any) =>
+                    prisma.skill.update({
+                        where: { id: item.id },
+                        // @ts-ignore
+                        data: { order: item.order }
+                    })
+                )
+            );
+            return NextResponse.json({ success: true });
+        }
+
+        return NextResponse.json({ error: "Invalid request" }, { status: 400 });
     } catch {
-        return NextResponse.json({ error: "Failed to reorder skills" }, { status: 500 });
+        return NextResponse.json({ error: "Operation failed" }, { status: 500 });
     }
 }
 
@@ -93,12 +105,18 @@ export async function DELETE(req: Request) {
 
         const { searchParams } = new URL(req.url);
         const id = searchParams.get("id");
+        const category = searchParams.get("category");
 
-        if (!id) return NextResponse.json({ error: "ID is required" }, { status: 400 });
+        if (category) {
+            await prisma.skill.deleteMany({ where: { category } });
+            return NextResponse.json({ success: true });
+        }
+
+        if (!id) return NextResponse.json({ error: "ID or Category is required" }, { status: 400 });
 
         await prisma.skill.delete({ where: { id } });
         return NextResponse.json({ success: true });
     } catch {
-        return NextResponse.json({ error: "Failed to delete skill" }, { status: 500 });
+        return NextResponse.json({ error: "Failed to delete" }, { status: 500 });
     }
 }

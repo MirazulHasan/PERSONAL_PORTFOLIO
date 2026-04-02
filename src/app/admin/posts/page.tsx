@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Edit3, Trash2 } from "lucide-react";
 const inputStyle: React.CSSProperties = {
     width: "100%", padding: "12px 16px",
     background: "rgba(255,255,255,0.03)", border: "1px solid var(--border)",
@@ -172,9 +173,15 @@ export default function PostsAdmin() {
                                     <span style={{ marginLeft: 8, color: post.published ? "var(--accent)" : "#ffb347", fontWeight: 800 }}>{post.published ? "PUBLISHED" : "DRAFT"}</span>
                                 </p>
                             </div>
-                            <div style={{ display: "flex", gap: 8 }}>
-                                <button onClick={() => setEditingPost(post)} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid var(--border)", color: "var(--text-primary)", cursor: "pointer", fontSize: 12, padding: "7px 14px", borderRadius: 8, fontWeight: 700 }}>Edit</button>
-                                <button onClick={() => handleDelete(post.id)} style={{ background: "rgba(255,59,59,0.08)", border: "1px solid rgba(255,59,59,0.2)", color: "#ff6b6b", cursor: "pointer", fontSize: 12, padding: "7px 14px", borderRadius: 8, fontWeight: 700 }}>Delete</button>
+                            <div style={{ display: "flex", gap: 10 }}>
+                                <button onClick={() => setEditingPost(post)} 
+                                    style={{ background: "rgba(255,255,255,0.03)", border: "1px solid var(--border)", color: "var(--text-primary)", cursor: "pointer", fontSize: 11, padding: "10px 18px", borderRadius: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 8 }}>
+                                    <Edit3 size={14} /> EDIT
+                                </button>
+                                <button onClick={() => handleDelete(post.id)} 
+                                    style={{ background: "rgba(255,59,59,0.06)", border: "1px solid rgba(255,59,59,0.2)", color: "#ff6b6b", cursor: "pointer", fontSize: 11, padding: "10px 18px", borderRadius: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 8 }}>
+                                    <Trash2 size={14} /> DELETE
+                                </button>
                             </div>
                         </div>
                     ))}

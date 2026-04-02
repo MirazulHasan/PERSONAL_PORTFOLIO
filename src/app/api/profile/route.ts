@@ -40,7 +40,8 @@ export async function PUT(req: Request) {
             publicationsTitle, publicationsSubtitle,
             activitiesTitle, activitiesSubtitle,
             referencesTitle, referencesSubtitle,
-            blogTitle, blogSubtitle
+            blogTitle, blogSubtitle,
+            availability
         } = body;
 
         const profile = await prisma.profile.findFirst();
@@ -68,7 +69,8 @@ export async function PUT(req: Request) {
             referencesTitle: clean(referencesTitle, "References"),
             referencesSubtitle: clean(referencesSubtitle, "Endorsements"),
             blogTitle: clean(blogTitle, "Latest Writing"),
-            blogSubtitle: clean(blogSubtitle, "Journal")
+            blogSubtitle: clean(blogSubtitle, "Journal"),
+            availability: clean(availability, "Available for new opportunities")
         };
 
         if (profile) {

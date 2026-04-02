@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { GripVertical, Activity, Calendar } from "lucide-react";
+import { GripVertical, Plus, Calendar, Edit3, Trash2, Activity } from "lucide-react";
 
 const inputStyle: React.CSSProperties = {
     width: "100%", padding: "12px 16px",
@@ -19,6 +19,17 @@ const labelStyle: React.CSSProperties = {
 function toDateInput(dateStr: string | null | undefined) {
     if (!dateStr) return "";
     return new Date(dateStr).toISOString().split("T")[0];
+}
+
+// Prevents SSR mismatch with react-beautiful-dnd / hello-pangea
+function DroppableFix({ children, ...props }: any) {
+    const [enabled, setEnabled] = useState(false);
+    useEffect(() => {
+        const frame = requestAnimationFrame(() => setEnabled(true));
+        return () => { cancelAnimationFrame(frame); setEnabled(false); };
+    }, []);
+    if (!enabled) return null;
+    return <Droppable {...props}>{children}</Droppable>;
 }
 
 export default function ActivitiesAdmin() {
@@ -44,6 +55,11 @@ export default function ActivitiesAdmin() {
         const t = setTimeout(() => setError(null), 5000);
         return () => clearTimeout(t);
     }, [error]);
+
+    const onDragStart = () => {
+        if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+        window.getSelection()?.removeAllRanges();
+    };
 
     const onDragEnd = async (result: any) => {
         if (!result.destination) return;
@@ -145,7 +161,10 @@ export default function ActivitiesAdmin() {
 
     return (
         <div style={{ maxWidth: 1000, paddingBottom: 100 }}>
-            <style>{`.act-row:hover .drag-handle { opacity: 1 !important; transform: translateX(0) !important; }`}</style>
+            <style>{`
+                .act-row { transition: background 0.2s, box-shadow 0.2s; }
+                .act-row:hover .drag-handle { opacity: 1 !important; transform: translateX(0) !important; }
+            `}</style>
             
             {error && (
                 <div style={{ position: "fixed", top: 24, right: 24, zIndex: 2000, padding: "16px 24px", borderRadius: 12, fontSize: 14, fontWeight: 600, background: "rgba(239,68,68,0.15)", backdropFilter: "blur(12px)", border: "1px solid rgba(239,68,68,0.3)", color: "#ef4444", boxShadow: "0 10px 40px rgba(0,0,0,0.4)", display: "flex", alignItems: "center", gap: 10 }}>
@@ -213,69 +232,91 @@ export default function ActivitiesAdmin() {
             </form>
 
             {/* ── DRAGGABLE RECORDS LIST ── */}
-            <div className="glass" style={{ border: "1px solid var(--border)", overflow: "hidden" }}>
-                <div style={{ padding: "24px 32px", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-                    <h3 style={{ fontWeight: 800, fontSize: "1.1rem" }}>Recorded Activities</h3>
-                    <p style={{ fontSize: 11, color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase" }}>Drag to reorder · Click edit to modify</p>
+            <div className="glass" style={{ padding: "18px 32px", border: "1px solid var(--border)", borderRadius: 16, display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(255,255,255,0.02)", marginBottom: 24 }}>
+                <h2 style={{ fontSize: "1.05rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.02em" }}>Activity Sequence</h2>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <span style={{ fontSize: 9, fontWeight: 800, color: "var(--text-muted)", letterSpacing: "0.12em", textTransform: "uppercase" }}>
+                        Drag to reorder
+                    </span>
+                    <span style={{ color: "var(--border)", opacity: 0.5 }}>•</span>
+                    <span style={{ fontSize: 9, fontWeight: 800, color: "var(--text-muted)", letterSpacing: "0.12em", textTransform: "uppercase" }}>
+                        Click to edit
+                    </span>
                 </div>
+            </div>
 
-                <DragDropContext onDragEnd={onDragEnd}>
-                    <Droppable droppableId="act-list">
-                        {(provided) => (
-                            <div {...provided.droppableProps} ref={provided.innerRef} style={{ display: "flex", flexDirection: "column" }}>
-                                {activities.length === 0 ? (
-                                    <p style={{ padding: 60, textAlign: "center", color: "var(--text-muted)", fontSize: 14 }}>List is empty.</p>
-                                ) : activities.map((item, index) => (
-                                    <Draggable key={item.id} draggableId={item.id} index={index}>
-                                        {(provided, snapshot) => (
-                                            <div ref={provided.innerRef} {...provided.draggableProps} className="act-row"
-                                                style={{
-                                                    ...provided.draggableProps.style,
-                                                    padding: "24px 32px",
-                                                    borderBottom: "1px solid var(--border)",
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    background: snapshot.isDragging ? "rgba(108,99,255,0.08)" : "transparent",
-                                                    backdropFilter: snapshot.isDragging ? "blur(20px)" : "none",
-                                                    transition: "background 0.2s",
-                                                }}>
+            <DragDropContext onDragStart={onDragStart} onDragEnd={(res) => { onDragEnd(res); window.getSelection()?.removeAllRanges(); }}>
+                <DroppableFix droppableId="act-list">
+                    {(provided: any) => (
+                        <div {...provided.droppableProps} ref={provided.innerRef} style={{ display: "flex", flexDirection: "column" }}>
+                            {activities.length === 0 ? (
+                                <p style={{ padding: 60, textAlign: "center", color: "var(--text-muted)", fontSize: 14 }}>History is empty.</p>
+                            ) : activities.map((item, index) => (
+                                <Draggable key={item.id} draggableId={item.id} index={index}>
+                                    {(provided: any, snapshot: any) => (
+                                        <div
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            className="glass act-row"
+                                            style={{
+                                                ...provided.draggableProps.style,
+                                                padding: "24px 32px",
+                                                border: "1px solid var(--border)",
+                                                borderRadius: 20,
+                                                marginBottom: 16,
+                                                display: "flex",
+                                                alignItems: "center",
+                                                background: snapshot.isDragging ? "rgba(108,99,255,0.12)" : "var(--bg-card)",
+                                                backdropFilter: snapshot.isDragging ? "blur(30px)" : "blur(10px)",
+                                                boxShadow: snapshot.isDragging ? "0 20px 50px rgba(0,0,0,0.4)" : "none",
+                                                zIndex: snapshot.isDragging ? 1000 : 1,
+                                                ...(snapshot.isDropAnimating ? { transitionDuration: "0.001s" } : {}),
+                                            }}
+                                        >
+                                            <div {...provided.dragHandleProps} className="drag-handle"
+                                                style={{ marginRight: 24, color: "var(--text-muted)", cursor: "grab", opacity: 0.4, transition: "all 0.2s" }}>
+                                                <GripVertical size={20} />
+                                            </div>
+
+                                            <div style={{ flex: 1, minWidth: 0 }}>
+                                                <h3 style={{ fontWeight: 800, fontSize: "1.1rem", color: "var(--text-primary)", marginBottom: 6, letterSpacing: "-0.01em" }}>{item.title}</h3>
+                                                {item.role && <p style={{ fontSize: 13, color: "var(--accent)", fontWeight: 800, marginBottom: 12, textTransform: "uppercase", letterSpacing: "0.02em" }}>{item.role}</p>}
                                                 
-                                                <div {...provided.dragHandleProps} className="drag-handle"
-                                                    style={{ marginRight: 24, color: "var(--text-muted)", cursor: "grab", opacity: 0.3, transition: "all 0.2s" }}>
-                                                    <GripVertical size={20} />
-                                                </div>
-
-                                                <div style={{ flex: 1, minWidth: 0 }}>
-                                                    <h3 style={{ fontWeight: 700, fontSize: "1.1rem", color: "var(--text-primary)", marginBottom: 4 }}>{item.title}</h3>
-                                                    {item.role && <p style={{ fontSize: 14, color: "var(--accent)", fontWeight: 700, marginBottom: 8 }}>{item.endDate && !item.current ? `Former ${item.role}` : item.role}</p>}
-                                                    <div style={{ display: "flex", alignItems: "center", gap: 12, color: "var(--text-muted)", fontSize: 12, fontWeight: 700 }}>
-                                                        <Calendar size={12} />
+                                                <div style={{ display: "flex", alignItems: "center", gap: 10, color: "var(--text-muted)", fontSize: 12, fontWeight: 700, marginBottom: 14 }}>
+                                                    <Calendar size={14} />
+                                                    <span style={{ opacity: 0.8 }}>
                                                         {item.startDate ? new Date(item.startDate).toLocaleDateString('en-GB') : "N/A"}
                                                         {" — "}
                                                         {item.current ? "PRESENT" : item.endDate ? new Date(item.endDate).toLocaleDateString('en-GB') : "N/A"}
-                                                    </div>
+                                                    </span>
                                                 </div>
 
-                                                <div style={{ display: "flex", gap: 8, marginLeft: 24 }}>
-                                                    <button onClick={() => openEdit(item)}
-                                                        style={{ background: "rgba(255,255,255,0.05)", border: "1px solid var(--border)", color: "var(--text-primary)", cursor: "pointer", fontSize: 12, padding: "7px 14px", borderRadius: 8, fontWeight: 700 }}>
-                                                        Edit
-                                                    </button>
-                                                    <button onClick={() => handleDelete(item.id)}
-                                                        style={{ background: "rgba(255,59,59,0.08)", border: "1px solid rgba(255,59,59,0.2)", color: "#ff6b6b", cursor: "pointer", fontSize: 12, padding: "7px 14px", borderRadius: 8, fontWeight: 700 }}>
-                                                        Delete
-                                                    </button>
-                                                </div>
+                                                {item.description && (
+                                                    <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.6, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 1, WebkitBoxOrient: "vertical" }}>
+                                                        {item.description}
+                                                    </p>
+                                                )}
                                             </div>
-                                        )}
-                                    </Draggable>
-                                ))}
-                                {provided.placeholder}
-                            </div>
-                        )}
-                    </Droppable>
-                </DragDropContext>
-            </div>
+
+                                            <div style={{ display: "flex", gap: 10, marginLeft: 24 }}>
+                                                <button onClick={() => openEdit(item)}
+                                                    style={{ background: "rgba(255,255,255,0.03)", border: "1px solid var(--border)", color: "var(--text-primary)", cursor: "pointer", fontSize: 11, padding: "10px 18px", borderRadius: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 8 }}>
+                                                    <Edit3 size={14} /> EDIT
+                                                </button>
+                                                <button onClick={() => handleDelete(item.id)}
+                                                    style={{ background: "rgba(255,59,59,0.06)", border: "1px solid rgba(255,59,59,0.2)", color: "#ff6b6b", cursor: "pointer", fontSize: 11, padding: "10px 18px", borderRadius: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 8 }}>
+                                                    <Trash2 size={14} /> DELETE
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </Draggable>
+                            ))}
+                            {provided.placeholder}
+                        </div>
+                    )}
+                </DroppableFix>
+            </DragDropContext>
 
             {/* ── EDIT MODAL ── */}
             {editingItem && (

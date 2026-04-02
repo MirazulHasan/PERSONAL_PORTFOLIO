@@ -19,6 +19,7 @@ interface Profile {
     avatarUrl?: string | null;
     email?: string | null;
     socialLinks?: SocialLink[];
+    availability?: string | null;
 }
 
 interface SocialLink {
@@ -131,9 +132,14 @@ export default async function AdminDashboard() {
         orderBy: [{ order: "asc" }, { date: "desc" }]
     }) as Publication[];
 
-    const references = await (prisma as any).reference.findMany({
-        orderBy: [{ order: "asc" }, { createdAt: "asc" }]
-    }) as Reference[];
+    let references: Reference[] = [];
+    try {
+        references = await (prisma as any).reference.findMany({
+            orderBy: [{ order: "asc" }, { createdAt: "asc" }]
+        }) as Reference[];
+    } catch (error) {
+        console.warn("Failed to fetch references:", error);
+    }
 
     const adminCards = [
         { title: "About", href: "/admin/profile", icon: "👤" },
@@ -153,7 +159,7 @@ export default async function AdminDashboard() {
                 .cv-card { background: rgba(255,255,255,0.01); backdrop-filter: blur(24px); border: 1px solid var(--border); border-radius: 32px; box-shadow: 0 40px 100px rgba(0,0,0,0.3); overflow: hidden; }
                 .cv-section-title { font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
                 .cv-section-title span { height: 1px; flex: 1; background: linear-gradient(to right, var(--accent), transparent); opacity: 0.3; }
-                .skill-chip { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 50px; font-size: 11.5px; font-weight: 800; color: var(--text-primary); display: inline-flex; align-items: center; justify-content: center; line-height: 1; min-height: 34px; padding: 0 16px; white-space: normal; text-align: center; }
+                .skill-chip { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 50px; font-size: 11px; font-weight: 800; color: var(--text-primary); display: table; width: auto; line-height: 1.4; padding: 6px 15px; white-space: normal; text-align: left; margin-bottom: 2px; }
                 .quick-btn:hover { border-color: var(--accent) !important; background: rgba(108,99,255,0.08) !important; transform: translateY(-3px); }
 
                 @media print {
@@ -217,7 +223,17 @@ export default async function AdminDashboard() {
                     </div>
                     <div>
                         <h2 style={{ fontSize: "3rem", fontWeight: 900, marginBottom: 8, letterSpacing: "-0.02em" }}>{profile?.name || "Your Name"}</h2>
-                        <p style={{ fontSize: "1.4rem", color: "var(--accent)", fontWeight: 700, marginBottom: 20 }}>{profile?.title || "Professional Title"}</p>
+                        <p style={{ fontSize: "1.4rem", color: "var(--accent)", fontWeight: 700, marginBottom: 12 }}>{profile?.title || "Professional Title"}</p>
+                        <div style={{
+                            display: "inline-flex", alignItems: "center", gap: 10,
+                            padding: "5px 16px", borderRadius: 50,
+                            background: "rgba(108,99,255,0.08)", border: "1px solid rgba(108,99,255,0.2)",
+                            fontSize: 11, fontWeight: 800, color: "var(--accent)",
+                            marginBottom: 24, letterSpacing: "0.05em", textTransform: "uppercase"
+                        }}>
+                            <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#4ade80", boxShadow: "0 0 10px #4ade80" }}></div>
+                            {profile?.availability ?? "Available for new opportunities"}
+                        </div>
                         <div style={{ display: "flex", flexDirection: "column", gap: 14, color: "var(--text-muted)", fontSize: 13 }}>
                             {/* All social links in one row */}
                             <div style={{ display: "flex", flexWrap: "wrap", gap: "20px 32px", marginBottom: 4 }}>
@@ -350,6 +366,23 @@ export default async function AdminDashboard() {
                                 </div>
                             </section>
                         )}
+
+                        <section style={{ marginTop: 40 }}>
+                            <h3 className="cv-section-title"><UserCheck size={16} /> References <span /></h3>
+                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }}>
+                                {references.map(ref => (
+                                    <div key={ref.id} className="cv-reference-item">
+                                        <h4 style={{ fontWeight: 800, fontSize: 16, marginBottom: 8 }}>{ref.name}</h4>
+                                        <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.6 }}>
+                                            {ref.designation}<br />
+                                            {ref.company}<br />
+                                            {ref.email && <span style={{ color: "var(--accent)" }}>{ref.email}</span>}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                            {references.length === 0 && <p style={{ color: "var(--text-muted)", fontSize: 14 }}>No references added yet.</p>}
+                        </section>
                     </div>
 
 
@@ -371,7 +404,7 @@ export default async function AdminDashboard() {
                                 ).map(([category, items]: [string, any]) => (
                                     <div key={category} style={{ marginBottom: 8 }}>
                                         <h4 style={{ fontSize: 10, fontWeight: 900, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 14 }}>{category}</h4>
-                                        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px 12px" }}>
+                                        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px 12px", justifyContent: "flex-start" }}>
                                             {items.map((skill: any) => (
                                                 <span key={skill.id} className="skill-chip">
                                                     {skill.name}
@@ -395,23 +428,6 @@ export default async function AdminDashboard() {
                                 ))}
                             </div>
                         </section>
-
-
-
-
-                        {references.length > 0 && (
-                            <section>
-                                <h3 className="cv-section-title"><UserCheck size={16} /> References <span /></h3>
-                                <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-                                    {references.slice(0, 2).map(ref => (
-                                        <div key={ref.id}>
-                                            <h4 style={{ fontSize: 14, fontWeight: 800 }}>{ref.name}</h4>
-                                            <p style={{ fontSize: 12, color: "var(--text-muted)", lineHeight: 1.5 }}>{ref.designation}<br />{ref.company}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </section>
-                        )}
                     </div>
                 </div>
             </div>

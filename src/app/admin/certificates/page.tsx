@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { GripVertical, Award, Calendar, ExternalLink } from "lucide-react";
+import { GripVertical, Award, Calendar, ExternalLink, Edit3, Trash2 } from "lucide-react";
 
 function DroppableFix({ children, ...props }: any) {
     const [enabled, setEnabled] = useState(false);
@@ -68,6 +68,11 @@ export default function CertificatesAdmin() {
                 setLoading(false);
             });
     }, []);
+
+    const onDragStart = () => {
+        if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+        window.getSelection()?.removeAllRanges();
+    };
 
     const onDragEnd = async (result: any) => {
         if (!result.destination) return;
@@ -153,6 +158,7 @@ export default function CertificatesAdmin() {
         <div style={{ maxWidth: 1000, paddingBottom: 100 }}>
             <style>{`
                 @keyframes spin { to { transform: rotate(360deg); } }
+                .cert-row { transition: background 0.2s, box-shadow 0.2s; }
                 .cert-row:hover .drag-handle { opacity: 1 !important; transform: translateX(0) !important; }
             `}</style>
 
@@ -193,90 +199,97 @@ export default function CertificatesAdmin() {
             </form>
 
             {/* ── DRAGGABLE RECORDS LIST ── */}
-            <div className="glass" style={{ border: "1px solid var(--border)", overflow: "hidden" }}>
-                <div style={{ padding: "24px 32px", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-                    <h3 style={{ fontWeight: 800, fontSize: "1.1rem" }}>Recorded Certificates</h3>
-                    <p style={{ fontSize: 11, color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase" }}>Drag to reorder · Click to edit</p>
+            <div className="glass" style={{ padding: "18px 32px", border: "1px solid var(--border)", borderRadius: 16, display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(255,255,255,0.02)", marginBottom: 24 }}>
+                <h2 style={{ fontSize: "1.05rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.02em" }}>Credential Sequence</h2>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <span style={{ fontSize: 9, fontWeight: 800, color: "var(--text-muted)", letterSpacing: "0.12em", textTransform: "uppercase" }}>
+                        Drag to reorder
+                    </span>
+                    <span style={{ color: "var(--border)", opacity: 0.5 }}>•</span>
+                    <span style={{ fontSize: 9, fontWeight: 800, color: "var(--text-muted)", letterSpacing: "0.12em", textTransform: "uppercase" }}>
+                        Click to edit
+                    </span>
                 </div>
+            </div>
 
-                <DragDropContext onDragEnd={onDragEnd}>
-                    <DroppableFix droppableId="certs-list">
-                        {(provided: any) => (
-                            <div {...provided.droppableProps} ref={provided.innerRef} style={{ display: "flex", flexDirection: "column" }}>
-                                {certs.length === 0 ? (
-                                    <p style={{ padding: 60, textAlign: "center", color: "var(--text-muted)", fontSize: 14 }}>List is empty.</p>
-                                ) : certs.map((cert, index) => (
-                                    <Draggable key={cert.id} draggableId={cert.id} index={index}>
-                                        {(provided: any, snapshot: any) => (
-                                            <div
-                                                ref={provided.innerRef}
-                                                {...provided.draggableProps}
-                                                className="cert-row"
-                                                style={{
-                                                    ...provided.draggableProps.style,
-                                                    padding: "20px 32px",
-                                                    borderBottom: "1px solid var(--border)",
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    background: snapshot.isDragging ? "rgba(108,99,255,0.06)" : "transparent",
-                                                    backdropFilter: snapshot.isDragging ? "blur(20px)" : "none",
-                                                    transition: "background 0.2s",
-                                                }}
-                                            >
-                                                {/* Drag Handle */}
-                                                <div 
-                                                    {...provided.dragHandleProps} 
-                                                    className="drag-handle"
-                                                    style={{ 
-                                                        marginRight: 24, 
-                                                        color: "var(--text-muted)", 
-                                                        cursor: "grab",
-                                                        opacity: 0.3,
-                                                        transition: "all 0.2s",
-                                                        transform: "translateX(-4px)"
-                                                    }}
-                                                >
-                                                    <GripVertical size={20} />
-                                                </div>
+            <DragDropContext onDragStart={onDragStart} onDragEnd={(res) => { onDragEnd(res); window.getSelection()?.removeAllRanges(); }}>
+                <DroppableFix droppableId="certs-list">
+                    {(provided: any) => (
+                        <div {...provided.droppableProps} ref={provided.innerRef} style={{ display: "flex", flexDirection: "column" }}>
+                            {certs.length === 0 ? (
+                                <p style={{ padding: 60, textAlign: "center", color: "var(--text-muted)", fontSize: 14 }}>History is empty.</p>
+                            ) : certs.map((cert, index) => (
+                                <Draggable key={cert.id} draggableId={cert.id} index={index}>
+                                    {(provided: any, snapshot: any) => (
+                                        <div
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            className="glass cert-row"
+                                            style={{
+                                                ...provided.draggableProps.style,
+                                                padding: "24px 32px",
+                                                border: "1px solid var(--border)",
+                                                borderRadius: 20,
+                                                marginBottom: 16,
+                                                display: "flex",
+                                                alignItems: "center",
+                                                background: snapshot.isDragging ? "rgba(108,99,255,0.12)" : "var(--bg-card)",
+                                                backdropFilter: snapshot.isDragging ? "blur(30px)" : "blur(10px)",
+                                                boxShadow: snapshot.isDragging ? "0 20px 50px rgba(0,0,0,0.4)" : "none",
+                                                zIndex: snapshot.isDragging ? 1000 : 1,
+                                                ...(snapshot.isDropAnimating ? { transitionDuration: "0.001s" } : {}),
+                                            }}
+                                        >
+                                            <div {...provided.dragHandleProps} className="drag-handle"
+                                                style={{ marginRight: 24, color: "var(--text-muted)", cursor: "grab", opacity: 0.4, transition: "all 0.2s" }}>
+                                                <GripVertical size={20} />
+                                            </div>
 
-                                                <div style={{ flex: 1, minWidth: 0 }}>
-                                                    <h3 style={{ fontWeight: 700, fontSize: "1rem", color: "var(--text-primary)", marginBottom: 4 }}>{cert.title}</h3>
-                                                    <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-                                                        <p style={{ fontSize: 13, color: "var(--accent)", fontWeight: 700 }}>{cert.issuer}</p>
-                                                        {cert.issuedAt && new Date(cert.issuedAt).getUTCFullYear() !== 1970 && (
-                                                            <p style={{ fontSize: 12, color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 6 }}>
-                                                                <Calendar size={12} />
-                                                                {new Date(cert.issuedAt).toLocaleDateString('en-GB')}
-                                                            </p>
-                                                        )}
-                                                        {cert.credentialUrl && (
-                                                            <a href={cert.credentialUrl} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: "var(--text-muted)", textDecoration: "none", fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
-                                                                VERIFY <ExternalLink size={12} />
-                                                            </a>
-                                                        )}
+                                            <div style={{ flex: 1, minWidth: 0 }}>
+                                                <h3 style={{ fontWeight: 800, fontSize: "1.1rem", color: "var(--text-primary)", marginBottom: 6, letterSpacing: "-0.01em" }}>{cert.title}</h3>
+                                                <p style={{ fontSize: 13, color: "var(--accent)", fontWeight: 800, marginBottom: 12, textTransform: "uppercase", letterSpacing: "0.02em" }}>{cert.issuer}</p>
+                                                
+                                                <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 16, color: "var(--text-muted)", fontSize: 12, fontWeight: 700 }}>
+                                                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                                        <Calendar size={14} />
+                                                        <span style={{ opacity: 0.8 }}>{cert.issueDate ? new Date(cert.issueDate).toLocaleDateString('en-GB') : "N/A"}</span>
                                                     </div>
-                                                </div>
-
-                                                <div style={{ display: "flex", gap: 8, marginLeft: 24 }}>
-                                                    <button onClick={() => setEditingItem(cert)}
-                                                        style={{ background: "rgba(255,255,255,0.05)", border: "1px solid var(--border)", color: "var(--text-primary)", cursor: "pointer", fontSize: 12, padding: "7px 14px", borderRadius: 8, fontWeight: 700 }}>
-                                                        Edit
-                                                    </button>
-                                                    <button onClick={() => handleDelete(cert.id)}
-                                                        style={{ background: "rgba(255,59,59,0.08)", border: "1px solid rgba(255,59,59,0.2)", color: "#ff6b6b", cursor: "pointer", fontSize: 12, padding: "7px 14px", borderRadius: 8, fontWeight: 700 }}>
-                                                        Delete
-                                                    </button>
+                                                    {cert.credentialId && (
+                                                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                                            <span style={{ color: "var(--border)", opacity: 0.5 }}>•</span>
+                                                            <span style={{ fontSize: 11, color: "var(--text-muted)", opacity: 0.9 }}>ID: {cert.credentialId}</span>
+                                                        </div>
+                                                    )}
+                                                    {cert.credentialUrl && (
+                                                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                                            <span style={{ color: "var(--border)", opacity: 0.5 }}>•</span>
+                                                            <a href={cert.credentialUrl} target="_blank" rel="noreferrer" style={{ color: "var(--accent-2)", textDecoration: "none", display: "flex", alignItems: "center", gap: 6 }}>
+                                                                <ExternalLink size={12} /> VERIFY
+                                                            </a>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </div>
-                                        )}
-                                    </Draggable>
-                                ))}
-                                {provided.placeholder}
-                            </div>
-                        )}
-                    </DroppableFix>
-                </DragDropContext>
-            </div>
+
+                                            <div style={{ display: "flex", gap: 10, marginLeft: 24 }}>
+                                                <button onClick={() => setEditingItem(cert)}
+                                                    style={{ background: "rgba(255,255,255,0.03)", border: "1px solid var(--border)", color: "var(--text-primary)", cursor: "pointer", fontSize: 11, padding: "10px 18px", borderRadius: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 8 }}>
+                                                    <Edit3 size={14} /> EDIT
+                                                </button>
+                                                <button onClick={() => handleDelete(cert.id)}
+                                                    style={{ background: "rgba(255,59,59,0.06)", border: "1px solid rgba(255,59,59,0.2)", color: "#ff6b6b", cursor: "pointer", fontSize: 11, padding: "10px 18px", borderRadius: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 8 }}>
+                                                    <Trash2 size={14} /> DELETE
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </Draggable>
+                            ))}
+                            {provided.placeholder}
+                        </div>
+                    )}
+                </DroppableFix>
+            </DragDropContext>
 
             {/* ── EDIT MODAL ── */}
             {editingItem && (

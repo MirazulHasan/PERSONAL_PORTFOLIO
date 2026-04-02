@@ -152,7 +152,9 @@ export default async function HomePage() {
             </div>
           )}
           <div style={{
-            display: "inline-block",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 10,
             padding: "6px 18px",
             borderRadius: 50,
             background: "rgba(108,99,255,0.15)",
@@ -164,7 +166,8 @@ export default async function HomePage() {
             marginBottom: 28,
             letterSpacing: "0.02em",
           }}>
-            Available for new opportunities
+            <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#4ade80", boxShadow: "0 0 12px #4ade80", animation: "pulse 2s infinite" }} />
+            {profile?.availability ?? "Available for new opportunities"}
           </div>
           <h1 style={{ fontSize: "clamp(3rem, 8vw, 6rem)", fontWeight: 900, lineHeight: 1.05, letterSpacing: "-0.04em", marginBottom: 24 }}>
             Hi, I&apos;m <span className="gradient-text">{profile?.name ?? "Md. Mirazul Hasan"}</span>

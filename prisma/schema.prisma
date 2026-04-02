@@ -48,6 +48,7 @@ model Profile {
   referencesSubtitle   String?      @default("Endorsements")
   blogTitle            String?     @default("Latest Writing")
   blogSubtitle         String?     @default("Journal")
+  availability         String?     @default("Available for new opportunities")
   createdAt            DateTime     @default(now())
   updatedAt            DateTime     @updatedAt
 

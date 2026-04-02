@@ -291,6 +291,9 @@ export default function ProfileAdmin() {
                         <Field label="About Section Title" name="aboutTitle" defaultValue={profile?.aboutTitle ?? "Passionate about building things that matter"} />
                     </div>
                     <div style={{ marginBottom: 24 }}>
+                        <Field label="Availability Status (Pill Text)" name="availability" defaultValue={profile?.availability ?? "Available for new opportunities"} />
+                    </div>
+                    <div style={{ marginBottom: 24 }}>
                         <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "var(--text-muted)", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>Bio / About Me</label>
                         <textarea name="bio" rows={5} defaultValue={profile?.bio ?? ""}
                             style={{ ...inputStyle, lineHeight: 1.7, resize: "vertical" }}
