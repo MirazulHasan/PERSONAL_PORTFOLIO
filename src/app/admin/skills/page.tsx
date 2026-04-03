@@ -188,7 +188,6 @@ export default function SkillsAdmin() {
     const [editingItem, setEditingItem] = useState<any | null>(null);
     const [editSaving, setEditSaving] = useState(false);
     const [isReordering, setIsReordering] = useState(false);
-    const [isDraggingCategory, setIsDraggingCategory] = useState(false);
     const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
     
     const [newCategory, setNewCategory] = useState("");
@@ -230,29 +229,21 @@ export default function SkillsAdmin() {
         setExpandedCategories(next);
     };
 
-    const onDragStart = (initial: any) => {
-        // Blur focused element so browser doesn't keep text selected after drop
+    const onDragStart = () => {
         if (document.activeElement instanceof HTMLElement) {
             document.activeElement.blur();
         }
-        // Clear any text selection
         window.getSelection()?.removeAllRanges();
-        // Track if we are dragging a category so we can freeze expanded children
-        if (initial.type === "category") {
-            setIsDraggingCategory(true);
-        }
     };
 
-    const onDragEnd = async (result: any) => {
+    const onDragEnd = (result: any) => {
         const { destination, source, type } = result;
         if (!destination) {
-            setIsDraggingCategory(false);
             if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
             window.getSelection()?.removeAllRanges();
             return;
         }
         if (destination.droppableId === source.droppableId && destination.index === source.index) {
-            setIsDraggingCategory(false);
             if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
             window.getSelection()?.removeAllRanges();
             return;
@@ -262,7 +253,7 @@ export default function SkillsAdmin() {
             const newCats = Array.from(categories);
             const [removed] = newCats.splice(source.index, 1);
             newCats.splice(destination.index, 0, removed);
-            await syncGlobalOrder(newCats, skillsByCategory);
+            syncGlobalOrder(newCats, skillsByCategory);
         } else {
             const catId = source.droppableId;
             const newSkills = Array.from(skillsByCategory[catId] ?? []);
@@ -270,9 +261,9 @@ export default function SkillsAdmin() {
             newSkills.splice(destination.index, 0, removed);
             
             const updatedGrouped = { ...skillsByCategory, [catId]: newSkills };
-            await syncGlobalOrder(categories, updatedGrouped);
+            syncGlobalOrder(categories, updatedGrouped);
         }
-        setIsDraggingCategory(false);
+        
         if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
         window.getSelection()?.removeAllRanges();
     };
@@ -521,9 +512,44 @@ export default function SkillsAdmin() {
                                                     </div>
                                                 </div>
 
-                                                {isExpanded && !isDraggingCategory && (
+                                                {isExpanded && (
                                                     <div style={{ borderTop: "1px solid var(--border)" }}>
-                                                        <DroppableFix droppableId={cat} type="skill">
+                                                        <DroppableFix droppableId={cat} type="skill"
+                                                            renderClone={(provided: any, snapshot: any, rubric: any) => {
+                                                                const skill = catSkills[rubric.source.index];
+                                                                return (
+                                                                    <div ref={provided.innerRef} {...provided.draggableProps} 
+                                                                        className="glass skill-row"
+                                                                        style={{
+                                                                            ...provided.draggableProps.style,
+                                                                            padding: "16px 32px",
+                                                                            borderBottom: "1px solid var(--border)",
+                                                                            display: "flex",
+                                                                            alignItems: "center",
+                                                                            background: "rgba(108,99,255,0.12)",
+                                                                            backdropFilter: "blur(30px)",
+                                                                            boxShadow: "0 20px 50px rgba(0,0,0,0.4)",
+                                                                            zIndex: 9999,
+                                                                            margin: 0,
+                                                                            ...(snapshot.isDropAnimating ? { transitionDuration: "0.001s" } : {}),
+                                                                        }}>
+                                                                        <div {...provided.dragHandleProps} className="drag-handle" style={{ marginRight: 24, color: "var(--text-muted)", cursor: "grab", opacity: 0.2 }}>
+                                                                            <GripVertical size={18} />
+                                                                        </div>
+                                                                        <div style={{ flex: 1 }}>
+                                                                            <span style={{ fontWeight: 700, fontSize: 15, color: "var(--text-primary)" }}>{skill.name}</span>
+                                                                        </div>
+                                                                        <div style={{ display: "flex", gap: 10 }}>
+                                                                            <button style={{ background: "rgba(255,255,255,0.03)", border: "1px solid var(--border)", color: "var(--text-primary)", cursor: "pointer", fontSize: 11, padding: "10px 18px", borderRadius: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 8 }}>
+                                                                                <Edit3 size={14} /> EDIT
+                                                                            </button>
+                                                                            <button style={{ background: "rgba(255,59,59,0.06)", border: "1px solid rgba(255,59,59,0.2)", color: "#ff6b6b", cursor: "pointer", fontSize: 11, padding: "10px 18px", borderRadius: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 8 }}>
+                                                                                <Trash2 size={14} /> DELETE
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                );
+                                                            }}>
                                                             {(skillProvided: any) => (
                                                                 <div {...skillProvided.droppableProps} ref={skillProvided.innerRef}>
                                                                     {catSkills.map((skill: any, skillIdx: number) => (
