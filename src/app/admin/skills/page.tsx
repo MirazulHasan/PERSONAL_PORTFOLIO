@@ -188,6 +188,7 @@ export default function SkillsAdmin() {
     const [editingItem, setEditingItem] = useState<any | null>(null);
     const [editSaving, setEditSaving] = useState(false);
     const [isReordering, setIsReordering] = useState(false);
+    const [isDraggingCategory, setIsDraggingCategory] = useState(false);
     const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
     
     const [newCategory, setNewCategory] = useState("");
@@ -229,52 +230,78 @@ export default function SkillsAdmin() {
         setExpandedCategories(next);
     };
 
-    const onDragStart = () => {
+    const onDragStart = (initial: any) => {
         // Blur focused element so browser doesn't keep text selected after drop
         if (document.activeElement instanceof HTMLElement) {
             document.activeElement.blur();
         }
         // Clear any text selection
         window.getSelection()?.removeAllRanges();
+        // Track if we are dragging a category so we can freeze expanded children
+        if (initial.type === "category") {
+            setIsDraggingCategory(true);
+        }
     };
 
     const onDragEnd = async (result: any) => {
         const { destination, source, type } = result;
-        if (!destination) return;
-        if (destination.droppableId === source.droppableId && destination.index === source.index) return;
+        if (!destination) {
+            setIsDraggingCategory(false);
+            if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+            window.getSelection()?.removeAllRanges();
+            return;
+        }
+        if (destination.droppableId === source.droppableId && destination.index === source.index) {
+            setIsDraggingCategory(false);
+            if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+            window.getSelection()?.removeAllRanges();
+            return;
+        }
 
         if (type === "category") {
             const newCats = Array.from(categories);
             const [removed] = newCats.splice(source.index, 1);
             newCats.splice(destination.index, 0, removed);
-            syncGlobalOrder(newCats, skillsByCategory);
+            await syncGlobalOrder(newCats, skillsByCategory);
         } else {
             const catId = source.droppableId;
-            const newSkills = Array.from(skillsByCategory[catId]);
+            const newSkills = Array.from(skillsByCategory[catId] ?? []);
             const [removed] = newSkills.splice(source.index, 1);
             newSkills.splice(destination.index, 0, removed);
             
             const updatedGrouped = { ...skillsByCategory, [catId]: newSkills };
-            syncGlobalOrder(categories, updatedGrouped);
+            await syncGlobalOrder(categories, updatedGrouped);
         }
+        setIsDraggingCategory(false);
+        if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+        window.getSelection()?.removeAllRanges();
     };
 
     const syncGlobalOrder = async (cats: string[], grouped: any) => {
         setIsReordering(true);
         const flattened: any[] = [];
-        cats.forEach(cat => flattened.push(...grouped[cat]));
+        cats.forEach(cat => flattened.push(...(grouped[cat] ?? [])));
         const updates = flattened.map((x, i) => ({ id: x.id, order: i }));
         
         setSkills(flattened.map((s, i) => ({ ...s, order: i })));
 
+        if (updates.length === 0) {
+            setIsReordering(false);
+            return;
+        }
+
         try {
-            await fetch("/api/skills", {
+            const res = await fetch("/api/skills", {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ orders: updates }),
             });
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                console.error("Failed to sync order — API error:", res.status, err);
+            }
         } catch (err) {
-            console.error("Failed to sync order", err);
+            console.error("Failed to sync order — network error:", err);
         }
         setIsReordering(false);
     };
@@ -391,6 +418,13 @@ export default function SkillsAdmin() {
 
     return (
         <div style={{ maxWidth: 1000, paddingBottom: 100 }}>
+            <style>{`
+                @keyframes spin { to { transform: rotate(360deg); } }
+                .cat-row { transition: background 0.2s, box-shadow 0.2s, border-color 0.2s; }
+                .cat-row:hover .drag-handle { opacity: 0.6 !important; }
+                .skill-row { transition: background 0.2s, box-shadow 0.2s; }
+                .skill-row:hover .drag-handle { opacity: 0.5 !important; }
+            `}</style>
             <div style={{ marginBottom: 40, display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
                 <div>
                     <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>Knowledge Base</p>
@@ -450,19 +484,21 @@ export default function SkillsAdmin() {
                                     <Draggable key={cat} draggableId={cat} index={catIdx}>
                                         {(provided, snapshot) => (
                                             <div ref={provided.innerRef} {...provided.draggableProps} 
-                                                className="glass" 
+                                                className="glass cat-row" 
                                                 style={{ 
                                                     ...provided.draggableProps.style,
                                                     border: "1px solid var(--border)", 
-                                                    overflow: "hidden", 
                                                     borderRadius: 20,
                                                     marginBottom: 20,
                                                     background: snapshot.isDragging ? "rgba(108,99,255,0.08)" : "var(--bg-card)",
+                                                    backdropFilter: snapshot.isDragging ? "blur(30px)" : "blur(10px)",
+                                                    boxShadow: snapshot.isDragging ? "0 20px 50px rgba(0,0,0,0.4)" : "none",
+                                                    zIndex: snapshot.isDragging ? 1000 : 1,
                                                     ...(snapshot.isDropAnimating ? { transitionDuration: "0.001s" } : {}),
                                                 }}>
                                                 <div style={{ padding: "24px 32px", display: "flex", justifyContent: "space-between", alignItems: "center", background: isExpanded ? "rgba(255,255,255,0.02)" : "transparent" }}>
                                                     <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                                                        <div {...provided.dragHandleProps} style={{ color: "var(--text-muted)", cursor: "grab", opacity: 0.3 }}>
+                                                        <div {...provided.dragHandleProps} className="drag-handle" style={{ color: "var(--text-muted)", cursor: "grab", opacity: 0.3 }}>
                                                             <GripVertical size={20} />
                                                         </div>
                                                         <div onClick={() => toggleCategory(cat)} style={{ cursor: "pointer" }}>
@@ -485,10 +521,10 @@ export default function SkillsAdmin() {
                                                     </div>
                                                 </div>
 
-                                                {isExpanded && (
+                                                {isExpanded && !isDraggingCategory && (
                                                     <div style={{ borderTop: "1px solid var(--border)" }}>
-                                                        <Droppable droppableId={cat} type="skill">
-                                                            {(skillProvided) => (
+                                                        <DroppableFix droppableId={cat} type="skill">
+                                                            {(skillProvided: any) => (
                                                                 <div {...skillProvided.droppableProps} ref={skillProvided.innerRef}>
                                                                     {catSkills.map((skill: any, skillIdx: number) => (
                                                                         <Draggable key={skill.id} draggableId={skill.id} index={skillIdx}>
@@ -502,9 +538,12 @@ export default function SkillsAdmin() {
                                                                                         display: "flex",
                                                                                         alignItems: "center",
                                                                                         background: sSnapshot.isDragging ? "rgba(108,99,255,0.12)" : "transparent",
+                                                                                        backdropFilter: sSnapshot.isDragging ? "blur(30px)" : "blur(10px)",
+                                                                                        boxShadow: sSnapshot.isDragging ? "0 20px 50px rgba(0,0,0,0.4)" : "none",
+                                                                                        zIndex: sSnapshot.isDragging ? 1000 : 1,
                                                                                         ...(sSnapshot.isDropAnimating ? { transitionDuration: "0.001s" } : {}),
                                                                                     }}>
-                                                                                    <div {...sProvided.dragHandleProps} style={{ marginRight: 24, color: "var(--text-muted)", cursor: "grab", opacity: 0.2 }}>
+                                                                                    <div {...sProvided.dragHandleProps} className="drag-handle" style={{ marginRight: 24, color: "var(--text-muted)", cursor: "grab", opacity: 0.2 }}>
                                                                                         <GripVertical size={18} />
                                                                                     </div>
                                                                                     <div style={{ flex: 1 }}>
@@ -527,7 +566,7 @@ export default function SkillsAdmin() {
                                                                     {skillProvided.placeholder}
                                                                 </div>
                                                             )}
-                                                        </Droppable>
+                                                        </DroppableFix>
                                                     </div>
                                                 )}
                                             </div>

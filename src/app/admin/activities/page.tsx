@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { GripVertical, Calendar, Edit3, Trash2, Activity } from "lucide-react";
+import { GripVertical, Edit3, Trash2, Calendar, Activity } from "lucide-react";
 
 const inputStyle: React.CSSProperties = {
     width: "100%", padding: "12px 16px",
@@ -165,7 +165,7 @@ export default function ActivitiesAdmin() {
                 .act-row { transition: background 0.2s, box-shadow 0.2s; }
                 .act-row:hover .drag-handle { opacity: 1 !important; transform: translateX(0) !important; }
             `}</style>
-            
+
             {error && (
                 <div style={{ position: "fixed", top: 24, right: 24, zIndex: 2000, padding: "16px 24px", borderRadius: 12, fontSize: 14, fontWeight: 600, background: "rgba(239,68,68,0.15)", backdropFilter: "blur(12px)", border: "1px solid rgba(239,68,68,0.3)", color: "#ef4444", boxShadow: "0 10px 40px rgba(0,0,0,0.4)", display: "flex", alignItems: "center", gap: 10 }}>
                     <span>⚠️</span> {error}
@@ -224,7 +224,7 @@ export default function ActivitiesAdmin() {
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(255,255,255,0.02)", padding: 20, borderRadius: 16, border: "1px solid var(--border)", marginTop: 8 }}>
                     <label style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13, fontWeight: 700, color: "var(--text-primary)", cursor: "pointer" }}>
                         <input type="checkbox" checked={current} onChange={(e) => setCurrent(e.target.checked)}
-                               style={{ accentColor: "var(--accent)", width: 18, height: 18 }} />
+                            style={{ accentColor: "var(--accent)", width: 18, height: 18 }} />
                         Current
                     </label>
                     <button type="submit" className="btn-glow" disabled={saving}>{saving ? "Saving..." : "Add Activity"}</button>
@@ -281,7 +281,7 @@ export default function ActivitiesAdmin() {
                                             <div style={{ flex: 1, minWidth: 0 }}>
                                                 <h3 style={{ fontWeight: 800, fontSize: "1.1rem", color: "var(--text-primary)", marginBottom: 6, letterSpacing: "-0.01em" }}>{item.title}</h3>
                                                 {item.role && <p style={{ fontSize: 13, color: "var(--accent)", fontWeight: 800, marginBottom: 12, textTransform: "uppercase", letterSpacing: "0.02em" }}>{item.role}</p>}
-                                                
+
                                                 <div style={{ display: "flex", alignItems: "center", gap: 10, color: "var(--text-muted)", fontSize: 12, fontWeight: 700, marginBottom: 14 }}>
                                                     <Calendar size={14} />
                                                     <span style={{ opacity: 0.8 }}>
