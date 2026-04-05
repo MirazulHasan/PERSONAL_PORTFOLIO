@@ -20,16 +20,6 @@ export default function EducationSection({ education }: EducationSectionProps) {
     return n + (s[(v - 20) % 10] || s[v] || s[0]);
   };
 
-  const startSequence = useCallback(() => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(() => {
-      setActiveIndex((current) => {
-        if (current === null) return 0;
-        return (current + 1) % count;
-      });
-    }, 4000);
-  }, [count]);
-
   useEffect(() => {
     if (!isPaused) {
       const timer = setInterval(() => {
@@ -38,6 +28,7 @@ export default function EducationSection({ education }: EducationSectionProps) {
           return (current + 1) % count;
         });
       }, 4000);
+      timerRef.current = timer;
       return () => clearInterval(timer);
     }
   }, [isPaused, count]);
