@@ -140,7 +140,6 @@ export default function BazilHero({ profile }: BazilHeroProps) {
               position: "fixed",
               inset: 0,
               zIndex: 99999,
-              cursor: "wait",
               pointerEvents: "all",
               background: "rgba(0,0,0,0)" // Fully transparent but blocks everything
             }}
