@@ -30,7 +30,7 @@ export default function ExperienceCard({ exp, ordinal, isExpanded, onHover }: Ex
       months += 12;
     }
 
-    let parts = [];
+    const parts = [];
     if (years > 0) parts.push(`${years} year${years > 1 ? "s" : ""}`);
     if (months > 0) parts.push(`${months} month${months > 1 ? "s" : ""}`);
     if (days > 0) parts.push(`${days} day${days > 1 ? "s" : ""}`);
