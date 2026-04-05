@@ -31,25 +31,16 @@ export default function EducationSection({ education }: EducationSectionProps) {
   }, [count]);
 
   useEffect(() => {
-    if (count === 0) return;
-    
-    // Initial start
-    if (!isPaused && hoveredIndex === null) {
-        if (activeIndex === null) {
-            const initialTimeout = setTimeout(() => {
-                setActiveIndex(0);
-                startSequence();
-            }, 1000);
-            return () => clearTimeout(initialTimeout);
-        } else {
-            startSequence();
-        }
+    if (!isPaused) {
+      const timer = setInterval(() => {
+        setActiveIndex((current) => {
+          if (current === null) return 0;
+          return (current + 1) % count;
+        });
+      }, 4000);
+      return () => clearInterval(timer);
     }
-
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [isPaused, count, hoveredIndex, startSequence, activeIndex]);
+  }, [isPaused, count]);
 
   const handleHoverIn = (idx: number) => {
     setHoveredIndex(idx);

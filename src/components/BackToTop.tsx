@@ -8,7 +8,8 @@ export default function BackToTop() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const toggleVisibility = () => {
+    const handleScroll = () => {
+      // Show button after 500px scroll, but keep it visible if we're scrolling to top
       if (window.scrollY > 500) {
         setIsVisible(true);
       } else {
@@ -16,34 +17,45 @@ export default function BackToTop() {
       }
     };
 
-    window.addEventListener("scroll", toggleVisibility);
-    return () => window.removeEventListener("scroll", toggleVisibility);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const scrollToTop = () => {
+    window.dispatchEvent(new Event("scrollStart"));
+    
+    // Explicit manual smooth scroll since CSS behavior was removed for reliability
     window.scrollTo({
       top: 0,
-      behavior: "smooth",
+      behavior: "smooth"
     });
-    // Clear the URL hash if it exists
+    
     if (window.location.hash) {
       window.history.replaceState(null, "", window.location.pathname);
     }
+
+    setTimeout(() => {
+      window.dispatchEvent(new Event("scrollEnd"));
+    }, 1500);
   };
 
   return (
     <AnimatePresence>
       {isVisible && (
         <motion.button
-          initial={{ opacity: 0, scale: 0.8, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.8, y: 20 }}
+          initial={{ opacity: 0, y: 10, scale: 0.8 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 10, scale: 0.8 }}
           onClick={scrollToTop}
+          // Simplified hover to avoid coordinate-fighting with entry/exit
+          whileHover={{ scale: 1.1, backgroundColor: "#6c63ff" }}
+          whileTap={{ scale: 0.9 }}
+          layout // Smoothly handle state changes
           style={{
             position: "fixed",
             bottom: "40px",
             right: "40px",
-            zIndex: 1000,
+            zIndex: 9999, // Ensure it's above reveal headers
             width: "50px",
             height: "50px",
             borderRadius: "50%",
@@ -56,16 +68,11 @@ export default function BackToTop() {
             cursor: "pointer",
             boxShadow: "0 10px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(108, 99, 255, 0.3)",
             backdropFilter: "blur(4px)",
+            WebkitBackfaceVisibility: "hidden", // Force GPU rendering
           }}
-          whileHover={{ 
-            scale: 1.1, 
-            boxShadow: "0 15px 50px rgba(108, 99, 255, 0.5)",
-            y: -5
-          }}
-          whileTap={{ scale: 0.9 }}
           title="Back to Top"
         >
-          <ArrowUp size={24} strokeWidth={2.5} />
+          <ArrowUp size={24} strokeWidth={3} />
         </motion.button>
       )}
     </AnimatePresence>

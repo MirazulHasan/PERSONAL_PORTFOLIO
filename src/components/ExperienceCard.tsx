@@ -10,6 +10,33 @@ interface ExperienceCardProps {
 }
 
 export default function ExperienceCard({ exp, ordinal, isExpanded, onHover }: ExperienceCardProps) {
+  const calculateDuration = (start: string | Date, end?: string | Date | null, isCurrent?: boolean) => {
+    if (!start) return "";
+    const startDate = new Date(start);
+    const endDate = isCurrent ? new Date() : (end ? new Date(end) : new Date());
+    
+    let years = endDate.getFullYear() - startDate.getFullYear();
+    let months = endDate.getMonth() - startDate.getMonth();
+    let days = endDate.getDate() - startDate.getDate();
+
+    if (days < 0) {
+      months--;
+      const lastMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 0);
+      days += lastMonth.getDate();
+    }
+    
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+
+    let parts = [];
+    if (years > 0) parts.push(`${years} year${years > 1 ? "s" : ""}`);
+    if (months > 0) parts.push(`${months} month${months > 1 ? "s" : ""}`);
+    if (days > 0) parts.push(`${days} day${days > 1 ? "s" : ""}`);
+    
+    return parts.length > 0 ? `(${parts.join(" ")})` : "";
+  };
 
   return (
     <div 
@@ -52,8 +79,15 @@ export default function ExperienceCard({ exp, ordinal, isExpanded, onHover }: Ex
                 style={{ overflow: "hidden" }}
               >
                 <p style={{ color: "var(--accent)", fontSize: "1.1rem", fontWeight: 700, marginBottom: 8 }}>{exp.company}</p>
-                <div style={{ color: "var(--text-muted)", fontWeight: 700, fontSize: 14 }}>
-                  {exp.startDate ? new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric' }).format(new Date(exp.startDate)) : "N/A"} — {exp.current ? "Present" : exp.endDate ? new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric' }).format(new Date(exp.endDate)) : ""}
+                <div style={{ color: "var(--text-muted)", fontWeight: 700, fontSize: 13, display: "flex", gap: 8, alignItems: "center" }}>
+                  <span>
+                    {exp.startDate ? new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric' }).format(new Date(exp.startDate)) : "N/A"} 
+                    {" — "} 
+                    {exp.current ? "Present" : exp.endDate ? new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric' }).format(new Date(exp.endDate)) : ""}
+                  </span>
+                  <span style={{ color: "var(--accent)", opacity: 0.8, fontWeight: 600 }}>
+                    {calculateDuration(exp.startDate, exp.endDate, exp.current)}
+                  </span>
                 </div>
               </motion.div>
             )}

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import Link from "next/link";
 
 interface BazilHeroProps {
@@ -20,18 +20,59 @@ export default function BazilHero({ profile }: BazilHeroProps) {
   const line1 = profile?.heroHeadline1 ?? "Photographer";
   const line2 = profile?.heroHeadline2 ?? "AI Engineer";
 
+  const [animationKey, setAnimationKey] = useState(0);
+  const [delayShift, setDelayShift] = useState(2.7);
+  const [isScrolling, setIsScrolling] = useState(false);
+
+  useEffect(() => {
+    const handleReTrigger = () => {
+      // Delay word reset until shutter closes (1575ms)
+      setTimeout(() => {
+        setDelayShift(1.1); // Match 2.7s total reveal
+        setAnimationKey(prev => prev + 1);
+      }, 1575);
+    };
+    window.addEventListener("triggerSplashScreen", handleReTrigger);
+
+    return () => {
+      window.removeEventListener("triggerSplashScreen", handleReTrigger);
+    };
+  }, []);
+
   // Mouse Parallax Logic
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
+  // Restore original fast-reacting tracking speed, but keep the constrained travel limits
   const springConfig = { damping: 40, stiffness: 250 };
   const smoothX = useSpring(mouseX, springConfig);
   const smoothY = useSpring(mouseY, springConfig);
 
-  const photoX = useTransform(smoothX, [-900, 900], [-45, 45]);
-  const photoY = useTransform(smoothY, [-900, 900], [-45, 45]);
+  // Greatly reduced physical movement bounding distance for a subtler float
+  const photoX = useTransform(smoothX, [-900, 900], [-15, 15]);
+  const photoY = useTransform(smoothY, [-900, 900], [-15, 15]);
+
+  useEffect(() => {
+    const startLock = () => {
+      // Catch the springs at their current rendered value to kill any ongoing momentum
+      mouseX.set(smoothX.get());
+      mouseY.set(smoothY.get());
+      setHoveredLine(null); // Immediately clear any active headline hover states
+      setIsScrolling(true);
+    };
+    const endLock = () => setIsScrolling(false);
+    
+    window.addEventListener("scrollStart", startLock);
+    window.addEventListener("scrollEnd", endLock);
+
+    return () => {
+      window.removeEventListener("scrollStart", startLock);
+      window.removeEventListener("scrollEnd", endLock);
+    };
+  }, [smoothX, smoothY, mouseX, mouseY]);
 
   const handleMouseMove = (e: React.MouseEvent) => {
+    if (isScrolling) return;
     if (typeof window !== "undefined") {
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
@@ -39,6 +80,22 @@ export default function BazilHero({ profile }: BazilHeroProps) {
       const y = e.clientY - windowHeight / 2;
       mouseX.set(x);
       mouseY.set(y);
+    }
+  };
+
+  const handleScrollClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const targetId = href.substring(1);
+    const element = document.getElementById(targetId);
+    if (element) {
+      window.dispatchEvent(new Event("scrollStart"));
+      document.body.style.pointerEvents = "none";
+      window.history.replaceState(null, "", href);
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+      setTimeout(() => {
+        document.body.style.pointerEvents = "all";
+        window.dispatchEvent(new Event("scrollEnd"));
+      }, 1500);
     }
   };
   // ─── text styles ──────────────────────────────────────────────
@@ -52,9 +109,9 @@ export default function BazilHero({ profile }: BazilHeroProps) {
     cursor: "default",
     userSelect: "none" as const,
     display: "block",
-    width: "100%",
+    width: "fit-content",
     textAlign: "center",
-    transition: "color 0.4s ease, -webkit-text-stroke 0.4s ease, opacity 0.4s ease",
+    transition: "color 0.7s cubic-bezier(0.16, 1, 0.3, 1), -webkit-text-stroke 0.7s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1)",
   };
 
   return (
@@ -72,6 +129,24 @@ export default function BazilHero({ profile }: BazilHeroProps) {
         padding: "100px 5% 40px",
       }}
     >
+      {/* ── INTERACTION LOCK OVERLAY ── */}
+      <AnimatePresence>
+        {isScrolling && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: "fixed",
+              inset: 0,
+              zIndex: 99999,
+              cursor: "wait",
+              pointerEvents: "all",
+              background: "rgba(0,0,0,0)" // Fully transparent but blocks everything
+            }}
+          />
+        )}
+      </AnimatePresence>
       {/* ── Ambient glows ── */}
       <div style={{
         position: "absolute", top: "15%", left: "-5%", width: 600, height: 600,
@@ -84,11 +159,11 @@ export default function BazilHero({ profile }: BazilHeroProps) {
         filter: "blur(80px)", pointerEvents: "none", zIndex: 0,
       }} />
 
-      {/* ── Greeting ── */}
       <motion.div
-        initial={{ opacity: 0, y: 24 }}
+        key={`greeting-${animationKey}`}
+        initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0, ease: "easeOut" }}
+        transition={{ duration: 1.2, delay: delayShift, ease: [0.16, 1, 0.3, 1] }}
         style={{
           marginBottom: 0,
           position: "relative",
@@ -102,21 +177,21 @@ export default function BazilHero({ profile }: BazilHeroProps) {
           alignItems: "baseline"
         }}
       >
-        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "0.2em", alignItems: "baseline" }}>
-          <span style={{ color: "var(--text-primary)" }}>{profile?.heroGreetingPrefix ?? "Hi, I'm"}</span>
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "0.4em", alignItems: "baseline" }}>
+          <span style={{ color: "var(--text-primary)", marginRight: "0.3em" }}>{profile?.heroGreetingPrefix ?? "👋 Hi, I'm"}</span>
           <span style={{
             background: "linear-gradient(to right, #a78bfa, #f472b6, #fb923c, #fbbf24)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
-            paddingRight: "0.1em"
+            paddingRight: "0.1em",
           }}>
             {name}
           </span>
           <span style={{
             color: "var(--text-muted)",
             fontWeight: 700,
-            marginLeft: "0.4em",
+            marginLeft: "0.3em", // Balancing the space on the other side as well
             opacity: 0.8,
             letterSpacing: "-0.02em"
           }}>
@@ -131,6 +206,7 @@ export default function BazilHero({ profile }: BazilHeroProps) {
           positioned over the top portion of the photo.
       ────────────────────────────────────────────────────────── */}
       <div
+        key={`headlines-${animationKey}`}
         style={{ position: "relative", width: "100%", zIndex: 5, padding: "0" }}
       >
         {/* === LAYER 1: BACK (Solid Text) === */}
@@ -143,9 +219,9 @@ export default function BazilHero({ profile }: BazilHeroProps) {
               color: hoveredLine === 2 ? "transparent" : "var(--text-primary)",
               WebkitTextStroke: hoveredLine === 2 ? "2px var(--text-muted)" : "0px transparent"
             }}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.12, ease: "easeOut" }}
+            initial={{ opacity: 0, x: -150 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1.5, delay: delayShift + 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
             {line1}
           </motion.h1>
@@ -157,9 +233,9 @@ export default function BazilHero({ profile }: BazilHeroProps) {
               color: hoveredLine === 2 ? "var(--text-primary)" : "transparent",
               WebkitTextStroke: hoveredLine === 2 ? "0px transparent" : "2px var(--text-muted)"
             }}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.24, ease: "easeOut" }}
+            initial={{ opacity: 0, x: 150 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1.5, delay: delayShift + 0.4, ease: [0.16, 1, 0.3, 1] }}
           >
             {line2 || title}
           </motion.h2>
@@ -213,9 +289,9 @@ export default function BazilHero({ profile }: BazilHeroProps) {
               WebkitTextStroke: hoveredLine === 2 ? "0px transparent" : "2px var(--text-muted)",
               opacity: hoveredLine === 2 ? 0 : 1 // Also toggle opacity to ensure transitions
             }}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.12, ease: "easeOut" }}
+            initial={{ opacity: 0, x: -150 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1.5, delay: delayShift + 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
             {line1}
           </motion.h1>
@@ -228,9 +304,9 @@ export default function BazilHero({ profile }: BazilHeroProps) {
               WebkitTextStroke: hoveredLine === 2 ? "2px var(--text-muted)" : "0px transparent",
               opacity: hoveredLine === 2 ? 1 : 0
             }}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.24, ease: "easeOut" }}
+            initial={{ opacity: 0, x: 150 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1.5, delay: delayShift + 0.4, ease: [0.16, 1, 0.3, 1] }}
           >
             {line2 || title}
           </motion.h2>
@@ -238,22 +314,28 @@ export default function BazilHero({ profile }: BazilHeroProps) {
 
         {/* === LAYER 4: INVISIBLE HITBOXES (Highest z-index) === */}
         <div style={{ position: "absolute", top: "8%", left: 0, width: "100%", zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <h1
+          <motion.h1
             className="bazil-headline"
             style={{ ...baseStyle, color: "transparent", cursor: "default", pointerEvents: "auto" }}
             onMouseEnter={() => setHoveredLine(1)}
             onMouseLeave={() => setHoveredLine(null)}
+            initial={{ opacity: 0, x: -150 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1.5, delay: delayShift + 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
             {line1}
-          </h1>
-          <h2
+          </motion.h1>
+          <motion.h2
             className="bazil-headline"
             style={{ ...baseStyle, color: "transparent", cursor: "default", pointerEvents: "auto" }}
             onMouseEnter={() => setHoveredLine(2)}
             onMouseLeave={() => setHoveredLine(null)}
+            initial={{ opacity: 0, x: 150 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1.5, delay: delayShift + 0.4, ease: [0.16, 1, 0.3, 1] }}
           >
             {line2 || title}
-          </h2>
+          </motion.h2>
         </div>
       </div>
 
@@ -279,6 +361,7 @@ export default function BazilHero({ profile }: BazilHeroProps) {
       >
         <Link
           href="#projects"
+          onClick={(e) => handleScrollClick(e, "#projects")}
           style={{
             padding: "12px 36px",
             background: "linear-gradient(135deg, #7c3aed, #f472b6)",
@@ -303,6 +386,7 @@ export default function BazilHero({ profile }: BazilHeroProps) {
         </Link>
         <Link
           href="#contact"
+          onClick={(e) => handleScrollClick(e, "#contact")}
           style={{
             padding: "12px 36px",
             background: "rgba(255, 255, 255, 0.03)",

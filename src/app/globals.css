@@ -40,7 +40,7 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* Removed scroll-behavior: smooth to let JS handle it reliably without conflicts */
   overflow-x: hidden;
 }
 
@@ -108,6 +108,10 @@ body {
 .btn-outline:hover {
   border-color: #6c63ff;
   background: rgba(108, 99, 255, 0.1);
+}
+
+section[id] {
+  scroll-margin-top: 50px;
 }
 
 /* Section headers */
@@ -199,17 +203,18 @@ body {
   will-change: transform;
 }
 
-/* Scroll reveal states */
+/* Scroll reveal states (Optimized: No translateY to prevent scroll distance glitches) */
 .reveal {
   opacity: 0;
-  transform: translateY(30px);
+  transform: scale(0.98); /* Use subtle scale instead of translateY to keep layout stable */
+  transform-origin: top center; /* CRITICAL: Locks top edge so scrollIntoView tracking never breaks */
   transition: opacity 0.8s ease-out, transform 0.8s ease-out;
   will-change: opacity, transform;
 }
 
 .reveal.visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: scale(1);
 }
 
 /* Admin nav button */

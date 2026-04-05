@@ -215,8 +215,8 @@ const BackgroundEffects = () => {
         <SpaceItem key={`nebula-${i}`} type="nebula" mouseX={smoothMouseX} mouseY={smoothMouseY} theme={theme} />
       ))}
 
-      {/* 2. Massive Starfield (Density!) */}
-      {[...Array(200)].map((_, i) => (
+      {/* 2. Massive Starfield (Optimized count for performance) */}
+      {[...Array(50)].map((_, i) => (
         <SpaceItem key={`star-${i}`} type="star" mouseX={smoothMouseX} mouseY={smoothMouseY} theme={theme} />
       ))}
 

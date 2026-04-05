@@ -14,8 +14,8 @@ export default function ClientInteractivity() {
         }
       });
     }, { 
-      threshold: 0.1, 
-      rootMargin: "0px 0px -10% 0px" 
+      threshold: 0.01, 
+      rootMargin: "0px" 
     });
 
     document.querySelectorAll('.reveal').forEach((el) => {

@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import { motion, AnimatePresence } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 interface NavbarProps {
   profile: any;
@@ -18,10 +19,10 @@ const PRIMARY_LINKS = [
   { name: "Education", href: "#education", icon: <GraduationCap size={14} /> },
   { name: "Experience", href: "#experience", icon: <Briefcase size={14} /> },
   { name: "Skills", href: "#skills", icon: <Code size={14} /> },
-  { name: "Projects", href: "#projects", icon: <LayoutPanelLeft size={14} /> },
 ];
 
 const SECONDARY_LINKS = [
+  { name: "Projects", href: "#projects", icon: <LayoutPanelLeft size={14} /> },
   { name: "Certificates", href: "#certificates", icon: <Award size={14} /> },
   { name: "Publications", href: "#publications", icon: <BookOpen size={14} /> },
   { name: "Activities", href: "#activities", icon: <Sparkles size={14} /> },
@@ -34,18 +35,76 @@ export default function Navbar({ profile }: NavbarProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [isSplashComplete, setIsSplashComplete] = useState(false);
+  const [isSplashComplete, setIsSplashComplete] = useState(true);
+  const [showSplash, setShowSplash] = useState(false);
+  const pathname = usePathname();
+  
+  const [mounted, setMounted] = useState(false);
+  const [time, setTime] = useState(new Date());
 
   useEffect(() => {
-    // Check if splash has been shown in this session
+    setMounted(true);
+    const timer = setInterval(() => {
+      setTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatDhakaTime = (date: Date) => {
+    return date.toLocaleString("en-US", {
+      timeZone: "Asia/Dhaka",
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+    });
+  };
+
+  const handleHomeClick = (e: React.MouseEvent) => {
+    if (pathname === "/") {
+      e.preventDefault();
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("triggerSplashScreen"));
+      }
+      setTimeout(() => {
+        if (window.location.hash) {
+          window.history.replaceState(null, "", "/");
+        }
+        window.scrollTo({ top: 0, behavior: "instant" });
+      }, 1575);
+    }
+  };
+
+  const handleNavLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith("#") && pathname === "/") {
+      e.preventDefault();
+      const targetId = href.substring(1);
+      const element = document.getElementById(targetId);
+      if (element) {
+        window.dispatchEvent(new Event("scrollStart"));
+        document.body.style.pointerEvents = "none";
+        window.history.replaceState(null, "", href);
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+        setTimeout(() => {
+          document.body.style.pointerEvents = "all";
+          window.dispatchEvent(new Event("scrollEnd"));
+        }, 1500);
+      }
+    }
+  };
+
+  useEffect(() => {
     const splashShown = sessionStorage.getItem("splashShown");
-    if (splashShown) {
-      setIsSplashComplete(true);
-    } else {
+    if (!splashShown) {
+      setShowSplash(true);
+      setIsSplashComplete(false);
       const timer = setTimeout(() => {
         setIsSplashComplete(true);
         sessionStorage.setItem("splashShown", "true");
-      }, 1800);
+      }, 1500);
       return () => clearTimeout(timer);
     }
   }, []);
@@ -56,11 +115,8 @@ export default function Navbar({ profile }: NavbarProps) {
         setIsDropdownOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const closeMenus = () => {
@@ -71,7 +127,7 @@ export default function Navbar({ profile }: NavbarProps) {
   return (
     <>
       <AnimatePresence>
-        {!isSplashComplete && (
+        {showSplash && !isSplashComplete && (
           <motion.div
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
@@ -79,17 +135,15 @@ export default function Navbar({ profile }: NavbarProps) {
               position: "fixed",
               inset: 0,
               zIndex: 9999,
-              background: "#020617", // Deep obsidian navy from root
+              background: "#020617",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              pointerEvents: "all"
+              pointerEvents: "none"
             }}
           >
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "24px" }}>
               <motion.div
-                layoutId="nav-logo-inner"
-                transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
                 style={{
                   width: 120,
                   height: 120,
@@ -104,11 +158,11 @@ export default function Navbar({ profile }: NavbarProps) {
                   <img src={profile?.avatarUrl || "/logo.png"} alt="Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </div>
               </motion.div>
-              <motion.h1 
+              <motion.h1
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="gradient-text" 
+                className="gradient-text"
                 style={{ fontSize: "2rem", fontWeight: 900, letterSpacing: "-0.05em" }}
               >
                 {profile?.name}
@@ -120,12 +174,9 @@ export default function Navbar({ profile }: NavbarProps) {
 
       <div className="navbar-container">
         <nav className="navbar-pill">
-          {/* Logo */}
-          <Link href="/" className="nav-logo-link" style={{ display: "flex", alignItems: "center", marginRight: "8px" }}>
-            <motion.div 
-              layoutId="nav-logo-inner"
-              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-              className="logo-container" 
+          <Link href="/" className="nav-logo-link" onClick={handleHomeClick} style={{ display: "flex", alignItems: "center", marginRight: "8px" }}>
+            <div
+              className="logo-container"
               style={{
                 width: 32,
                 height: 32,
@@ -138,19 +189,23 @@ export default function Navbar({ profile }: NavbarProps) {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={profile?.avatarUrl || "/logo.png"} alt="Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               </div>
-            </motion.div>
+            </div>
           </Link>
 
-          {/* Desktop Nav Links */}
           <div className="nav-links-main">
             {PRIMARY_LINKS.map((link) => (
-              <Link key={link.name} href={link.href} className="nav-link-item" style={{ gap: "8px" }}>
+              <Link 
+                key={link.name} 
+                href={link.href} 
+                className="nav-link-item" 
+                style={{ gap: "8px" }}
+                onClick={(e) => handleNavLinkClick(e, link.href)}
+              >
                 <span className="nav-icon" style={{ opacity: 0.8, display: "flex", color: "var(--accent)" }}>{link.icon}</span>
                 {link.name}
               </Link>
             ))}
 
-            {/* More Dropdown */}
             <div ref={dropdownRef} className="nav-dropdown-wrapper">
               <button
                 className={`nav-dropdown-trigger ${isDropdownOpen ? 'active' : ''}`}
@@ -172,7 +227,7 @@ export default function Navbar({ profile }: NavbarProps) {
                         key={link.name}
                         href={link.href}
                         className="dropdown-item"
-                        onClick={() => setIsDropdownOpen(false)}
+                        onClick={(e) => { setIsDropdownOpen(false); handleNavLinkClick(e, link.href); }}
                       >
                         <span style={{ color: "var(--accent)" }}>{link.icon}</span>
                         {link.name}
@@ -186,8 +241,25 @@ export default function Navbar({ profile }: NavbarProps) {
 
           <div className="nav-divider" />
 
-          {/* Actions */}
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            {mounted && (
+              <div 
+                className="desktop-only"
+                style={{
+                  fontFamily: "monospace",
+                  fontSize: "0.85rem",
+                  color: "var(--text-primary)",
+                  opacity: 0.8,
+                  letterSpacing: "0.05em",
+                  paddingRight: "12px",
+                  borderRight: "1px solid var(--border-subtle)",
+                  marginRight: "4px"
+                }}
+              >
+                {formatDhakaTime(time)}
+              </div>
+            )}
+
             <ThemeToggle />
 
             <Link href="/login" className="nav-cta">
@@ -196,7 +268,6 @@ export default function Navbar({ profile }: NavbarProps) {
               </span>
             </Link>
 
-            {/* Mobile Toggle */}
             <button className="mobile-toggle" onClick={() => setIsMobileOpen(true)}>
               <Menu size={24} />
             </button>
@@ -204,15 +275,13 @@ export default function Navbar({ profile }: NavbarProps) {
         </nav>
       </div>
 
-      {/* Mobile Overlay */}
       <div className={`mobile-overlay ${isMobileOpen ? 'open' : ''}`}>
         <button className="close-mobile" onClick={() => setIsMobileOpen(false)}>
           <X size={32} />
         </button>
 
         <div className="mobile-nav-links">
-          {/* Logo link for mobile home navigation */}
-          <Link href="/" onClick={closeMenus} style={{ marginBottom: "20px" }}>
+          <Link href="/" onClick={(e) => { closeMenus(); handleHomeClick(e); }} style={{ marginBottom: "20px" }}>
             <div className="logo-container" style={{
               width: 80,
               height: 80,
@@ -229,11 +298,13 @@ export default function Navbar({ profile }: NavbarProps) {
 
           <div className="mobile-nav-grid">
             {[...PRIMARY_LINKS, ...SECONDARY_LINKS].map((link) => (
-              <Link key={link.name} href={link.href} className="mobile-nav-item" onClick={closeMenus} style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "12px",
-              }}>
+              <Link 
+                key={link.name} 
+                href={link.href} 
+                className="mobile-nav-item" 
+                onClick={(e) => { closeMenus(); handleNavLinkClick(e, link.href); }}
+                style={{ display: "flex", alignItems: "center", gap: "12px" }}
+              >
                 <span style={{ color: "var(--accent)" }}>{link.icon}</span>
                 {link.name}
               </Link>
