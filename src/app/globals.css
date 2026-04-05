@@ -322,10 +322,31 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 /* logo and name link hover effect */
 .nav-logo-link {
   transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.nav-logo-link::after {
+  content: "";
+  position: absolute;
+  right: -8px;
+  width: 5px;
+  height: 5px;
+  background-color: var(--accent-2);
+  border-radius: 50%;
+  opacity: 0;
+  transform: translateX(10px);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .nav-logo-link:hover {
-  transform: scale(1.02) translateX(4px);
+  transform: scale(1.02);
+}
+
+.nav-logo-link:hover::after {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .nav-logo-link .logo-container {
@@ -335,15 +356,6 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 .nav-logo-link:hover .logo-container {
   box-shadow: 0 0 25px rgba(108, 99, 255, 0.6) !important;
   transform: scale(1.1) rotate(5deg);
-}
-
-.nav-logo-link span {
-  transition: all 0.3s ease;
-}
-
-.nav-logo-link:hover span {
-  color: #fff !important;
-  text-shadow: 0 0 15px rgba(108, 99, 255, 0.4);
 }
 
 .nav-link-glow {
@@ -625,16 +637,44 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   border-radius: 9999px;
   transition: all 0.3s ease;
   white-space: nowrap;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.nav-link-item::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  width: 5px;
+  height: 5px;
+  background-color: var(--accent-2);
+  border-radius: 50%;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .nav-link-item:hover {
   color: var(--text-primary);
   background: rgba(255, 255, 255, 0.05);
+  padding-left: 20px;
+}
+
+.nav-link-item:hover::before {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .nav-link-item.active {
   color: var(--accent);
   background: rgba(108, 99, 255, 0.1);
+  padding-left: 20px;
+}
+
+.nav-link-item.active::before {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 /* ── DROPDOWN ── */

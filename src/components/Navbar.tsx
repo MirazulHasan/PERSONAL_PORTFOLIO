@@ -34,6 +34,21 @@ export default function Navbar({ profile }: NavbarProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isSplashComplete, setIsSplashComplete] = useState(false);
+
+  useEffect(() => {
+    // Check if splash has been shown in this session
+    const splashShown = sessionStorage.getItem("splashShown");
+    if (splashShown) {
+      setIsSplashComplete(true);
+    } else {
+      const timer = setTimeout(() => {
+        setIsSplashComplete(true);
+        sessionStorage.setItem("splashShown", "true");
+      }, 1800);
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -55,29 +70,82 @@ export default function Navbar({ profile }: NavbarProps) {
 
   return (
     <>
+      <AnimatePresence>
+        {!isSplashComplete && (
+          <motion.div
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
+            style={{
+              position: "fixed",
+              inset: 0,
+              zIndex: 9999,
+              background: "#020617", // Deep obsidian navy from root
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              pointerEvents: "all"
+            }}
+          >
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "24px" }}>
+              <motion.div
+                layoutId="nav-logo-inner"
+                transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+                style={{
+                  width: 120,
+                  height: 120,
+                  borderRadius: "50%",
+                  background: "linear-gradient(135deg, #6c63ff, #ff6584)",
+                  padding: "4px",
+                  boxShadow: "0 0 50px rgba(108, 99, 255, 0.5)"
+                }}
+              >
+                <div style={{ width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden", background: "var(--avatar-bg)" }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={profile?.avatarUrl || "/logo.png"} alt="Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                </div>
+              </motion.div>
+              <motion.h1 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="gradient-text" 
+                style={{ fontSize: "2rem", fontWeight: 900, letterSpacing: "-0.05em" }}
+              >
+                {profile?.name}
+              </motion.h1>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="navbar-container">
         <nav className="navbar-pill">
           {/* Logo */}
           <Link href="/" className="nav-logo-link" style={{ display: "flex", alignItems: "center", marginRight: "8px" }}>
-            <div className="logo-container" style={{
-              width: 32,
-              height: 32,
-              borderRadius: "50%",
-              background: "linear-gradient(135deg, #6c63ff, #ff6584)",
-              padding: "1.5px"
-            }}>
+            <motion.div 
+              layoutId="nav-logo-inner"
+              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+              className="logo-container" 
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: "50%",
+                background: "linear-gradient(135deg, #6c63ff, #ff6584)",
+                padding: "1.5px"
+              }}
+            >
               <div style={{ width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden", background: "var(--avatar-bg)" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={profile?.avatarUrl || "/logo.png"} alt="Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               </div>
-            </div>
+            </motion.div>
           </Link>
 
           {/* Desktop Nav Links */}
           <div className="nav-links-main">
             {PRIMARY_LINKS.map((link) => (
-              <Link key={link.name} href={link.href} className="nav-link-item" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <span style={{ opacity: 0.8, display: "flex", color: "var(--accent)" }}>{link.icon}</span>
+              <Link key={link.name} href={link.href} className="nav-link-item" style={{ gap: "8px" }}>
+                <span className="nav-icon" style={{ opacity: 0.8, display: "flex", color: "var(--accent)" }}>{link.icon}</span>
                 {link.name}
               </Link>
             ))}
