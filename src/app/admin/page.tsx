@@ -224,16 +224,7 @@ export default async function AdminDashboard() {
                     <div>
                         <h2 style={{ fontSize: "3rem", fontWeight: 900, marginBottom: 8, letterSpacing: "-0.02em" }}>{profile?.name || "Your Name"}</h2>
                         <p style={{ fontSize: "1.4rem", color: "var(--accent)", fontWeight: 700, marginBottom: 12 }}>{profile?.title || "Professional Title"}</p>
-                        <div style={{
-                            display: "inline-flex", alignItems: "center", gap: 10,
-                            padding: "5px 16px", borderRadius: 50,
-                            background: "rgba(108,99,255,0.08)", border: "1px solid rgba(108,99,255,0.2)",
-                            fontSize: 11, fontWeight: 800, color: "var(--accent)",
-                            marginBottom: 24, letterSpacing: "0.05em", textTransform: "uppercase"
-                        }}>
-                            <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#4ade80", boxShadow: "0 0 10px #4ade80" }}></div>
-                            {profile?.availability ?? "Available for new opportunities"}
-                        </div>
+
                         <div style={{ display: "flex", flexDirection: "column", gap: 14, color: "var(--text-muted)", fontSize: 13 }}>
                             {/* All social links in one row */}
                             <div style={{ display: "flex", flexWrap: "wrap", gap: "20px 32px", marginBottom: 4 }}>

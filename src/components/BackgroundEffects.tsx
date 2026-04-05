@@ -6,8 +6,8 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 const keywords = [
   "Next.js", "TypeScript", "React", "Prisma", "PostgreSQL",
   "Tailwind", "Framer Motion", "Node.js", "Full Stack", "API",
-  "UI/UX", "Database", "Scalable", "Clean Code", "Modern Web",
-  "AI", "ML", "GPU", "CPU", "RAM", "MOBO", "SSD", "HDD", "PSU", "CASE"
+  "UI/UX", "Database", "Scalable", "Modern Web", "AI", "ML",
+  "GPU", "CPU", "RAM", "MOBO", "SSD", "HDD", "PSU", "CASE"
 ];
 
 const colors = ["#818cf8", "#f472b6", "#fbbf24", "#34d399", "#60a5fa"];
@@ -25,7 +25,7 @@ const SpaceItem = ({
   gridPos,
   theme
 }: {
-  type: "keyword" | "star" | "nebula" | "planet",
+  type: "keyword" | "star" | "nebula" | "planet" | "solarSystem" | "galaxy",
   mouseX: any,
   mouseY: any,
   gridPos?: { x: number, y: number },
@@ -37,9 +37,10 @@ const SpaceItem = ({
     const isKeyword = type === "keyword";
     const isNebula = type === "nebula";
     const isPlanet = type === "planet";
+    const isSpaceObject = ["solarSystem", "galaxy"].includes(type);
 
     // Parallax Factor (Deeper layers move slower, planets move faster)
-    const parallaxFactor = isNebula ? 0.01 : (isPlanet ? 0.05 : (isKeyword ? 0.03 : 0.02));
+    const parallaxFactor = isNebula ? 0.01 : (isPlanet || isSpaceObject ? 0.05 : (isKeyword ? 0.03 : 0.02));
 
     const xStart = gridPos ? gridPos.x + getRandom(-5, 5) : getRandom(2, 98);
     const yStart = gridPos ? gridPos.y + getRandom(-5, 5) : getRandom(2, 98);
@@ -47,19 +48,19 @@ const SpaceItem = ({
     return {
       content: isKeyword ? keywords[Math.floor(Math.random() * keywords.length)] : null,
       color: colors[Math.floor(Math.random() * colors.length)],
-      fontSize: isKeyword ? getRandom(12, 22) : (isPlanet ? getRandom(40, 100) : getRandom(1, 3)),
+      fontSize: isKeyword ? getRandom(12, 22) : (isPlanet ? getRandom(40, 100) : (isSpaceObject ? getRandom(40, 80) : getRandom(1, 3))),
 
       xStart,
       yStart,
 
-      xDrift: isPlanet ? getRandom(-5, 5) : getRandom(-12, 12),
-      yDrift: isPlanet ? getRandom(-5, 5) : getRandom(-12, 12),
-      rotateDrift: isKeyword ? getRandom(-15, 15) : (isPlanet ? getRandom(360, 720) : 0),
+      xDrift: isPlanet || isSpaceObject ? getRandom(-5, 5) : getRandom(-12, 12),
+      yDrift: isPlanet || isSpaceObject ? getRandom(-5, 5) : getRandom(-12, 12),
+      rotateDrift: isKeyword ? getRandom(-15, 15) : (isPlanet || isSpaceObject ? getRandom(360, 720) : 0),
 
-      duration: isNebula ? getRandom(30, 50) : (isPlanet ? getRandom(40, 60) : getRandom(15, 25)),
+      duration: isNebula ? getRandom(30, 50) : (isPlanet || isSpaceObject ? getRandom(40, 60) : getRandom(15, 25)),
       delay: getRandom(0, 5),
       blur: isNebula ? getRandom(100, 150) : 0,
-      opacity: isNebula ? (theme === "light" ? 0.02 : 0.04) : (isPlanet ? 0.15 : (isKeyword ? (theme === "light" ? 0.4 : 0.22) : (theme === "light" ? 0.6 : 0.45))),
+      opacity: isNebula ? (theme === "light" ? 0.02 : 0.04) : (isPlanet ? 0.15 : (isKeyword ? (theme === "light" ? 0.4 : 0.22) : (isSpaceObject ? (theme === "light" ? 0.6 : 0.45) : (theme === "light" ? 0.6 : 0.45)))),
       parallaxFactor
     };
   }, [type, gridPos, theme]);
@@ -83,7 +84,7 @@ const SpaceItem = ({
         x: parallaxX,
         y: parallaxY,
         mixBlendMode: theme === "light" ? "multiply" : "screen",
-        zIndex: type === "nebula" ? -3 : (type === "star" ? -2 : (type === "planet" ? -1 : 0)),
+        zIndex: type === "nebula" ? -3 : (type === "star" ? -2 : (type === "keyword" ? 0 : -1)),
         fontFamily: "ui-monospace, monospace",
       }}
       initial={{ opacity: 0, scale: 0.8 }}
@@ -106,6 +107,23 @@ const SpaceItem = ({
         <span style={{ color: params.color, fontSize: `${params.fontSize}px`, fontWeight: 500 }}>
           {params.content}
         </span>
+      ) : type === "solarSystem" ? (
+        <div style={{ width: `${params.fontSize * 1.5}px`, height: `${params.fontSize * 1.5}px`, position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ width: "20%", height: "20%", background: "radial-gradient(circle, #fbbf24, #f59e0b)", borderRadius: "50%", boxShadow: "0 0 20px #fbbf24" }} />
+          <motion.div animate={{ rotate: 360 }} transition={{ duration: 10, repeat: Infinity, ease: "linear" }} className="absolute w-full h-full rounded-full border border-[rgba(128,128,128,0.3)]">
+            <div className="absolute top-[-3%] left-1/2 -translate-x-1/2 w-[6%] h-[6%] bg-blue-500 rounded-full shadow-[0_0_8px_#3b82f6]" />
+          </motion.div>
+          <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="absolute w-[70%] h-[70%] rounded-full border border-[rgba(128,128,128,0.3)]">
+            <div className="absolute top-[-4%] left-1/2 -translate-x-1/2 w-[8%] h-[8%] bg-red-400 rounded-full shadow-[0_0_8px_#f87171]" />
+          </motion.div>
+          <motion.div animate={{ rotate: 360 }} transition={{ duration: 5, repeat: Infinity, ease: "linear" }} className="absolute w-[40%] h-[40%] rounded-full border border-[rgba(128,128,128,0.3)]">
+            <div className="absolute top-[-5%] left-1/2 -translate-x-1/2 w-[10%] h-[10%] bg-gray-400 rounded-full shadow-[0_0_5px_#9ca3af]" />
+          </motion.div>
+        </div>
+      ) : type === "galaxy" ? (
+        <motion.div animate={{ rotate: 360 }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }} style={{ width: `${params.fontSize * 2.5}px`, height: `${params.fontSize * 2.5}px`, position: "relative", borderRadius: "50%", background: `conic-gradient(from 0deg, transparent 0%, ${params.color}40 20%, transparent 40%, transparent 50%, ${params.color}40 70%, transparent 90%)`, filter: "blur(4px)" }}>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/3 h-1/3 bg-white rounded-full blur-[8px]" style={{ boxShadow: `0 0 30px ${params.color}` }} />
+        </motion.div>
       ) : type === "planet" ? (
         <div style={{
           width: `${params.fontSize}px`,
@@ -147,7 +165,7 @@ const BackgroundEffects = () => {
 
   useEffect(() => {
     setIsMounted(true);
-    
+
     // Initial theme check
     const currentTheme = document.documentElement.getAttribute("data-theme") || "dark";
     setTheme(currentTheme);
@@ -205,6 +223,16 @@ const BackgroundEffects = () => {
       {/* 3. Celestial Planets */}
       {[...Array(4)].map((_, i) => (
         <SpaceItem key={`planet-${i}`} type="planet" mouseX={smoothMouseX} mouseY={smoothMouseY} theme={theme} />
+      ))}
+
+      {/* 3.1. Galaxies */}
+      {[...Array(2)].map((_, i) => (
+        <SpaceItem key={`galaxy-${i}`} type="galaxy" mouseX={smoothMouseX} mouseY={smoothMouseY} theme={theme} />
+      ))}
+
+      {/* 3.2. Solar Systems */}
+      {[...Array(2)].map((_, i) => (
+        <SpaceItem key={`solarSystem-${i}`} type="solarSystem" mouseX={smoothMouseX} mouseY={smoothMouseY} theme={theme} />
       ))}
 
       {/* 4. Non-Colliding Tech Keywords */}

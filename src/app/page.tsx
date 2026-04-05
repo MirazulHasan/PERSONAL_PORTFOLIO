@@ -4,10 +4,13 @@ import ClientInteractivity from "@/components/ClientInteractivity";
 import ProjectCarousel from "@/components/ProjectCarousel";
 import SkillTree from "@/components/SkillTree";
 import Navbar from "@/components/Navbar";
-import CodingPanel from "@/components/CodingPanel";
 import EducationSection from "@/components/EducationSection";
 import ExperienceSection from "@/components/ExperienceSection";
 import PublicationSection from "@/components/PublicationSection";
+import Typewriter from "@/components/Typewriter";
+import BazilHero from "@/components/BazilHero";
+
+
 
 export const dynamic = 'force-dynamic';
 
@@ -122,73 +125,19 @@ export default async function HomePage() {
     <main>
       <Navbar profile={profile} />
 
-      {/* ── HERO ── */}
-      <section style={{
-        position: "relative",
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        textAlign: "center",
-        padding: "100px 5% 60px", // Increased top padding to ensure zero overlap
-        overflow: "hidden",
-      }}>
-
-        <div className="animate-in" style={{ maxWidth: 760, position: "relative" }}>
-          {/* Avatar */}
-          {profile?.avatarUrl && (
-            <div style={{ display: "flex", justifyContent: "center", position: "relative", zIndex: 10 }}>
-              <div style={{
-                width: 120, height: 120, borderRadius: "50%",
-                background: "linear-gradient(135deg, #6c63ff, #ff6584)",
-                padding: 3, boxShadow: "0 0 60px rgba(108,99,255,0.5)",
-              }}>
-                <div style={{ width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden", background: "var(--avatar-bg)" }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={profile.avatarUrl} alt={profile.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                </div>
-              </div>
-            </div>
-          )}
-          <div style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 10,
-            padding: "6px 18px",
-            borderRadius: 50,
-            background: "rgba(108,99,255,0.15)",
-            border: "1px solid rgba(108,99,255,0.35)",
-            fontSize: 13,
-            fontWeight: 500,
-            color: "var(--accent)",
-            marginTop: 20,
-            marginBottom: 28,
-            letterSpacing: "0.02em",
-          }}>
-            <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#4ade80", boxShadow: "0 0 12px #4ade80", animation: "pulse 2s infinite" }} />
-            {profile?.availability ?? "Available for new opportunities"}
-          </div>
-          <h1 style={{ fontSize: "clamp(3rem, 8vw, 6rem)", fontWeight: 900, lineHeight: 1.05, letterSpacing: "-0.04em", marginBottom: 24 }}>
-            Hi, I&apos;m <span className="gradient-text">{profile?.name ?? "Md. Mirazul Hasan"}</span>
-          </h1>
-          <p style={{ fontSize: "clamp(1.1rem, 2.5vw, 1.4rem)", color: "var(--text-muted)", lineHeight: 1.7, marginBottom: 40, maxWidth: 640, margin: "0 auto 40px" }}>
-            {profile?.bio ?? "Full Stack Developer crafting clean, scalable, and beautiful web applications with a passion for great user experience."}
-          </p>
-          <div className="hero-cta-row" style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", marginBottom: 32 }}>
-            <Link href="#projects" className="btn-glow">View My Work</Link>
-            <Link href="#contact" className="btn-outline">Get in Touch</Link>
-          </div>
-          <CodingPanel />
-        </div>
-      </section>
+      {/* ── HERO (Bazil-style) ── */}
+      <BazilHero profile={profile} />
 
       {/* ── ABOUT ── */}
-      <section id="about" style={{ padding: "100px 5%" }}>
-        <div className="reveal about-responsive-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center", maxWidth: 1100, margin: "0 auto" }}>
-          <div>
+      <section id="about" style={{ padding: "100px 5%", position: "relative", overflow: "hidden" }}>
+        <div className="reveal about-responsive-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center", maxWidth: 1200, margin: "0 auto" }}>
+
+
+          <div style={{ position: "relative", zIndex: 2 }}>
             <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>About Me</p>
-            <h2 className="section-title" style={{ marginBottom: 24 }}>{(profile as any)?.aboutTitle ?? "Passionate about building things that matter"}</h2>
+            <h2 className="section-title" style={{ marginBottom: 24 }}>
+              <Typewriter text={(profile as any)?.aboutTitle ?? "Passionate about building things that matter"} delay={70} />
+            </h2>
             <p style={{ color: "var(--text-muted)", lineHeight: 1.8, marginBottom: 16 }}>
               {profile?.bio ?? "I'm a full stack developer with experience building production-ready applications. I love clean code, great design, and solving hard problems."}
             </p>
@@ -198,6 +147,7 @@ export default async function HomePage() {
               ))}
             </div>
           </div>
+
           <div className="glass hover-card about-info-card" style={{ padding: 40 }}>
             {/* Avatar in about card */}
             {profile?.avatarUrl && (
@@ -213,8 +163,7 @@ export default async function HomePage() {
                   </div>
                 </div>
                 <div>
-                  <p style={{ fontWeight: 700, fontSize: 16, color: "var(--text-primary)" }}>{profile.name}</p>
-                  <p style={{ fontSize: 13, color: "var(--accent)", fontWeight: 600 }}>{profile.title}</p>
+                  <p style={{ fontWeight: 700, fontSize: 24, color: "var(--text-primary)" }}>{profile.name}</p>
                 </div>
               </div>
             )}

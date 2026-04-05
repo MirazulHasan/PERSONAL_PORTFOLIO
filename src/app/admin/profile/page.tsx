@@ -4,17 +4,23 @@ import { useState, useEffect, useCallback } from "react";
 import Cropper from "react-easy-crop";
 // ── helpers ─────────────────────────────────────────────────────────────────
 
-async function getCroppedImg(imageSrc: string, croppedAreaPixels: any): Promise<string | null> {
+async function getCroppedImg(imageSrc: string, croppedAreaPixels: any, type: "avatar" | "about"): Promise<string | null> {
     const image = new Image();
     image.src = imageSrc;
     await new Promise((resolve) => { image.onload = resolve; });
 
     const canvas = document.createElement("canvas");
-    canvas.width = 400;
-    canvas.height = 400;
+    
+    // Optimized dimensions for web/mobile to ensure small payload size (fixed aspect 2:3 for about)
+    const targetWidth = type === "avatar" ? 300 : 400;
+    const targetHeight = type === "avatar" ? 300 : 600;
+    
+    canvas.width = targetWidth;
+    canvas.height = targetHeight;
     const ctx = canvas.getContext("2d");
     if (!ctx) return null;
 
+    // Use WebP for best compression while retaining alpha channel (transparency)
     ctx.drawImage(
         image,
         croppedAreaPixels.x,
@@ -22,10 +28,11 @@ async function getCroppedImg(imageSrc: string, croppedAreaPixels: any): Promise<
         croppedAreaPixels.width,
         croppedAreaPixels.height,
         0, 0,
-        400, 400
+        targetWidth,
+        targetHeight
     );
-    // Use lower quality to save space in base64 string
-    return canvas.toDataURL("image/jpeg", 0.85);
+    // 0.8 quality WebP is significantly smaller than PNG/JPEG and supports transparency
+    return canvas.toDataURL("image/webp", 0.8);
 }
 
 const inputStyle: React.CSSProperties = {
@@ -63,6 +70,8 @@ export default function ProfileAdmin() {
     const [showCropper, setShowCropper] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [dragOver, setDragOver] = useState(false);
+    const [activeTarget, setActiveTarget] = useState<"avatar" | "about">("avatar");
+    const [aboutDragOver, setAboutDragOver] = useState(false);
 
     useEffect(() => {
         fetch("/api/profile?t=" + Date.now())
@@ -100,29 +109,49 @@ export default function ProfileAdmin() {
         reader.readAsDataURL(file);
     };
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files.length > 0) loadFile(e.target.files[0]);
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, target: "avatar" | "about") => {
+        if (e.target.files && e.target.files.length > 0) {
+            setActiveTarget(target);
+            loadFile(e.target.files[0]);
+        }
     };
 
-    const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    const handleAvatarDrop = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
         setDragOver(false);
         const file = e.dataTransfer.files[0];
-        if (file && file.type.startsWith("image/")) loadFile(file);
+        if (file && file.type.startsWith("image/")) {
+            setActiveTarget("avatar");
+            loadFile(file);
+        }
+    };
+
+    const handleAboutDrop = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        setAboutDragOver(false);
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith("image/")) {
+            setActiveTarget("about");
+            loadFile(file);
+        }
     };
 
     const handleUpload = async () => {
         if (!imageSrc || !croppedAreaPixels) return;
         setUploading(true);
         try {
-            const croppedImage = await getCroppedImg(imageSrc, croppedAreaPixels);
+            const croppedImage = await getCroppedImg(imageSrc, croppedAreaPixels, activeTarget);
             if (!croppedImage) {
                 setUploading(false);
                 return;
             }
 
             // Set the profile state with the new base64 image URL
-            setProfile((prev: any) => ({ ...prev, avatarUrl: croppedImage }));
+            if (activeTarget === "avatar") {
+                setProfile((prev: any) => ({ ...prev, avatarUrl: croppedImage }));
+            } else {
+                setProfile((prev: any) => ({ ...prev, aboutImageUrl: croppedImage }));
+            }
             setShowCropper(false);
             showToast("success", "Photo updated locally! Click 'Save Profile' to permanently save.");
         } catch (error) {
@@ -162,11 +191,16 @@ export default function ProfileAdmin() {
         const res = await fetch("/api/profile", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ ...data, avatarUrl: profile?.avatarUrl, socialLinks }),
+            body: JSON.stringify({ ...data, avatarUrl: profile?.avatarUrl, aboutImageUrl: profile?.aboutImageUrl, socialLinks }),
         });
         setSaving(false);
-        if (res.ok) showToast("success", "Profile saved successfully!");
-        else showToast("error", "Save failed. Please try again.");
+        if (res.ok) {
+            showToast("success", "Profile saved successfully!");
+        } else {
+            const errData = await res.json().catch(() => ({}));
+            console.error("Save error:", res.status, errData);
+            showToast("error", `Save failed (${res.status}): ${errData.error || "Please check payload size or connection."}`);
+        }
     };
 
     if (loading) return (
@@ -195,7 +229,7 @@ export default function ProfileAdmin() {
             {/* ── Toast ── */}
             {toast && (
                 <div style={{
-                    position: "fixed", bottom: 32, right: 32, zIndex: 9999,
+                    position: "fixed", bottom: 32, right: 120, zIndex: 9999,
                     padding: "14px 24px", borderRadius: 14, fontWeight: 600, fontSize: 14,
                     background: toast.type === "success" ? "rgba(34,197,94,0.15)" : "rgba(239,68,68,0.15)",
                     border: `1px solid ${toast.type === "success" ? "rgba(34,197,94,0.5)" : "rgba(239,68,68,0.5)"}`,
@@ -209,71 +243,132 @@ export default function ProfileAdmin() {
             )}
 
             <form onSubmit={handleSubmit}>
-                {/* ── Avatar Card ── */}
-                <div className="glass" style={{ padding: 40, border: "1px solid var(--border)", marginBottom: 24 }}>
-                    <h2 style={{ fontSize: "1rem", fontWeight: 700, marginBottom: 28, color: "var(--text-primary)", display: "flex", alignItems: "center", gap: 10 }}>
-                        <span style={{ width: 3, height: 20, background: "var(--accent)", borderRadius: 4, display: "inline-block" }} />
-                        Profile Photo
-                    </h2>
-                    <div style={{ display: "flex", alignItems: "center", gap: 40, flexWrap: "wrap" }}>
-                        {/* Avatar preview */}
-                        <div style={{ position: "relative", flexShrink: 0 }}>
-                            <div style={{
-                                width: 140, height: 140, borderRadius: "50%",
-                                background: "linear-gradient(135deg, #6c63ff, #ff6584)",
-                                padding: 3,
-                                boxShadow: "0 0 40px rgba(108,99,255,0.4)",
-                            }}>
-                                <div style={{ width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden", background: "#0a0a0f" }}>
-                                    {profile?.avatarUrl ? (
-                                        /* eslint-disable-next-line @next/next/no-img-element */
-                                        <img src={profile.avatarUrl} alt="Avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                                    ) : (
-                                        <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 48, fontWeight: 900, color: "var(--text-primary)" }}>
-                                            {(profile?.name?.[0] || "M").toUpperCase()}
-                                        </div>
-                                    )}
+                {/* ── Photo Grid ── */}
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))", gap: 24, marginBottom: 24 }}>
+                    {/* ── Avatar Card ── */}
+                    <div className="glass" style={{ padding: 24, border: "1px solid var(--border)" }}>
+                        <h2 style={{ fontSize: "0.9rem", fontWeight: 700, marginBottom: 16, color: "var(--text-primary)", display: "flex", alignItems: "center", gap: 10 }}>
+                            <span style={{ width: 3, height: 16, background: "var(--accent)", borderRadius: 4, display: "inline-block" }} />
+                            Profile Photo
+                        </h2>
+                        <div style={{ display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" }}>
+                            {/* Avatar preview */}
+                            <div style={{ position: "relative", flexShrink: 0 }}>
+                                <div style={{
+                                    width: 100, height: 100, borderRadius: "50%",
+                                    background: "linear-gradient(135deg, #6c63ff, #ff6584)",
+                                    padding: 3,
+                                    boxShadow: "0 0 30px rgba(108,99,255,0.3)",
+                                }}>
+                                    <div style={{ width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden", background: "#0a0a0f" }}>
+                                        {profile?.avatarUrl ? (
+                                            /* eslint-disable-next-line @next/next/no-img-element */
+                                            <img src={profile.avatarUrl} alt="Avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                        ) : (
+                                            <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32, fontWeight: 900, color: "var(--text-primary)" }}>
+                                                {(profile?.name?.[0] || "M").toUpperCase()}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
+                                <label htmlFor="avatar-input" style={{
+                                    position: "absolute", bottom: 0, right: 0,
+                                    width: 32, height: 32, borderRadius: "50%",
+                                    background: "linear-gradient(135deg, #6c63ff, #ff6584)",
+                                    display: "flex", alignItems: "center", justifyContent: "center",
+                                    cursor: "pointer", fontSize: 14,
+                                    boxShadow: "0 4px 14px rgba(0,0,0,0.5)",
+                                    border: "2px solid #0a0a0f",
+                                }} title="Upload new photo">📷</label>
                             </div>
-                            {/* Camera badge */}
-                            <label htmlFor="avatar-input" style={{
-                                position: "absolute", bottom: 4, right: 4,
-                                width: 36, height: 36, borderRadius: "50%",
-                                background: "linear-gradient(135deg, #6c63ff, #ff6584)",
-                                display: "flex", alignItems: "center", justifyContent: "center",
-                                cursor: "pointer", fontSize: 16,
-                                boxShadow: "0 4px 14px rgba(0,0,0,0.5)",
-                                border: "2px solid #0a0a0f",
-                            }} title="Upload new photo">📷</label>
-                        </div>
 
-                        {/* Drop zone */}
-                        <div
-                            className="upload-zone"
-                            onDrop={handleDrop}
-                            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-                            onDragLeave={() => setDragOver(false)}
-                            style={{
-                                flex: 1, minWidth: 220,
-                                border: `2px dashed ${dragOver ? "var(--accent)" : "var(--border)"}`,
-                                borderRadius: 16, padding: "28px 24px",
-                                textAlign: "center", cursor: "pointer",
-                                background: dragOver ? "rgba(108,99,255,0.06)" : "transparent",
-                                transition: "all 0.2s",
-                            }}
-                            onClick={() => document.getElementById("avatar-input")?.click()}
-                        >
-                            <div style={{ fontSize: 32, marginBottom: 12 }}>🖼️</div>
-                            <p style={{ fontWeight: 600, fontSize: 14, color: "var(--text-primary)", marginBottom: 6 }}>
-                                Drag &amp; drop or click to upload
-                            </p>
-                            <p style={{ fontSize: 12, color: "var(--text-muted)" }}>PNG, JPG, WEBP — max 10 MB</p>
-                            <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 8 }}>
-                                You&apos;ll get a crop &amp; resize editor before saving
-                            </p>
-                        </div>
+                            {/* Drop zone */}
+                            <div
+                                className="upload-zone"
+                                onDrop={handleAvatarDrop}
+                                onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                                onDragLeave={() => setDragOver(false)}
+                                style={{
+                                    flex: 1, minWidth: 150,
+                                    border: `2px dashed ${dragOver ? "var(--accent)" : "var(--border)"}`,
+                                    borderRadius: 16, padding: "16px",
+                                    textAlign: "center", cursor: "pointer",
+                                    background: dragOver ? "rgba(108,99,255,0.06)" : "transparent",
+                                    transition: "all 0.2s",
+                                }}
+                                onClick={() => document.getElementById("avatar-input")?.click()}
+                            >
+                                <div style={{ fontSize: 24, marginBottom: 8 }}>🖼️</div>
+                                <p style={{ fontWeight: 600, fontSize: 13, color: "var(--text-primary)", marginBottom: 4 }}>
+                                    Upload Avatar
+                                </p>
+                                <p style={{ fontSize: 11, color: "var(--text-muted)" }}>max 10 MB</p>
+                            </div>
 
-                        <input id="avatar-input" type="file" accept="image/*" onChange={handleFileChange} style={{ display: "none" }} />
+                            <input id="avatar-input" type="file" accept="image/*" onChange={(e) => handleFileChange(e, "avatar")} style={{ display: "none" }} />
+                        </div>
+                    </div>
+
+                    {/* ── About Me Standing Photo ── */}
+                    <div className="glass" style={{ padding: 24, border: "1px solid var(--border)" }}>
+                        <h2 style={{ fontSize: "0.9rem", fontWeight: 700, marginBottom: 16, color: "var(--text-primary)", display: "flex", alignItems: "center", gap: 10 }}>
+                            <span style={{ width: 3, height: 16, background: "var(--accent)", borderRadius: 4, display: "inline-block" }} />
+                            Standing Photo
+                        </h2>
+                        <div style={{ display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" }}>
+                            <div style={{ position: "relative", flexShrink: 0 }}>
+                                <div style={{
+                                    width: 100, height: 130, borderRadius: 12,
+                                    background: "linear-gradient(135deg, #6c63ff, #ff6584)",
+                                    padding: 3,
+                                    boxShadow: "0 0 30px rgba(108,99,255,0.3)",
+                                }}>
+                                    <div style={{ width: "100%", height: "100%", borderRadius: 9, overflow: "hidden", background: "#0a0a0f" }}>
+                                        {profile?.aboutImageUrl ? (
+                                            /* eslint-disable-next-line @next/next/no-img-element */
+                                            <img src={profile.aboutImageUrl} alt="About" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+                                        ) : (
+                                            <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32, fontWeight: 900, color: "var(--text-primary)" }}>
+                                                🧍
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                                <label htmlFor="about-input" style={{
+                                    position: "absolute", bottom: -5, right: -5,
+                                    width: 32, height: 32, borderRadius: "50%",
+                                    background: "linear-gradient(135deg, #6c63ff, #ff6584)",
+                                    display: "flex", alignItems: "center", justifyContent: "center",
+                                    cursor: "pointer", fontSize: 14,
+                                    boxShadow: "0 4px 14px rgba(0,0,0,0.5)",
+                                    border: "2px solid #0a0a0f",
+                                }} title="Upload About Photo">📷</label>
+                            </div>
+
+                            <div
+                                className="upload-zone"
+                                onDrop={handleAboutDrop}
+                                onDragOver={(e) => { e.preventDefault(); setAboutDragOver(true); }}
+                                onDragLeave={() => setAboutDragOver(false)}
+                                style={{
+                                    flex: 1, minWidth: 150,
+                                    border: `2px dashed ${aboutDragOver ? "var(--accent)" : "var(--border)"}`,
+                                    borderRadius: 16, padding: "16px",
+                                    textAlign: "center", cursor: "pointer",
+                                    background: aboutDragOver ? "rgba(108,99,255,0.06)" : "transparent",
+                                    transition: "all 0.2s",
+                                }}
+                                onClick={() => document.getElementById("about-input")?.click()}
+                            >
+                                <div style={{ fontSize: 24, marginBottom: 8 }}>👕</div>
+                                <p style={{ fontWeight: 600, fontSize: 13, color: "var(--text-primary)", marginBottom: 4 }}>
+                                    Upload Full-body
+                                </p>
+                                <p style={{ fontSize: 11, color: "var(--text-muted)" }}>Best as PNG</p>
+                            </div>
+
+                            <input id="about-input" type="file" accept="image/*" onChange={(e) => handleFileChange(e, "about")} style={{ display: "none" }} />
+                        </div>
                     </div>
                 </div>
 
@@ -285,14 +380,20 @@ export default function ProfileAdmin() {
                     </h2>
                     <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
                         <Field label="Full Name" name="name" defaultValue={profile?.name ?? ""} />
-                        <Field label="Professional Title" name="title" defaultValue={profile?.title ?? ""} />
+                        <Field label="Professional Title (Document Meta)" name="title" defaultValue={profile?.title ?? ""} />
+                    </div>
+                    <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+                        <Field label="Hero First Line (Large Text 1)" name="heroHeadline1" defaultValue={profile?.heroHeadline1 ?? "AI"} />
+                        <Field label="Hero Second Line (Large Text 2)" name="heroHeadline2" defaultValue={profile?.heroHeadline2 ?? "Engineer"} />
+                    </div>
+                    <div className="admin-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+                        <Field label="Hero Greeting Prefix (Hi, I'm)" name="heroGreetingPrefix" defaultValue={profile?.heroGreetingPrefix ?? "Hi, I'm"} />
+                        <Field label="Hero Greeting Suffix (and I am a)" name="heroGreetingSuffix" defaultValue={profile?.heroGreetingSuffix ?? "and I am a"} />
                     </div>
                     <div style={{ marginBottom: 24 }}>
                         <Field label="About Section Title" name="aboutTitle" defaultValue={profile?.aboutTitle ?? "Passionate about building things that matter"} />
                     </div>
-                    <div style={{ marginBottom: 24 }}>
-                        <Field label="Availability Status (Pill Text)" name="availability" defaultValue={profile?.availability ?? "Available for new opportunities"} />
-                    </div>
+
                     <div style={{ marginBottom: 24 }}>
                         <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "var(--text-muted)", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>Bio / About Me</label>
                         <textarea name="bio" rows={5} defaultValue={profile?.bio ?? ""}
@@ -466,8 +567,8 @@ export default function ProfileAdmin() {
                                 crop={crop}
                                 zoom={zoom}
                                 rotation={rotation}
-                                aspect={1}
-                                cropShape="round"
+                                aspect={activeTarget === "avatar" ? 1 : 2 / 3}
+                                cropShape={activeTarget === "avatar" ? "round" : "rect"}
                                 showGrid={false}
                                 onCropChange={setCrop}
                                 onCropComplete={onCropComplete}

@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/client"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -24,10 +24,15 @@ model Profile {
   id          String       @id @default(cuid())
   name        String
   title       String
+  heroHeadline1 String?      @default("AI")
+  heroHeadline2 String?      @default("Engineer")
+  heroGreetingPrefix String?   @default("Hi, I'm")
+  heroGreetingSuffix String?   @default("and I am a")
   bio         String
   aboutTitle  String?
   address     String?
   avatarUrl   String?
+  aboutImageUrl String?
   resumeUrl   String?
   email       String?
   educationTitle       String?      @default("Academic Background")
