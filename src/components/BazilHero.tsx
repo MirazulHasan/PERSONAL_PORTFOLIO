@@ -88,16 +88,11 @@ export default function BazilHero({ profile }: BazilHeroProps) {
     const targetId = href.substring(1);
     const element = document.getElementById(targetId);
     if (element) {
-      window.dispatchEvent(new Event("scrollStart"));
-      document.body.style.pointerEvents = "none";
       window.history.replaceState(null, "", href);
       element.scrollIntoView({ behavior: "smooth", block: "start" });
-      setTimeout(() => {
-        document.body.style.pointerEvents = "all";
-        window.dispatchEvent(new Event("scrollEnd"));
-      }, 1500);
     }
   };
+
   // ─── text styles ──────────────────────────────────────────────
   const baseStyle: React.CSSProperties = {
     fontSize: "clamp(5.5rem, 15vw, 15rem)",
@@ -358,59 +353,63 @@ export default function BazilHero({ profile }: BazilHeroProps) {
           zIndex: 20, // Overlay on top of photo
         }}
       >
-        <Link
-          href="#projects"
-          onClick={(e) => handleScrollClick(e, "#projects")}
-          style={{
-            padding: "12px 36px",
-            background: "linear-gradient(135deg, #7c3aed, #f472b6)",
-            color: "#ffffff",
-            borderRadius: "50px",
-            fontWeight: 800,
-            fontSize: "15px",
-            textDecoration: "none",
-            transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-            boxShadow: "0 10px 25px -5px rgba(124, 58, 237, 0.3)"
+        <motion.div
+          whileHover={{ 
+            scale: 1.04, 
+            y: -2,
+            boxShadow: "0 20px 35px -5px rgba(124, 58, 237, 0.4)"
           }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "scale(1.04) translateY(-2px)";
-            e.currentTarget.style.boxShadow = "0 20px 35px -5px rgba(124, 58, 237, 0.4)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "scale(1) translateY(0)";
-            e.currentTarget.style.boxShadow = "0 10px 25px -5px rgba(124, 58, 237, 0.3)";
-          }}
+          initial={{ boxShadow: "0 10px 25px -5px rgba(124, 58, 237, 0.3)" }}
+          transition={{ type: "spring", stiffness: 400, damping: 25 }}
+          style={{ borderRadius: "50px" }}
         >
-          View My Work
-        </Link>
-        <Link
-          href="#contact"
-          onClick={(e) => handleScrollClick(e, "#contact")}
-          style={{
-            padding: "12px 36px",
-            background: "rgba(255, 255, 255, 0.03)",
-            border: "1.5px solid rgba(255, 255, 255, 0.15)",
-            color: "#ffffff",
+          <Link
+            href="#projects"
+            onClick={(e) => handleScrollClick(e, "#projects")}
+            style={{
+              display: "block",
+              padding: "12px 36px",
+              background: "linear-gradient(135deg, #7c3aed, #f472b6)",
+              color: "#ffffff",
+              borderRadius: "50px",
+              fontWeight: 800,
+              fontSize: "15px",
+              textDecoration: "none",
+            }}
+          >
+            View My Work
+          </Link>
+        </motion.div>
+        <motion.div
+          whileHover={{ 
+            scale: 1.02,
+            backgroundColor: "rgba(255, 255, 255, 0.08)",
+            borderColor: "rgba(255, 255, 255, 0.4)"
+          }}
+          transition={{ type: "spring", stiffness: 400, damping: 25 }}
+          style={{ 
             borderRadius: "50px",
-            fontWeight: 800,
-            fontSize: "15px",
-            textDecoration: "none",
-            transition: "all 0.3s ease",
+            border: "1.5px solid rgba(255, 255, 255, 0.15)",
+            background: "rgba(255, 255, 255, 0.03)",
             backdropFilter: "blur(8px)"
           }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "rgba(255, 255, 255, 0.08)";
-            e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.4)";
-            e.currentTarget.style.transform = "scale(1.02)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "rgba(255, 255, 255, 0.03)";
-            e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.15)";
-            e.currentTarget.style.transform = "scale(1)";
-          }}
         >
-          Get in Touch
-        </Link>
+          <Link
+            href="#contact"
+            onClick={(e) => handleScrollClick(e, "#contact")}
+            style={{
+              display: "block",
+              padding: "12px 36px",
+              color: "#ffffff",
+              borderRadius: "50px",
+              fontWeight: 800,
+              fontSize: "15px",
+              textDecoration: "none",
+            }}
+          >
+            Get in Touch
+          </Link>
+        </motion.div>
       </motion.div>
     </section>
   );

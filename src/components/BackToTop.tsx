@@ -22,8 +22,6 @@ export default function BackToTop() {
   }, []);
 
   const scrollToTop = () => {
-    window.dispatchEvent(new Event("scrollStart"));
-    
     // Explicit manual smooth scroll since CSS behavior was removed for reliability
     window.scrollTo({
       top: 0,
@@ -33,10 +31,6 @@ export default function BackToTop() {
     if (window.location.hash) {
       window.history.replaceState(null, "", window.location.pathname);
     }
-
-    setTimeout(() => {
-      window.dispatchEvent(new Event("scrollEnd"));
-    }, 1500);
   };
 
   return (
