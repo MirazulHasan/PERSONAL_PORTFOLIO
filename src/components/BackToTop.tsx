@@ -22,12 +22,19 @@ export default function BackToTop() {
   }, []);
 
   const scrollToTop = () => {
-    // Explicit manual smooth scroll since CSS behavior was removed for reliability
+    // Dispatch events to freeze parallax during scroll
+    window.dispatchEvent(new Event("scrollStart"));
+
+    // Explicit manual smooth scroll
     window.scrollTo({
       top: 0,
       behavior: "smooth"
     });
     
+    setTimeout(() => {
+      window.dispatchEvent(new Event("scrollEnd"));
+    }, 1000);
+
     if (window.location.hash) {
       window.history.replaceState(null, "", window.location.pathname);
     }

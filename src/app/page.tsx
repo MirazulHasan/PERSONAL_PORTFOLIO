@@ -130,7 +130,7 @@ export default async function HomePage() {
       <BazilHero profile={profile} />
 
       {/* ── ABOUT ── */}
-      <section id="about" style={{ padding: "40px 5%", position: "relative", overflow: "hidden" }}>
+      <section id="about" style={{ padding: "100px 5%", position: "relative", overflow: "hidden" }}>
         <div className="reveal about-responsive-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center", maxWidth: 1200, margin: "0 auto" }}>
 
 
@@ -188,7 +188,7 @@ export default async function HomePage() {
 
       {/* ── EDUCATION ── */}
       {education.length > 0 && (
-        <section id="education" className="reveal" style={{ padding: "40px 5%" }}>
+        <section id="education" className="reveal" style={{ padding: "100px 5%" }}>
           <div style={{ maxWidth: 1100, margin: "0 auto" }}>
             <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>{(profile as any)?.educationSubtitle ?? "Education"}</p>
             <h2 className="section-title" style={{ marginBottom: 60 }}>{(profile as any)?.educationTitle ?? "Academic Background"}</h2>
@@ -210,7 +210,7 @@ export default async function HomePage() {
 
       {/* ── EXPERIENCE ── */}
       {experience.length > 0 && (
-        <section id="experience" className="reveal" style={{ padding: "40px 5%", maxWidth: 1100, margin: "0 auto" }}>
+        <section id="experience" className="reveal" style={{ padding: "100px 5%", maxWidth: 1100, margin: "0 auto" }}>
           <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>{(profile as any)?.experienceSubtitle ?? "Career Path"}</p>
           <h2 className="section-title" style={{ marginBottom: 60 }}>{(profile as any)?.experienceTitle ?? "Professional Experience"}</h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
@@ -221,7 +221,7 @@ export default async function HomePage() {
 
       {/* ── SKILLS (Core Expertise) ── */}
       {skills.length > 0 && (
-        <section id="skills" className="reveal" style={{ padding: "40px 5%" }}>
+        <section id="skills" className="reveal" style={{ padding: "100px 5%" }}>
           <div style={{ maxWidth: 1100, margin: "0 auto" }}>
             <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>{(profile as any)?.skillsSubtitle ?? "Technical Stack"}</p>
             <h2 className="section-title" style={{ marginBottom: 60 }}>{(profile as any)?.skillsTitle ?? "Core Expertise"}</h2>
@@ -231,7 +231,7 @@ export default async function HomePage() {
       )}
 
       {/* ── PROJECTS ── */}
-      <section id="projects" className="reveal" style={{ padding: "40px 5%" }}>
+      <section id="projects" className="reveal" style={{ padding: "100px 5%" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>{(profile as any)?.projectsSubtitle ?? "Portfolio"}</p>
           <h2 className="section-title" style={{ marginBottom: 60 }}>{(profile as any)?.projectsTitle ?? "Featured Projects"}</h2>
@@ -247,7 +247,7 @@ export default async function HomePage() {
 
       {/* ── CERTIFICATES ── */}
       {certificates.length > 0 && (
-        <section id="certificates" className="reveal" style={{ padding: "40px 5%", maxWidth: 1100, margin: "0 auto" }}>
+        <section id="certificates" className="reveal" style={{ padding: "100px 5%", maxWidth: 1100, margin: "0 auto" }}>
           <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>{(profile as any)?.certificatesSubtitle ?? "Recognition"}</p>
           <h2 className="section-title" style={{ marginBottom: 60 }}>{(profile as any)?.certificatesTitle ?? "Certifications"}</h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 24 }}>
@@ -267,7 +267,7 @@ export default async function HomePage() {
 
       {/* ── PUBLICATIONS ── */}
       {publications.length > 0 && (
-        <section id="publications" className="reveal" style={{ padding: "40px 5%" }}>
+        <section id="publications" className="reveal" style={{ padding: "100px 5%" }}>
           <div style={{ maxWidth: 1100, margin: "0 auto" }}>
             <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>{(profile as any)?.publicationsSubtitle ?? "Academic Work"}</p>
             <h2 className="section-title" style={{ marginBottom: 60 }}>{(profile as any)?.publicationsTitle ?? "Research & Publications"}</h2>
@@ -280,7 +280,7 @@ export default async function HomePage() {
 
       {/* ── EXTRA-CURRICULAR ACTIVITIES ── */}
       {activities.length > 0 && (
-        <section id="activities" className="reveal" style={{ padding: "40px 5%", maxWidth: 1100, margin: "0 auto" }}>
+        <section id="activities" className="reveal" style={{ padding: "100px 5%", maxWidth: 1100, margin: "0 auto" }}>
           <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>{(profile as any)?.activitiesSubtitle ?? "Involvement"}</p>
           <h2 className="section-title" style={{ marginBottom: 60 }}>{(profile as any)?.activitiesTitle ?? "Extra-Curricular Activities"}</h2>
           <div className="activities-timeline-section" style={{ position: "relative", borderLeft: "2px solid var(--border)", paddingLeft: 32, display: "flex", flexDirection: "column", gap: 48 }}>
@@ -323,7 +323,7 @@ export default async function HomePage() {
 
       {/* ── REFERENCES ── */}
       {references.length > 0 && (
-        <section id="references" className="reveal" style={{ padding: "40px 5%" }}>
+        <section id="references" className="reveal" style={{ padding: "100px 5%" }}>
           <div style={{ maxWidth: 1100, margin: "0 auto" }}>
             <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>{(profile as any)?.referencesSubtitle ?? "Endorsements"}</p>
             <h2 className="section-title" style={{ marginBottom: 60 }}>{(profile as any)?.referencesTitle ?? "References"}</h2>
@@ -344,7 +344,7 @@ export default async function HomePage() {
 
       {/* ── BLOG SECTION ── */}
       {posts.length > 0 && (
-        <section id="blog" className="reveal" style={{ padding: "40px 5%", maxWidth: 1100, margin: "0 auto" }}>
+        <section id="blog" className="reveal" style={{ padding: "100px 5%", maxWidth: 1100, margin: "0 auto" }}>
           <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>{(profile as any)?.blogSubtitle ?? "Journal"}</p>
           <h2 className="section-title" style={{ marginBottom: 60 }}>{(profile as any)?.blogTitle ?? "Latest Writing"}</h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 32 }}>
@@ -368,7 +368,7 @@ export default async function HomePage() {
 
 
       {/* ── CONTACT ── */}
-      <section id="contact" className="reveal" style={{ padding: "40px 5%", textAlign: "center" }}>
+      <section id="contact" className="reveal" style={{ padding: "120px 5%", textAlign: "center" }}>
         <div style={{ maxWidth: 680, margin: "0 auto" }}>
           <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>Contact</p>
           <h2 className="section-title" style={{ marginBottom: 20 }}>Let&apos;s work together</h2>

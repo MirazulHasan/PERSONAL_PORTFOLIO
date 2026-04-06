@@ -61,7 +61,7 @@ export default function BazilHero({ profile }: BazilHeroProps) {
       setIsScrolling(true);
     };
     const endLock = () => setIsScrolling(false);
-    
+
     window.addEventListener("scrollStart", startLock);
     window.addEventListener("scrollEnd", endLock);
 
@@ -88,8 +88,21 @@ export default function BazilHero({ profile }: BazilHeroProps) {
     const targetId = href.substring(1);
     const element = document.getElementById(targetId);
     if (element) {
+      window.dispatchEvent(new Event("scrollStart"));
       window.history.replaceState(null, "", href);
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
+      
+      const offset = 90;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+
+      setTimeout(() => {
+        window.dispatchEvent(new Event("scrollEnd"));
+      }, 1000);
     }
   };
 
@@ -121,7 +134,7 @@ export default function BazilHero({ profile }: BazilHeroProps) {
         justifyContent: "center",
         textAlign: "center",
         overflow: "hidden",
-        padding: "100px 5% 40px",
+        padding: "100px 5% 100px",
       }}
     >
       {/* ── INTERACTION LOCK OVERLAY ── */}
@@ -134,7 +147,7 @@ export default function BazilHero({ profile }: BazilHeroProps) {
             style={{
               position: "fixed",
               inset: 0,
-              zIndex: 99999,
+              zIndex: 900, // Below Navbar layer (1000)
               pointerEvents: "all",
               background: "rgba(0,0,0,0)" // Fully transparent but blocks everything
             }}
@@ -342,7 +355,7 @@ export default function BazilHero({ profile }: BazilHeroProps) {
         transition={{ duration: 0.7, delay: 0.8, ease: "easeOut" }}
         style={{
           position: "absolute",
-          bottom: "clamp(100px, 22vh, 250px)",
+          bottom: "clamp(140px, 28vh, 250px)",
           left: 0,
           width: "100%",
           display: "flex",
@@ -354,8 +367,8 @@ export default function BazilHero({ profile }: BazilHeroProps) {
         }}
       >
         <motion.div
-          whileHover={{ 
-            scale: 1.04, 
+          whileHover={{
+            scale: 1.04,
             y: -2,
             boxShadow: "0 20px 35px -5px rgba(124, 58, 237, 0.4)"
           }}
@@ -381,13 +394,13 @@ export default function BazilHero({ profile }: BazilHeroProps) {
           </Link>
         </motion.div>
         <motion.div
-          whileHover={{ 
+          whileHover={{
             scale: 1.02,
             backgroundColor: "rgba(255, 255, 255, 0.08)",
             borderColor: "rgba(255, 255, 255, 0.4)"
           }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          style={{ 
+          style={{
             borderRadius: "50px",
             border: "1.5px solid rgba(255, 255, 255, 0.15)",
             background: "rgba(255, 255, 255, 0.03)",

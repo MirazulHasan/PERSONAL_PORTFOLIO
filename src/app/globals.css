@@ -167,7 +167,7 @@ section[id] {
 
 .standing-photo-container:hover {
   transform: translateY(-5px) scale(1.02);
-  filter: drop-shadow(0 0 40px rgba(108,99,255,0.4));
+  filter: drop-shadow(0 0 40px rgba(108, 99, 255, 0.4));
 }
 
 .scanline-effect {
@@ -176,12 +176,10 @@ section[id] {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(129, 140, 248, 0.05) 50%,
-    transparent 100%
-  );
+  background: linear-gradient(to bottom,
+      transparent 0%,
+      rgba(129, 140, 248, 0.05) 50%,
+      transparent 100%);
   background-size: 100% 4px;
   pointer-events: none;
   z-index: 2;
@@ -206,8 +204,10 @@ section[id] {
 /* Scroll reveal states (Optimized: No translateY to prevent scroll distance glitches) */
 .reveal {
   opacity: 0;
-  transform: scale(0.98); /* Use subtle scale instead of translateY to keep layout stable */
-  transform-origin: top center; /* CRITICAL: Locks top edge so scrollIntoView tracking never breaks */
+  transform: scale(0.98);
+  /* Use subtle scale instead of translateY to keep layout stable */
+  transform-origin: top center;
+  /* CRITICAL: Locks top edge so scrollIntoView tracking never breaks */
   transition: opacity 0.8s ease-out, transform 0.8s ease-out;
   will-change: opacity, transform;
 }
@@ -423,7 +423,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   align-items: center;
   justify-content: center;
   /* Adjusting wrapper to fit the navbar without being huge */
-  transform: scale(0.65); 
+  transform: scale(0.65);
   transform-origin: center;
 }
 
@@ -484,11 +484,11 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   border-radius: 50%;
 }
 
-.theme-container input:checked + .theme-slider {
+.theme-container input:checked+.theme-slider {
   background: linear-gradient(-45deg, #222, #000030);
 }
 
-.theme-container input:checked + .theme-slider:before {
+.theme-container input:checked+.theme-slider:before {
   background: var(--theme-moon);
   transform: translateX(180%);
   box-shadow:
@@ -517,7 +517,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   z-index: 15;
 }
 
-.theme-container input:checked + .theme-slider::after {
+.theme-container input:checked+.theme-slider::after {
   transform: scale(1) rotate(-24deg);
 }
 
@@ -528,7 +528,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   z-index: 2;
 }
 
-.theme-container input:checked + .theme-slider .theme-star {
+.theme-container input:checked+.theme-slider .theme-star {
   width: 0;
   height: 0;
   border: 10px solid transparent;
@@ -538,12 +538,12 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   transform: scale(.3) translate(50%);
 }
 
-.theme-container input:checked + .theme-slider .theme-star:last-child {
+.theme-container input:checked+.theme-slider .theme-star:last-child {
   transform: scale(.4) translate(225%, 300%);
 }
 
-.theme-container input:checked + .theme-slider .theme-star::before,
-.theme-container input:checked + .theme-slider .theme-star::after {
+.theme-container input:checked+.theme-slider .theme-star::before,
+.theme-container input:checked+.theme-slider .theme-star::after {
   content: "";
   position: absolute;
   width: 0;
@@ -551,7 +551,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   border-top: none;
 }
 
-.theme-container input:checked + .theme-slider .theme-star::before {
+.theme-container input:checked+.theme-slider .theme-star::before {
   border: 3px solid transparent;
   border-bottom: 8px solid var(--theme-star);
   transform: rotate(35deg);
@@ -559,7 +559,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   left: 1.5px;
 }
 
-.theme-container input:checked + .theme-slider .theme-star::after {
+.theme-container input:checked+.theme-slider .theme-star::after {
   border: 10px solid transparent;
   border-bottom: 7px solid var(--theme-star);
   transform: rotate(70deg);
@@ -589,7 +589,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   z-index: 2;
 }
 
-.theme-container input:checked + .theme-slider .theme-background {
+.theme-container input:checked+.theme-slider .theme-background {
   transform: translateY(260%);
   opacity: 0;
 }

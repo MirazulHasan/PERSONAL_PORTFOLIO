@@ -35,8 +35,6 @@ export default function Navbar({ profile }: NavbarProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [isSplashComplete, setIsSplashComplete] = useState(true);
-  const [showSplash, setShowSplash] = useState(false);
   const pathname = usePathname();
   
   const [mounted, setMounted] = useState(false);
@@ -66,17 +64,27 @@ export default function Navbar({ profile }: NavbarProps) {
   const handleHomeClick = (e: React.MouseEvent) => {
     if (pathname === "/") {
       e.preventDefault();
+      
+      // Cancel any ongoing scroll locks
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+
       if (typeof window !== "undefined") {
         window.dispatchEvent(new Event("triggerSplashScreen"));
       }
-      setTimeout(() => {
+
+      scrollTimeoutRef.current = setTimeout(() => {
         if (window.location.hash) {
           window.history.replaceState(null, "", "/");
         }
         window.scrollTo({ top: 0, behavior: "instant" });
+        scrollTimeoutRef.current = null;
       }, 1575);
     }
   };
+
+  const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleNavLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     if (href.startsWith("#") && pathname === "/") {
@@ -84,30 +92,34 @@ export default function Navbar({ profile }: NavbarProps) {
       const targetId = href.substring(1);
       const element = document.getElementById(targetId);
       if (element) {
+        // Clear any existing timeout
+        if (scrollTimeoutRef.current) {
+          clearTimeout(scrollTimeoutRef.current);
+        }
+
         window.dispatchEvent(new Event("scrollStart"));
-        document.body.style.pointerEvents = "none";
         window.history.replaceState(null, "", href);
-        element.scrollIntoView({ behavior: "smooth", block: "start" });
-        setTimeout(() => {
-          document.body.style.pointerEvents = "all";
+        
+        // Manual calculation for maximum reliability
+        const offset = 90; 
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth"
+        });
+        
+        // Use a reasonably short timeout to allow next clicks, 
+        // but keep the 'isScrolling' state active briefly for animation syncing
+        scrollTimeoutRef.current = setTimeout(() => {
           window.dispatchEvent(new Event("scrollEnd"));
-        }, 1500);
+          scrollTimeoutRef.current = null;
+        }, 1000); // 1s is a good balance for smooth scroll duration
       }
     }
   };
 
-  useEffect(() => {
-    const splashShown = sessionStorage.getItem("splashShown");
-    if (!splashShown) {
-      setShowSplash(true);
-      setIsSplashComplete(false);
-      const timer = setTimeout(() => {
-        setIsSplashComplete(true);
-        sessionStorage.setItem("splashShown", "true");
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
-  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -126,51 +138,6 @@ export default function Navbar({ profile }: NavbarProps) {
 
   return (
     <>
-      <AnimatePresence>
-        {showSplash && !isSplashComplete && (
-          <motion.div
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
-            style={{
-              position: "fixed",
-              inset: 0,
-              zIndex: 9999,
-              background: "#020617",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              pointerEvents: "none"
-            }}
-          >
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "24px" }}>
-              <motion.div
-                style={{
-                  width: 120,
-                  height: 120,
-                  borderRadius: "50%",
-                  background: "linear-gradient(135deg, #6c63ff, #ff6584)",
-                  padding: "4px",
-                  boxShadow: "0 0 50px rgba(108, 99, 255, 0.5)"
-                }}
-              >
-                <div style={{ width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden", background: "var(--avatar-bg)" }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={profile?.avatarUrl || "/logo.png"} alt="Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                </div>
-              </motion.div>
-              <motion.h1
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="gradient-text"
-                style={{ fontSize: "2rem", fontWeight: 900, letterSpacing: "-0.05em" }}
-              >
-                {profile?.name}
-              </motion.h1>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       <div className="navbar-container">
         <nav className="navbar-pill">
