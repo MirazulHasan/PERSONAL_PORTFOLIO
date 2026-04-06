@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp } from "lucide-react";
+import { scrollToTop } from "@/lib/scrollTo";
 
 export default function BackToTop() {
   const [isVisible, setIsVisible] = useState(false);
@@ -21,23 +22,8 @@ export default function BackToTop() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollToTop = () => {
-    // Dispatch events to freeze parallax during scroll
-    window.dispatchEvent(new Event("scrollStart"));
-
-    // Explicit manual smooth scroll
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-    
-    setTimeout(() => {
-      window.dispatchEvent(new Event("scrollEnd"));
-    }, 1000);
-
-    if (window.location.hash) {
-      window.history.replaceState(null, "", window.location.pathname);
-    }
+  const handleScrollToTop = () => {
+    scrollToTop();
   };
 
   return (
@@ -47,7 +33,7 @@ export default function BackToTop() {
           initial={{ opacity: 0, y: 10, scale: 0.8 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 10, scale: 0.8 }}
-          onClick={scrollToTop}
+          onClick={handleScrollToTop}
           // Simplified hover to avoid coordinate-fighting with entry/exit
           whileHover={{ scale: 1.1, backgroundColor: "#6c63ff" }}
           whileTap={{ scale: 0.9 }}

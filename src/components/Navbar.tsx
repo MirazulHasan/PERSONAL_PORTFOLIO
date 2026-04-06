@@ -9,6 +9,7 @@ import {
 import ThemeToggle from "./ThemeToggle";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
+import { scrollToSection } from "@/lib/scrollTo";
 
 interface NavbarProps {
   profile: any;
@@ -89,34 +90,12 @@ export default function Navbar({ profile }: NavbarProps) {
   const handleNavLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     if (href.startsWith("#") && pathname === "/") {
       e.preventDefault();
-      const targetId = href.substring(1);
-      const element = document.getElementById(targetId);
-      if (element) {
-        // Clear any existing timeout
-        if (scrollTimeoutRef.current) {
-          clearTimeout(scrollTimeoutRef.current);
-        }
-
-        window.dispatchEvent(new Event("scrollStart"));
-        window.history.replaceState(null, "", href);
-        
-        // Manual calculation for maximum reliability
-        const offset = 90; 
-        const elementPosition = element.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - offset;
-
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: "smooth"
-        });
-        
-        // Use a reasonably short timeout to allow next clicks, 
-        // but keep the 'isScrolling' state active briefly for animation syncing
-        scrollTimeoutRef.current = setTimeout(() => {
-          window.dispatchEvent(new Event("scrollEnd"));
-          scrollTimeoutRef.current = null;
-        }, 1000); // 1s is a good balance for smooth scroll duration
+      // Clear any pending safety timer from a previous navigation
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+        scrollTimeoutRef.current = null;
       }
+      scrollToSection(href);
     }
   };
 

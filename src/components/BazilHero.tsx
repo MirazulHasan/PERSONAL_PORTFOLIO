@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import Link from "next/link";
+import { scrollToSection } from "@/lib/scrollTo";
 
 interface BazilHeroProps {
   profile: any;
@@ -85,25 +86,7 @@ export default function BazilHero({ profile }: BazilHeroProps) {
 
   const handleScrollClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
-    const targetId = href.substring(1);
-    const element = document.getElementById(targetId);
-    if (element) {
-      window.dispatchEvent(new Event("scrollStart"));
-      window.history.replaceState(null, "", href);
-      
-      const offset = 90;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth"
-      });
-
-      setTimeout(() => {
-        window.dispatchEvent(new Event("scrollEnd"));
-      }, 1000);
-    }
+    scrollToSection(href);
   };
 
   // ─── text styles ──────────────────────────────────────────────
