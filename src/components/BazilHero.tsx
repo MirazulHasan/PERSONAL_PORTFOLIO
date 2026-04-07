@@ -13,7 +13,6 @@ export default function BazilHero({ profile }: BazilHeroProps) {
   const name = profile?.name ?? "Md. Mirazul Hasan";
   const title = profile?.title ?? "AI Developer";
   const aboutImageUrl = profile?.aboutImageUrl ?? null;
-  const avatarUrl = profile?.avatarUrl ?? null;
 
   // hoveredLine tracks exactly which text line currently has the mouse
   const [hoveredLine, setHoveredLine] = useState<1 | 2 | null>(null);
@@ -197,10 +196,30 @@ export default function BazilHero({ profile }: BazilHeroProps) {
       ────────────────────────────────────────────────────────── */}
       <div
         key={`headlines-${animationKey}`}
-        style={{ position: "relative", width: "100%", zIndex: 5, padding: "0" }}
+        style={{ 
+          position: "relative", 
+          width: "100%", 
+          zIndex: 5, 
+          padding: "0",
+          minHeight: aboutImageUrl ? "auto" : "clamp(300px, 40vh, 500px)",
+          display: "flex",
+          alignItems: aboutImageUrl ? "flex-start" : "center",
+          justifyContent: "center"
+        }}
       >
         {/* === LAYER 1: BACK (Solid Text) === */}
-        <div style={{ position: "absolute", top: "8%", left: 0, width: "100%", zIndex: 1, display: "flex", flexDirection: "column", alignItems: "center", pointerEvents: "none" }}>
+        <div style={{ 
+          position: "absolute", 
+          top: aboutImageUrl ? "8%" : "50%", 
+          translate: aboutImageUrl ? "0" : "0 -50%",
+          left: 0, 
+          width: "100%", 
+          zIndex: 1, 
+          display: "flex", 
+          flexDirection: "column", 
+          alignItems: "center", 
+          pointerEvents: "none" 
+        }}>
           {/* Back Line 1 */}
           <motion.h1
             className="bazil-headline"
@@ -232,7 +251,7 @@ export default function BazilHero({ profile }: BazilHeroProps) {
         </div>
 
         {/* === LAYER 2: MIDDLE (Photo defines normal flow & height) === */}
-        {(aboutImageUrl || avatarUrl) && (
+        {aboutImageUrl && (
           <motion.div
             style={{
               position: "relative",
@@ -253,7 +272,7 @@ export default function BazilHero({ profile }: BazilHeroProps) {
             }} />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={aboutImageUrl || avatarUrl}
+              src={aboutImageUrl}
               alt={name}
               style={{
                 height: "clamp(350px, 55vw, 850px)",
@@ -269,7 +288,18 @@ export default function BazilHero({ profile }: BazilHeroProps) {
         )}
 
         {/* === LAYER 3: FRONT (Outline Text Only active word draws here) === */}
-        <div style={{ position: "absolute", top: "8%", left: 0, width: "100%", zIndex: 3, display: "flex", flexDirection: "column", alignItems: "center", pointerEvents: "none" }}>
+        <div style={{ 
+          position: "absolute", 
+          top: aboutImageUrl ? "8%" : "50%", 
+          translate: aboutImageUrl ? "0" : "0 -50%",
+          left: 0, 
+          width: "100%", 
+          zIndex: 3, 
+          display: "flex", 
+          flexDirection: "column", 
+          alignItems: "center", 
+          pointerEvents: "none"
+        }}>
           {/* Front Line 1 */}
           <motion.h1
             className="bazil-headline"
@@ -303,7 +333,17 @@ export default function BazilHero({ profile }: BazilHeroProps) {
         </div>
 
         {/* === LAYER 4: INVISIBLE HITBOXES (Highest z-index) === */}
-        <div style={{ position: "absolute", top: "8%", left: 0, width: "100%", zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <div style={{ 
+          position: "absolute", 
+          top: aboutImageUrl ? "8%" : "50%", 
+          translate: aboutImageUrl ? "0" : "0 -50%",
+          left: 0, 
+          width: "100%", 
+          zIndex: 10, 
+          display: "flex", 
+          flexDirection: "column", 
+          alignItems: "center"
+        }}>
           <motion.h1
             className="bazil-headline"
             style={{ ...baseStyle, color: "transparent", cursor: "default", pointerEvents: "auto" }}
