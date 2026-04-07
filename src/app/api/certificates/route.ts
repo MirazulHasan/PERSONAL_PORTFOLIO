@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]/route";
+import { uploadToCloudinary } from "@/lib/upload";
 
 export async function GET() {
     try {
-        // @ts-ignore
         const certificates = await prisma.certificate.findMany({ orderBy: [{ order: "asc" }, { issuedAt: "desc" }] });
         return NextResponse.json(certificates);
     } catch {
@@ -27,7 +27,6 @@ export async function PATCH(req: Request) {
             orders.map((item: any) =>
                 prisma.certificate.update({
                     where: { id: item.id },
-                    // @ts-ignore
                     data: { order: item.order }
                 })
             )
@@ -47,21 +46,23 @@ export async function POST(req: Request) {
         }
 
         const body = await req.json();
-        const { title, issuer, issueDate, credentialId, credentialUrl } = body;
+        const { title, issuer, issueDate, credentialId, credentialUrl, imageUrl } = body;
+
+        const finalImageUrl = await uploadToCloudinary(imageUrl, "certificates");
 
         const certificate = await prisma.certificate.create({
             data: {
                 title,
                 issuer,
-                // @ts-ignore 
                 issuedAt: issueDate ? new Date(issueDate) : null,
                 credentialId,
-                credentialUrl
+                credentialUrl,
+                imageUrl: finalImageUrl || null
             }
         });
         return NextResponse.json(certificate);
-    } catch {
-        return NextResponse.json({ error: "Failed to create certificate" }, { status: 500 });
+    } catch (error: any) {
+        return NextResponse.json({ error: "Failed to create certificate - " + error.message }, { status: 500 });
     }
 }
 
@@ -77,22 +78,24 @@ export async function PUT(req: Request) {
         if (!id) return NextResponse.json({ error: "ID is required" }, { status: 400 });
 
         const body = await req.json();
-        const { title, issuer, issueDate, credentialId, credentialUrl } = body;
+        const { title, issuer, issueDate, credentialId, credentialUrl, imageUrl } = body;
+
+        const finalImageUrl = await uploadToCloudinary(imageUrl, "certificates");
 
         const certificate = await prisma.certificate.update({
             where: { id },
             data: {
                 title,
                 issuer,
-                // @ts-ignore
                 issuedAt: issueDate ? new Date(issueDate) : null,
                 credentialId: credentialId || null,
                 credentialUrl: credentialUrl || null,
+                imageUrl: finalImageUrl || null
             }
         });
         return NextResponse.json(certificate);
-    } catch {
-        return NextResponse.json({ error: "Failed to update certificate" }, { status: 500 });
+    } catch (error: any) {
+        return NextResponse.json({ error: "Failed to update certificate - " + error.message }, { status: 500 });
     }
 }
 

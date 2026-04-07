@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]/route";
+import { uploadToCloudinary } from "@/lib/upload";
 
 export async function GET() {
     try {
@@ -20,7 +21,7 @@ export async function PATCH(req: Request) {
         }
 
         const body = await req.json();
-        const { orders } = body; // Array of { id: string, order: number }
+        const { orders } = body;
 
         await Promise.all(
             orders.map((item: any) =>
@@ -47,12 +48,22 @@ export async function POST(req: Request) {
         const body = await req.json();
         const { title, description, imageUrl, githubUrl, liveUrl, tags, featured } = body;
 
+        const finalImageUrl = await uploadToCloudinary(imageUrl, "projects");
+
         const project = await prisma.project.create({
-            data: { title, description, imageUrl: imageUrl || null, githubUrl: githubUrl || null, liveUrl: liveUrl || null, tags, featured: !!featured }
+            data: { 
+                title, 
+                description, 
+                imageUrl: finalImageUrl || null, 
+                githubUrl: githubUrl || null, 
+                liveUrl: liveUrl || null, 
+                tags, 
+                featured: !!featured 
+            }
         });
         return NextResponse.json(project);
-    } catch {
-        return NextResponse.json({ error: "Failed to create project" }, { status: 500 });
+    } catch (error: any) {
+        return NextResponse.json({ error: "Failed to create project - " + error.message }, { status: 500 });
     }
 }
 
@@ -70,13 +81,23 @@ export async function PUT(req: Request) {
         const body = await req.json();
         const { title, description, imageUrl, githubUrl, liveUrl, tags, featured } = body;
 
+        const finalImageUrl = await uploadToCloudinary(imageUrl, "projects");
+
         const project = await prisma.project.update({
             where: { id },
-            data: { title, description, imageUrl: imageUrl || null, githubUrl: githubUrl || null, liveUrl: liveUrl || null, tags, featured: !!featured }
+            data: { 
+                title, 
+                description, 
+                imageUrl: finalImageUrl || null, 
+                githubUrl: githubUrl || null, 
+                liveUrl: liveUrl || null, 
+                tags, 
+                featured: !!featured 
+            }
         });
         return NextResponse.json(project);
-    } catch {
-        return NextResponse.json({ error: "Failed to update project" }, { status: 500 });
+    } catch (error: any) {
+        return NextResponse.json({ error: "Failed to update project - " + error.message }, { status: 500 });
     }
 }
 
