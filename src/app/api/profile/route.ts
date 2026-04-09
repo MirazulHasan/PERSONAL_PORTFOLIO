@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]/route";
-import cloudinary from "@/lib/cloudinary";
+import { uploadToCloudinary } from "@/lib/upload";
 
 export const dynamic = 'force-dynamic';
 
@@ -29,8 +29,6 @@ export async function PUT(req: Request) {
         }
 
         const body = await req.json();
-        console.log("PUT /api/profile - Body size:", JSON.stringify(body).length, "keys:", Object.keys(body));
-
         const {
             name, title, heroHeadline1, heroHeadline2, bio = "", aboutTitle, address, avatarUrl, aboutImageUrl, resumeUrl, email,
             socialLinks = [],
@@ -50,23 +48,9 @@ export async function PUT(req: Request) {
         const profile = await prisma.profile.findFirst();
         let updated;
 
-        // Helper to upload images to Cloudinary if they are base64
-        const uploadToCloudinary = async (imageUrl: string | null, folder: string) => {
-            if (!imageUrl || !imageUrl.startsWith("data:image/")) return imageUrl;
-            try {
-                const uploadRes = await cloudinary.uploader.upload(imageUrl, {
-                    folder: `portfolio/${folder}`,
-                    resource_type: "auto",
-                });
-                return uploadRes.secure_url;
-            } catch (err) {
-                console.error(`Cloudinary Upload Error (${folder}):`, err);
-                return imageUrl; // Fallback to original
-            }
-        };
-
         const finalAvatarUrl = await uploadToCloudinary(avatarUrl, "avatars");
         const finalAboutImageUrl = await uploadToCloudinary(aboutImageUrl, "about");
+        const finalResumeUrl = await uploadToCloudinary(resumeUrl, "cv");
 
         // Helper to use provided value or fall back to system defaults if blank
         const clean = (val: string, fallback: string) => (val && val.trim() !== "") ? val : fallback;
@@ -75,7 +59,8 @@ export async function PUT(req: Request) {
             name, title, heroHeadline1, heroHeadline2, heroGreetingPrefix, heroGreetingSuffix, bio, aboutTitle, address, 
             avatarUrl: finalAvatarUrl, 
             aboutImageUrl: finalAboutImageUrl, 
-            resumeUrl, email,
+            resumeUrl: finalResumeUrl, 
+            email,
             educationTitle: clean(educationTitle, "Academic Background"),
             educationSubtitle: clean(educationSubtitle, "Education"),
             experienceTitle: clean(experienceTitle, "Professional Experience"),
@@ -128,17 +113,13 @@ export async function PUT(req: Request) {
             });
         }
 
-        // Finalize the update/create
         updated = await updated;
         return NextResponse.json(updated);
-
 
     } catch (error: any) {
         console.error("Profile Update Error Details:", error.message, error);
         return NextResponse.json({
             error: "Failed to update profile - " + error.message,
-            details: error.message,
-            stack: error.stack
         }, { status: 500 });
     }
 }
