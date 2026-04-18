@@ -1,4 +1,4 @@
-import { Github, Linkedin, Mail, ExternalLink, Globe, MapPin, Award, BookOpen, UserCheck, Briefcase, GraduationCap, Code, Rocket, Facebook, Instagram, Twitter, Youtube } from "lucide-react";
+import { Github, Award, BookOpen, UserCheck, Briefcase, GraduationCap, Code, Rocket, ExternalLink } from "lucide-react";
 
 export default function CvPreviewGrid({ profile, education, experience, skills, certificates, activities, publications, references, projects }: any) {
 

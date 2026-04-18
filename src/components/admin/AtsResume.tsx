@@ -205,7 +205,7 @@ export default function AtsResume({ profile, education, experience, skills, cert
                         background: #fff !important;
                         color: #000 !important;
                         font-family: Arial, "Helvetica Neue", Helvetica, sans-serif !important;
-                        line-height: 1.25;
+                        line-height: 1.4;
                         padding: 0;
                         margin: 0;
                         width: 100%;
@@ -275,7 +275,7 @@ export default function AtsResume({ profile, education, experience, skills, cert
                     }
 
                     /* Sections */
-                    .ats-section { margin-bottom: 12pt; page-break-inside: avoid; }
+                    .ats-section { margin-bottom: 16pt; }
                     .ats-section-title {
                         font-size: 13pt;
                         font-weight: 800;
@@ -304,7 +304,7 @@ export default function AtsResume({ profile, education, experience, skills, cert
                     .ats-item-subtitle { font-weight: 700; font-size: 10pt; color: #007bff !important; margin-bottom: 2pt; }
                     .ats-item-date { font-size: 9pt; color: #777; display: flex; align-items: center; gap: 4pt; margin-bottom: 2pt; font-weight: 500; }
 
-                    .ats-resume p { font-size: 9.5pt; color: #444; margin: 0 0 2pt 0; text-align: justify; line-height: 1.25; }
+                    .ats-resume p { font-size: 10pt; color: #333; margin: 0 0 4pt 0; text-align: justify; line-height: 1.4; }
                     .ats-resume ul { font-size: 9.5pt; color: #444; margin: 0 0 0 15pt; padding: 0; list-style-type: disc; }
                     .ats-resume li { margin-bottom: 1pt; text-align: justify; }
 
