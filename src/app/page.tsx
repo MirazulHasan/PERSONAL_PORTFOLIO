@@ -29,7 +29,6 @@ async function getProjects() {
       where: { featured: true },
       // @ts-ignore
       orderBy: [{ order: "asc" }, { createdAt: "desc" }],
-      take: 6,
     });
   } catch {
     return [];
@@ -59,13 +58,13 @@ async function getCertificates() {
 }
 
 async function getActivities() {
-  try { return (prisma as any).activity.findMany({ orderBy: [{ order: "asc" }, { startDate: "desc" }] }); } catch { return []; }
+  try { return prisma.activity.findMany({ orderBy: [{ order: "asc" }, { startDate: "desc" }] }); } catch (error) { console.error("Error fetching activities:", error); return []; }
 }
 async function getPublications() {
-  try { return (prisma as any).publication.findMany({ orderBy: [{ order: "asc" }, { date: "desc" }] }); } catch { return []; }
+  try { return prisma.publication.findMany({ orderBy: [{ order: "asc" }, { date: "desc" }] }); } catch (error) { console.error("Error fetching publications:", error); return []; }
 }
 async function getReferences() {
-  try { return (prisma as any).reference.findMany({ orderBy: [{ order: "asc" }, { createdAt: "asc" }] }); } catch { return []; }
+  try { return prisma.reference.findMany({ orderBy: [{ order: "asc" }, { createdAt: "asc" }] }); } catch (error) { console.error("Error fetching references:", error); return []; }
 }
 
 async function getEducation() {
@@ -97,7 +96,8 @@ async function getPosts() {
       orderBy: { createdAt: "desc" },
       take: 3,
     });
-  } catch {
+  } catch (error) {
+    console.error("Error fetching posts:", error);
     return [];
   }
 }
@@ -343,10 +343,15 @@ export default async function HomePage() {
       )}
 
       {/* ── BLOG SECTION ── */}
-      {posts.length > 0 && (
-        <section id="blog" className="reveal" style={{ padding: "100px 5%", maxWidth: 1100, margin: "0 auto" }}>
-          <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>{(profile as any)?.blogSubtitle ?? "Journal"}</p>
-          <h2 className="section-title" style={{ marginBottom: 60 }}>{(profile as any)?.blogTitle ?? "Latest Writing"}</h2>
+      <section id="blog" className="reveal" style={{ padding: "100px 5%", maxWidth: 1100, margin: "0 auto" }}>
+        <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>{(profile as any)?.blogSubtitle ?? "Journal"}</p>
+        <h2 className="section-title" style={{ marginBottom: 60 }}>{(profile as any)?.blogTitle ?? "Latest Writing"}</h2>
+        
+        {posts.length === 0 ? (
+          <div className="glass" style={{ padding: 60, textAlign: "center" }}>
+            <p style={{ color: "var(--text-muted)", fontSize: "1.1rem" }}>No articles published yet. Check back soon!</p>
+          </div>
+        ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 32 }}>
             {posts.map((post: any) => (
               <div key={post.id} className="glass hover-card" style={{ padding: 32 }}>
@@ -363,8 +368,8 @@ export default async function HomePage() {
               </div>
             ))}
           </div>
-        </section>
-      )}
+        )}
+      </section>
 
 
       {/* ── CONTACT ── */}

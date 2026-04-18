@@ -1,13 +1,11 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
 
 model User {
   id        String   @id @default(cuid())
@@ -21,20 +19,20 @@ model User {
 }
 
 model Profile {
-  id          String       @id @default(cuid())
-  name        String
-  title       String
-  heroHeadline1 String?      @default("AI")
-  heroHeadline2 String?      @default("Engineer")
-  heroGreetingPrefix String?   @default("Hi, I'm")
-  heroGreetingSuffix String?   @default("and I am a")
-  bio         String
-  aboutTitle  String?
-  address     String?
-  avatarUrl   String?
-  aboutImageUrl String?
-  resumeUrl   String?
-  email       String?
+  id                   String       @id @default(cuid())
+  name                 String
+  title                String
+  heroHeadline1        String?      @default("AI")
+  heroHeadline2        String?      @default("Engineer")
+  heroGreetingPrefix   String?      @default("Hi, I'm")
+  heroGreetingSuffix   String?      @default("and I am a")
+  bio                  String
+  aboutTitle           String?
+  address              String?
+  avatarUrl            String?
+  aboutImageUrl        String?
+  resumeUrl            String?
+  email                String?
   educationTitle       String?      @default("Academic Background")
   educationSubtitle    String?      @default("Education")
   experienceTitle      String?      @default("Professional Experience")
@@ -51,19 +49,17 @@ model Profile {
   activitiesSubtitle   String?      @default("Involvement")
   referencesTitle      String?      @default("References")
   referencesSubtitle   String?      @default("Endorsements")
-  blogTitle            String?     @default("Latest Writing")
-  blogSubtitle         String?     @default("Journal")
-  availability         String?     @default("Available for new opportunities")
-  
-  // ordered string of sections (comma separated)
-  layoutMain         String?     @default("summary,experience,education,publications,activities,projects,references")
-  layoutSidebar      String?     @default("skills,certificates")
-  layoutAts          String?     @default("summary,experience,projects,education,skills,certificates,publications,activities,references")
+  blogTitle            String?      @default("Latest Writing")
+  blogSubtitle         String?      @default("Journal")
+  availability         String?      @default("Available for new opportunities")
+
+  layoutMain           String?      @default("summary,experience,education,publications,activities,projects,references")
+  layoutSidebar        String?      @default("skills,certificates")
+  layoutAts            String?      @default("summary,experience,projects,education,skills,certificates,publications,activities,references")
 
   createdAt            DateTime     @default(now())
   updatedAt            DateTime     @updatedAt
-
-  socialLinks SocialLink[]
+  socialLinks          SocialLink[]
 }
 
 model SocialLink {
@@ -149,7 +145,7 @@ model Post {
   title     String
   slug      String   @unique
   content   String
-   published Boolean  @default(false)
+  published Boolean  @default(false)
   authorId  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
