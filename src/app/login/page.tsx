@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -41,6 +42,26 @@ export default function LoginPage() {
                 maxWidth: 420,
                 padding: "0 20px",
             }}>
+                <Link href="/" style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 8,
+                    color: "var(--text-muted)",
+                    textDecoration: "none",
+                    marginBottom: 24,
+                    fontSize: 14,
+                    fontWeight: 500,
+                    transition: "color 0.2s",
+                }}
+                onMouseOver={(e) => e.currentTarget.style.color = "var(--text-primary)"}
+                onMouseOut={(e) => e.currentTarget.style.color = "var(--text-muted)"}
+                >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    Return to home
+                </Link>
                 <div className="glass" style={{ padding: 48, border: "1px solid var(--border)" }}>
                     <div style={{ textAlign: "center", marginBottom: 40 }}>
                         <div style={{ width: 48, height: 48, borderRadius: 12, background: "linear-gradient(135deg, #6c63ff, #ff6584)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 24, margin: "0 auto 20px" }}>M</div>

@@ -54,6 +54,12 @@ model Profile {
   blogTitle            String?     @default("Latest Writing")
   blogSubtitle         String?     @default("Journal")
   availability         String?     @default("Available for new opportunities")
+  
+  // ordered string of sections (comma separated)
+  layoutMain         String?     @default("summary,experience,education,publications,activities,projects,references")
+  layoutSidebar      String?     @default("skills,certificates")
+  layoutAts          String?     @default("summary,experience,projects,education,skills,certificates,publications,activities,references")
+
   createdAt            DateTime     @default(now())
   updatedAt            DateTime     @updatedAt
 

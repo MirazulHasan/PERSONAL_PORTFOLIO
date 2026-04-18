@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Cropper from "react-easy-crop";
-// ── helpers ─────────────────────────────────────────────────────────────────
+
 
 async function getCroppedImg(imageSrc: string, croppedAreaPixels: any, type: "avatar" | "about"): Promise<string | null> {
     const image = new Image();
@@ -53,7 +53,7 @@ const Field = ({ label, name, type = "text", defaultValue }: any) => (
     </div>
 );
 
-// ── component ────────────────────────────────────────────────────────────────
+
 export default function ProfileAdmin() {
     const [profile, setProfile] = useState<any>(null);
     const [loading, setLoading] = useState(true);
@@ -180,8 +180,6 @@ export default function ProfileAdmin() {
         });
     };
 
-
-
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setSaving(true);
@@ -217,7 +215,6 @@ export default function ProfileAdmin() {
                 @keyframes toastIn { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
                 .upload-zone:hover { border-color: var(--accent) !important; background: rgba(108,99,255,0.06) !important; }
                 .remove-link-btn:hover { background: rgba(255,77,77,0.15) !important; }
-                .social-row:hover .drag-handle { opacity: 1 !important; transform: translateX(0) !important; }
             `}</style>
 
             {/* ── Header ── */}
@@ -364,7 +361,7 @@ export default function ProfileAdmin() {
                                 <p style={{ fontWeight: 600, fontSize: 13, color: "var(--text-primary)", marginBottom: 4 }}>
                                     Upload Full-body
                                 </p>
-                                <p style={{ fontSize: 11, color: "var(--text-muted)" }}>Best as PNG</p>
+                                <p style={{ fontSize: 11, color: "var(--text-muted)" }}>Transparent Recommended</p>
                             </div>
 
                             <input id="about-input" type="file" accept="image/*" onChange={(e) => handleFileChange(e, "about")} style={{ display: "none" }} />
@@ -629,7 +626,7 @@ export default function ProfileAdmin() {
                                 {profile?.avatarUrl ? <img src={profile.avatarUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <div style={{ width: "100%", height: "100%", background: "linear-gradient(135deg,#6c63ff,#ff6584)" }} />}
                             </div>
                             <div>
-                                <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)" }}>Saved as 400×400 PNG</p>
+                                <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)" }}>Optimized High Quality Photo</p>
                                 <p style={{ fontSize: 12, color: "var(--text-muted)" }}>Round crop shown in sidebar &amp; portfolio</p>
                             </div>
                         </div>
