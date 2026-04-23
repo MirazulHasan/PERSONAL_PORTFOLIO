@@ -134,15 +134,15 @@ export default async function HomePage() {
         <div className="reveal about-responsive-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center", maxWidth: 1200, margin: "0 auto" }}>
 
 
-          <div style={{ position: "relative", zIndex: 2 }}>
+          <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center" }}>
             <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>About Me</p>
             <h2 className="section-title" style={{ marginBottom: 24 }}>
               {(profile as any)?.aboutTitle ?? "Passionate about building things that matter"}
             </h2>
-            <p style={{ color: "var(--text-muted)", lineHeight: 1.8, marginBottom: 16 }}>
+            <p style={{ color: "var(--text-muted)", lineHeight: 1.8, marginBottom: 16, textAlign: "justify" }}>
               {profile?.bio ?? "I'm a full stack developer with experience building production-ready applications. I love clean code, great design, and solving hard problems."}
             </p>
-            <div style={{ display: "flex", gap: 12, marginTop: 32, flexWrap: "wrap" }}>
+            <div style={{ display: "flex", gap: 12, marginTop: 32, flexWrap: "wrap", justifyContent: "center" }}>
               {profile?.socialLinks?.map((link: any) => (
                 <a key={link.id} href={link.url} className="btn-outline" target="_blank" rel="noreferrer" style={{ fontSize: 14 }}>{link.platform}</a>
               ))}
@@ -346,7 +346,7 @@ export default async function HomePage() {
       <section id="blog" className="reveal" style={{ padding: "100px 5%", maxWidth: 1100, margin: "0 auto" }}>
         <p style={{ color: "var(--accent)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>{(profile as any)?.blogSubtitle ?? "Journal"}</p>
         <h2 className="section-title" style={{ marginBottom: 60 }}>{(profile as any)?.blogTitle ?? "Latest Writing"}</h2>
-        
+
         {posts.length === 0 ? (
           <div className="glass" style={{ padding: 60, textAlign: "center" }}>
             <p style={{ color: "var(--text-muted)", fontSize: "1.1rem" }}>No articles published yet. Check back soon!</p>
