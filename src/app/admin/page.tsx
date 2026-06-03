@@ -1,10 +1,11 @@
-import { Github, Linkedin, ExternalLink, Globe, Mail, MapPin, Facebook, Instagram, Twitter, Youtube } from "lucide-react";
+import { Mail, MapPin } from "lucide-react";
 import Link from "next/link";
 import prisma from "@/lib/db";
 import DownloadPDFButton from "@/components/admin/DownloadPDFButton";
 import AtsResume from "@/components/admin/AtsResume";
 import LayoutSettings from "@/components/admin/LayoutSettings";
 import CvPreviewGrid from "@/components/admin/CvPreviewGrid";
+import SocialIcon from "@/components/SocialIcon";
 
 export const dynamic = 'force-dynamic';
 
@@ -98,19 +99,6 @@ interface Project {
     liveUrl?: string | null;
     tags: string;
 }
-
-const SocialIcon = ({ platform }: { platform: string }) => {
-    switch (platform.toLowerCase()) {
-        case "github": return <Github size={14} />;
-        case "linkedin": return <Linkedin size={14} />;
-        case "twitter": return <Twitter size={14} />;
-        case "facebook": return <Facebook size={14} />;
-        case "instagram": return <Instagram size={14} />;
-        case "youtube": return <Youtube size={14} />;
-        case "portfolio": return <Globe size={14} />;
-        default: return <ExternalLink size={14} />;
-    }
-};
 
 // ── COMPONENT ──────────────────────────────────────────────────────────────
 export default async function AdminDashboard() {
