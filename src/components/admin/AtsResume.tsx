@@ -1,7 +1,7 @@
 "use client";
 
-import { Mail, MapPin, Calendar, CheckCircle, Link as LinkIcon, Edit2, Star, Trophy, Zap, Lightbulb, Github, Linkedin, Facebook, Instagram, Youtube, Twitter } from "lucide-react";
-
+import { Mail, MapPin, Calendar, CheckCircle, Edit2, Star, Trophy, Zap, Lightbulb } from "lucide-react";
+import SocialIcon from "../SocialIcon";
 export default function AtsResume({ profile, education, experience, skills, certificates, activities, publications, references, projects, preview = false }: any) {
     // Collect initials for the avatar placeholder
     const getInitials = (name: string) => {
@@ -10,14 +10,7 @@ export default function AtsResume({ profile, education, experience, skills, cert
     };
 
     const getSocialIcon = (platform: string) => {
-        const p = platform.toLowerCase();
-        if (p.includes('github')) return <Github size={12} color="#007bff" />;
-        if (p.includes('linkedin')) return <Linkedin size={12} color="#007bff" />;
-        if (p.includes('facebook')) return <Facebook size={12} color="#007bff" />;
-        if (p.includes('instagram')) return <Instagram size={12} color="#007bff" />;
-        if (p.includes('youtube')) return <Youtube size={12} color="#007bff" />;
-        if (p.includes('twitter') || p.includes(' x ')) return <Twitter size={12} color="#007bff" />;
-        return <LinkIcon size={12} color="#007bff" />;
+        return <SocialIcon platform={platform} size={12} color="#007bff" />;
     };
 
     // Component Blocks
@@ -56,7 +49,7 @@ export default function AtsResume({ profile, education, experience, skills, cert
                     <div className="ats-item-title">{proj.title}</div>
                     {proj.githubUrl && (
                         <div style={{ color: '#007bff', fontSize: '9pt', marginTop: '1pt', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4pt' }}>
-                            <Github size={11} />
+                            <SocialIcon platform="GitHub" size={11} color="#007bff" />
                             <a href={proj.githubUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>GitHub</a>
                         </div>
                     )}

@@ -476,7 +476,20 @@ export default function ProfileAdmin() {
                                             padding: "11px 16px",
                                             cursor: "pointer"
                                         }}>
-                                        {["GitHub", "LinkedIn", "Twitter", "Instagram", "Facebook", "Portfolio", "YouTube", "Other"].map(p => (
+                                        {[
+                                            // Professional & Academic
+                                            "LinkedIn", "ResearchGate", "ORCID", "Google Scholar", "Academia.edu", "Semantic Scholar", "IEEE Xplore",
+                                            // Dev & Tech
+                                            "GitHub", "Stack Overflow", "Kaggle", "HuggingFace",
+                                            // Social Media
+                                            "Twitter", "Instagram", "Facebook", "YouTube", "TikTok", "Reddit", "Threads",
+                                            // Blogging & Design
+                                            "Medium", "Dev.to", "Hashnode", "Behance", "Dribbble",
+                                            // Messaging
+                                            "Discord", "Telegram",
+                                            // Other
+                                            "Portfolio", "Other"
+                                        ].map(p => (
                                             <option key={p} value={p} style={{ background: "var(--bg-card)", color: "var(--text-primary)" }}>{p}</option>
                                         ))}
                                     </select>

@@ -10,7 +10,7 @@ import PublicationSection from "@/components/PublicationSection";
 
 import BazilHero from "@/components/BazilHero";
 import SplashScreen from "@/components/SplashScreen";
-
+import SocialIcon from "@/components/SocialIcon";
 
 
 export const dynamic = 'force-dynamic';
@@ -144,7 +144,10 @@ export default async function HomePage() {
             </p>
             <div style={{ display: "flex", gap: 12, marginTop: 32, flexWrap: "wrap", justifyContent: "center" }}>
               {profile?.socialLinks?.map((link: any) => (
-                <a key={link.id} href={link.url} className="btn-outline" target="_blank" rel="noreferrer" style={{ fontSize: 14 }}>{link.platform}</a>
+                <a key={link.id} href={link.url} className="btn-outline" target="_blank" rel="noreferrer" style={{ fontSize: 14, display: "flex", alignItems: "center", gap: 8 }}>
+                  <SocialIcon platform={link.platform} size={16} />
+                  {link.platform}
+                </a>
               ))}
             </div>
           </div>
