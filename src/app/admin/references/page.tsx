@@ -272,9 +272,9 @@ export default function ReferencesAdmin() {
 
             {/* ── EDIT MODAL ── */}
             {editingItem && (
-                <div style={{ position: "fixed", inset: 0, zIndex: 999, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(15px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}
+                <div className="admin-modal-overlay" style={{ position: "fixed", inset: 0, zIndex: 999, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(15px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}
                     onClick={() => setEditingItem(null)}>
-                    <div className="glass" style={{ width: "100%", maxWidth: 680, padding: 48, borderRadius: 28, border: "1px solid var(--border)", maxHeight: "90vh", overflowY: "auto" }}
+                    <div className="glass admin-modal-card" style={{ width: "100%", maxWidth: 680, padding: 48, borderRadius: 28, border: "1px solid var(--border)", maxHeight: "90vh", overflowY: "auto" }}
                         onClick={(e) => e.stopPropagation()}>
                         <h3 style={{ fontWeight: 800, fontSize: "1.4rem", marginBottom: 32 }}>Update Reference Profile</h3>
                         <form onSubmit={handleEditSave}>

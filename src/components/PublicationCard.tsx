@@ -38,7 +38,7 @@ export default function PublicationCard({ pub, ordinal, isExpanded, onHover }: P
         {ordinal}
       </div>
 
-      <div style={{ marginBottom: isExpanded ? 16 : 0, transition: "margin 0.3s ease" }}>
+      <div style={{ marginBottom: 16 }}>
         <div style={{ paddingRight: 80 }}> {/* Keep space for ordinal */}
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4, flexWrap: "wrap" }}>
             <h3 style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--text-primary)" }}>{pub.title}</h3>
@@ -53,27 +53,15 @@ export default function PublicationCard({ pub, ordinal, isExpanded, onHover }: P
             )}
           </div>
           
-          <AnimatePresence>
-            {isExpanded && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
-                style={{ overflow: "hidden" }}
-              >
-                {!pub.submitted ? (
-                  <p style={{ color: "var(--accent)", fontSize: 14, fontWeight: 600, marginBottom: 8 }}>
-                    {pub.publisher} • {pub.date ? new Date(pub.date).getFullYear() : "N/A"}
-                  </p>
-                ) : (
-                  <p style={{ color: "var(--text-muted)", fontSize: 14, fontWeight: 600, marginBottom: 8, fontStyle: "italic" }}>
-                    Currently under review
-                  </p>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {!pub.submitted ? (
+            <p style={{ color: "var(--accent)", fontSize: 14, fontWeight: 600, marginBottom: 0 }}>
+              {pub.publisher} • {pub.date ? new Date(pub.date).getFullYear() : "N/A"}
+            </p>
+          ) : (
+            <p style={{ color: "var(--text-muted)", fontSize: 14, fontWeight: 600, marginBottom: 0, fontStyle: "italic" }}>
+              Currently under review
+            </p>
+          )}
         </div>
       </div>
 
@@ -86,7 +74,11 @@ export default function PublicationCard({ pub, ordinal, isExpanded, onHover }: P
             transition={{ duration: 0.5, ease: "easeInOut" }}
             style={{ overflow: "hidden" }}
           >
-            {pub.description && <p style={{ color: "var(--text-muted)", fontSize: 14, lineHeight: 1.7, marginBottom: 20 }}>{pub.description}</p>}
+            {pub.description && (
+              <p style={{ color: "var(--text-muted)", fontSize: 14, lineHeight: 1.7, marginBottom: 20, textAlign: "justify" }}>
+                {pub.description}
+              </p>
+            )}
             {!pub.submitted && pub.url && (
               <a href={pub.url} target="_blank" rel="noreferrer" className="btn-outline" style={{ padding: "8px 20px", fontSize: 13, display: "inline-block" }}>
                 Read Publication ↗

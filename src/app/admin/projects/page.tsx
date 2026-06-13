@@ -306,12 +306,12 @@ export default function ProjectsAdmin() {
 
             {/* ── EDIT MODAL ── */}
             {editingProject && (
-                <div style={{
+                <div className="admin-modal-overlay" style={{
                     position: "fixed", inset: 0, zIndex: 999,
                     background: "rgba(0,0,0,0.8)", backdropFilter: "blur(12px)",
                     display: "flex", alignItems: "center", justifyContent: "center", padding: 24,
                 }} onClick={() => setEditingProject(null)}>
-                    <div className="glass" style={{ width: "100%", maxWidth: 680, padding: 48, borderRadius: 24, border: "1px solid var(--border)", maxHeight: "90vh", overflowY: "auto" }}
+                    <div className="glass admin-modal-card" style={{ width: "100%", maxWidth: 680, padding: 48, borderRadius: 24, border: "1px solid var(--border)", maxHeight: "90vh", overflowY: "auto" }}
                         onClick={(e) => e.stopPropagation()}>
                         <h2 style={{ fontWeight: 800, fontSize: "1.3rem", marginBottom: 32 }}>Update Project Detail</h2>
                         <form onSubmit={handleEditSave}>

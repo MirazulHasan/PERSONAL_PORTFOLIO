@@ -103,9 +103,9 @@ export default function CvPreviewGrid({ profile, education, experience, skills, 
                             </div>
                             <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.6, marginBottom: 12 }}>{proj.description}</p>
                             {proj.tags && (
-                                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                                     {proj.tags.split(',').map((tag: string, idx: number) => (
-                                        <span key={idx} style={{ fontSize: 10, padding: "2px 8px", borderRadius: 4, background: "rgba(255,255,255,0.05)", border: "1px solid var(--border)", color: "var(--text-primary)" }}>{tag.trim()}</span>
+                                        <span key={idx} className="cv-tag-chip" style={{ fontSize: 10, padding: "2px 8px", borderRadius: 4, border: "1px solid var(--border)", color: "var(--text-primary)" }}>{tag.trim()}</span>
                                     ))}
                                 </div>
                             )}

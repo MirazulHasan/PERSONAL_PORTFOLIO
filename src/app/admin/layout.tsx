@@ -9,7 +9,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             backgroundColor: "transparent",
             color: "var(--text-primary)",
             position: "relative",
-            overflow: "auto"
         }}>
 
             <ClientInteractivity />

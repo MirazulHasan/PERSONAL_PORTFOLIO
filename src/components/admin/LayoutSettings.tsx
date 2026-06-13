@@ -135,26 +135,27 @@ export default function LayoutSettings({ profile }: { profile: any }) {
             </button>
 
             {open && (
-                <div style={{
-                    position: "fixed", 
-                    top: 0, left: 0, right: 0, bottom: 0, 
-                    background: "rgba(0,0,0,0.85)", 
-                    zIndex: 99999,
-                    display: "flex", 
-                    alignItems: "center", 
-                    justifyContent: "center"
-                }}>
-                    <div style={{
-                        background: "var(--bg-card)",
-                        padding: "32px", 
-                        borderRadius: 20, 
-                        border: "1px solid var(--border)", 
-                        width: 700, 
-                        maxWidth: "95vw",
-                        maxHeight: "90vh",
-                        overflowY: "auto",
-                        boxShadow: "0 40px 100px rgba(0,0,0,0.8)"
+                <div
+                    className="admin-modal-overlay"
+                    onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }}
+                    style={{
+                        position: "fixed",
+                        top: 0, left: 0, right: 0, bottom: 0,
+                        zIndex: 99999,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center"
                     }}>
+                    <div
+                        className="admin-modal-card"
+                        style={{
+                            padding: "32px",
+                            borderRadius: 20,
+                            width: 700,
+                            maxWidth: "95vw",
+                            maxHeight: "90vh",
+                            overflowY: "auto",
+                        }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
                             <h3 style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--text-primary)", display: "flex", alignItems: "center", gap: 10 }}>
                                 <LayoutList size={20} style={{ color: "var(--accent)" }} /> Layout Settings
@@ -163,7 +164,7 @@ export default function LayoutSettings({ profile }: { profile: any }) {
                         </div>
                         
                         {/* Tab Switcher */}
-                        <div style={{ display: "flex", gap: 12, marginBottom: 24, padding: "4px", background: "rgba(0,0,0,0.3)", borderRadius: "12px", width: "fit-content" }}>
+                        <div style={{ display: "flex", gap: 12, marginBottom: 24, padding: "4px", background: "var(--bg-section)", borderRadius: "12px", width: "fit-content" }}>
                             <button 
                                 onClick={() => setActiveTab("LIVE")}
                                 style={{ 

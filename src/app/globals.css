@@ -220,7 +220,7 @@ section[id] {
 /* Admin nav button */
 .admin-nav-link:hover {
   border-color: rgba(108, 99, 255, 0.5) !important;
-  color: #fff !important;
+  color: var(--text-primary) !important;
   background: rgba(108, 99, 255, 0.08) !important;
 }
 
@@ -228,6 +228,60 @@ section[id] {
 .admin-footer-link:hover {
   color: var(--text-muted) !important;
 }
+
+/* Admin Edit Modals */
+.admin-modal-overlay {
+  background: rgba(0, 0, 0, 0.75) !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  transition: background 0.3s ease;
+}
+
+[data-theme="light"] .admin-modal-overlay {
+  background: rgba(15, 23, 42, 0.25) !important;
+}
+
+.admin-modal-card {
+  background: rgba(15, 23, 42, 0.95) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="light"] .admin-modal-card {
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08) !important;
+}
+
+/* ── Admin Dashboard light-theme fixes ── */
+[data-theme="light"] .cv-card {
+  background: rgba(255, 255, 255, 0.85) !important;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .cv-main-col {
+  background: rgba(255, 255, 255, 0.9) !important;
+}
+
+[data-theme="light"] .cv-sidebar {
+  background: rgba(248, 250, 252, 0.95) !important;
+}
+
+[data-theme="light"] .skill-chip {
+  background: rgba(15, 23, 42, 0.04) !important;
+  color: var(--text-primary) !important;
+  border-color: rgba(15, 23, 42, 0.1) !important;
+}
+
+[data-theme="light"] .cv-tag-chip {
+  background: rgba(99, 102, 241, 0.08) !important;
+  border-color: rgba(99, 102, 241, 0.2) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .quick-btn {
+  background: rgba(255, 255, 255, 0.9) !important;
+}
+
 
 /* Hover generic card */
 .hover-card {

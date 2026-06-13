@@ -607,8 +607,8 @@ export default function SkillsAdmin() {
             </DragDropContext>
 
             {editingItem && (
-                <div style={{ position: "fixed", inset: 0, zIndex: 999, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(15px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }} onClick={() => setEditingItem(null)}>
-                    <div className="glass" style={{ width: "100%", maxWidth: 500, padding: 48, borderRadius: 28, border: "1px solid var(--border)", overflow: "visible" }} onClick={(e) => e.stopPropagation()}>
+                <div className="admin-modal-overlay" style={{ position: "fixed", inset: 0, zIndex: 999, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(15px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }} onClick={() => setEditingItem(null)}>
+                    <div className="glass admin-modal-card" style={{ width: "100%", maxWidth: 500, padding: 48, borderRadius: 28, border: "1px solid var(--border)", overflow: "visible" }} onClick={(e) => e.stopPropagation()}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
                             <h3 style={{ fontWeight: 800, fontSize: "1.3rem", display: "flex", alignItems: "center", gap: 12 }}><Zap size={20} color="var(--accent)" /> Edit Skill Detail</h3>
                             <button onClick={() => setEditingItem(null)} style={{ background: "none", border: "none", color: "var(--text-muted)", cursor: "pointer" }}><X size={22} /></button>
@@ -632,8 +632,8 @@ export default function SkillsAdmin() {
                 </div>
             )}
             {renamingCategory && (
-                <div style={{ position: "fixed", inset: 0, zIndex: 99999, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(15px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }} onClick={() => setRenamingCategory(null)}>
-                    <div className="glass" style={{ width: "100%", maxWidth: 450, padding: 40, borderRadius: 24, border: "1px solid var(--border)", overflow: "visible" }} onClick={(e) => e.stopPropagation()}>
+                <div className="admin-modal-overlay" style={{ position: "fixed", inset: 0, zIndex: 99999, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(15px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }} onClick={() => setRenamingCategory(null)}>
+                    <div className="glass admin-modal-card" style={{ width: "100%", maxWidth: 450, padding: 40, borderRadius: 24, border: "1px solid var(--border)", overflow: "visible" }} onClick={(e) => e.stopPropagation()}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
                             <h3 style={{ fontWeight: 800, fontSize: "1.2rem", display: "flex", alignItems: "center", gap: 12 }}>
                                 <Edit3 size={20} color="var(--accent)" />

@@ -159,10 +159,10 @@ export default async function AdminDashboard() {
     return (
         <div style={{ maxWidth: 1100, margin: "0 auto", paddingBottom: 100 }}>
             <style>{`
-                .cv-card { background: rgba(255,255,255,0.01); backdrop-filter: blur(24px); border: 1px solid var(--border); border-radius: 32px; box-shadow: 0 40px 100px rgba(0,0,0,0.3); overflow: hidden; }
+                .cv-card { background: var(--bg-card); backdrop-filter: blur(24px); border: 1px solid var(--border); border-radius: 32px; box-shadow: 0 40px 100px rgba(0,0,0,0.15); overflow: hidden; }
                 .cv-section-title { font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
                 .cv-section-title span { height: 1px; flex: 1; background: linear-gradient(to right, var(--accent), transparent); opacity: 0.3; }
-                .skill-chip { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 50px; font-size: 11px; font-weight: 800; color: var(--text-primary); display: table; width: auto; line-height: 1.4; padding: 6px 15px; white-space: normal; text-align: left; margin-bottom: 2px; }
+                .skill-chip { background: var(--bg-section); border: 1px solid var(--border); border-radius: 50px; font-size: 11px; font-weight: 800; color: var(--text-primary); display: table; width: auto; line-height: 1.4; padding: 6px 15px; white-space: normal; text-align: left; margin-bottom: 2px; }
                 .quick-btn:hover { border-color: var(--accent) !important; background: rgba(108,99,255,0.08) !important; transform: translateY(-3px); }
 
                 @media print {
@@ -256,7 +256,7 @@ export default async function AdminDashboard() {
                             </div>
 
                             {/* Main Contact (Email & Address) */}
-                            <div style={{ display: "flex", flexWrap: "wrap", gap: 32, borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: 14 }}>
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: 32, borderTop: "1px solid var(--border)", paddingTop: 14 }}>
                                 {profile?.email && <span style={{ display: "flex", alignItems: "center", gap: 8 }}><Mail size={16} color="var(--accent)" /> <a href={`mailto:${profile.email}`} className="transition-colors hover:text-[#6c63ff]" style={{ color: "inherit", textDecoration: "none" }}>{profile.email}</a></span>}
                                 {profile?.address && <span style={{ display: "flex", alignItems: "center", gap: 8 }}><MapPin size={16} color="var(--accent)" /> {profile.address}</span>}
                             </div>
