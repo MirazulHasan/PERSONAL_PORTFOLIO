@@ -425,30 +425,6 @@ export default function ProfileAdmin() {
                         <Field label="Present Address" name="address" defaultValue={profile?.address ?? ""} />
                     </div>
                     <Field label="Primary Email Address" name="email" type="email" defaultValue={profile?.email ?? ""} />
-                    
-                    <div style={{ marginTop: 24, borderTop: "1px solid var(--border)", paddingTop: 24 }}>
-                        <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "var(--text-muted)", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>Resume / CV (PDF or Doc)</label>
-                        <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-                            <div style={{ flex: 1 }}>
-                                <input type="file" accept=".pdf,.doc,.docx" onChange={async (e) => {
-                                    const file = e.target.files?.[0];
-                                    if (file) {
-                                        const reader = new FileReader();
-                                        reader.onload = (ev) => {
-                                            setProfile((prev: any) => ({ ...prev, resumeUrl: ev.target?.result as string }));
-                                            showToast("success", "Resume ready to upload!");
-                                        };
-                                        reader.readAsDataURL(file);
-                                    }
-                                }} style={inputStyle} />
-                            </div>
-                            {profile?.resumeUrl && (
-                                <div style={{ fontSize: 12, color: "var(--accent)", fontWeight: 700 }}>
-                                    {profile.resumeUrl.startsWith("data:") ? "📄 PENDING UPLOAD" : "✅ CURRENTLY SAVED"}
-                                </div>
-                            )}
-                        </div>
-                    </div>
                 </div>
 
                 {/* ── Social Links ── */}
