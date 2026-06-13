@@ -437,6 +437,14 @@ export default function ProfileAdmin() {
                         <h2 style={{ fontSize: "1rem", fontWeight: 700, color: "var(--text-primary)", display: "flex", alignItems: "center", gap: 10 }}>
                             <span style={{ width: 3, height: 20, background: "var(--accent)", borderRadius: 4, display: "inline-block" }} />
                             Social Profiles
+                            {socialLinks.length > 0 && (
+                                <>
+                                    <span style={{ color: "var(--border)", opacity: 0.5 }}>•</span>
+                                    <span style={{ fontSize: 9, fontWeight: 800, color: "var(--text-muted)", letterSpacing: "0.12em", textTransform: "uppercase" }}>
+                                        Drag to reorder
+                                    </span>
+                                </>
+                            )}
                         </h2>
                         <div style={{ display: "flex", gap: 12 }}>
                             {socialLinks.length > 0 && (
